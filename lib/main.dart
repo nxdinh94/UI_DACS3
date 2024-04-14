@@ -1,0 +1,95 @@
+import 'package:flutter/material.dart';
+import 'package:practise_ui/pages/home_page.dart';
+import 'package:practise_ui/pages/user_profile.dart';
+import 'package:practise_ui/widgets/custom_dropdown_menu.dart';
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatefulWidget {
+  const MyApp({super.key});
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+  int _selectedIndex = 0;
+  List<Widget> _navigationOptions = <Widget>[
+    HomePage(),
+    Text(
+      'Index 2: Business',
+    ),
+    Text(
+      'Index 3: School',
+    ),
+    Text(
+      'Index 4: School',
+    ),
+
+    // UserProfile()
+    CustomDropdownMenu()
+  ];
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue.shade400),
+        useMaterial3: true,
+        unselectedWidgetColor: Colors.grey
+      ),
+      home: Container(
+        color: Colors.lightBlue.shade400,
+        child: GestureDetector(
+          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+          child: SafeArea(
+            child: Scaffold(
+              body: _navigationOptions[_selectedIndex],
+              bottomNavigationBar: BottomNavigationBar(
+                showUnselectedLabels: true,
+                unselectedItemColor: Colors.grey,
+                selectedLabelStyle: TextStyle(fontSize: 14),
+                backgroundColor: Colors.white,
+                items:  <BottomNavigationBarItem>[
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.home),
+                    label: 'Home',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.wallet),
+                    label: 'Tài khoản',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.add, weight: 20),
+                    label: 'Thêm',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.bar_chart),
+                    label: 'Báo cáo',
+                  ),
+                  BottomNavigationBarItem(
+                    icon: Icon(Icons.settings),
+                    label: 'Khác',
+                  ),
+                ],
+                currentIndex: _selectedIndex,
+                selectedItemColor: Colors.blue,
+                selectedFontSize: 20,
+                selectedIconTheme: IconThemeData(size: 34),
+                onTap: _onItemTapped,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
