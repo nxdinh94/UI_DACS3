@@ -1,8 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:practise_ui/constant/color.dart';
+import 'package:practise_ui/pages/adding_workspace.dart';
 import 'package:practise_ui/pages/home_page.dart';
 import 'package:practise_ui/pages/user_profile.dart';
-import 'package:practise_ui/widgets/custom_dropdown_menu.dart';
+import 'package:practise_ui/widgets/adding_workspace/expand_input_adding_space.dart';
 void main() {
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+    statusBarColor: Colors.transparent,
+  ));
   runApp(const MyApp());
 }
 
@@ -20,15 +26,13 @@ class _MyAppState extends State<MyApp> {
     Text(
       'Index 2: Business',
     ),
-    Text(
-      'Index 3: School',
-    ),
+    AddingWorkspace(),
     Text(
       'Index 4: School',
     ),
 
-    // UserProfile()
-    CustomDropdownMenu()
+    UserProfile()
+    // CustomDropdownMenu()
   ];
   void _onItemTapped(int index) {
     setState(() {
@@ -46,7 +50,7 @@ class _MyAppState extends State<MyApp> {
         unselectedWidgetColor: Colors.grey
       ),
       home: Container(
-        color: Colors.lightBlue.shade400,
+        color: primaryColor,
         child: GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: SafeArea(

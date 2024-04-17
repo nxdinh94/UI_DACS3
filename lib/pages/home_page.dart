@@ -32,7 +32,7 @@ class _HomePageState extends State<HomePage> {
                     width: double.infinity,
                     padding: EdgeInsets.all(12),
                     decoration: BoxDecoration(
-                        color: Colors.lightBlue.shade400
+                        color: primaryColor
                     ),
                     child: Column(
                       children: [
