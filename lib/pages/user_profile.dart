@@ -93,7 +93,6 @@ class _MyFormState extends State<MyForm> {
 
   //default option for radiobutton
 
-
   DateTime selectedDate = DateTime.now();
   SingingCharacter? _intialValue = SingingCharacter.nam;
 

@@ -110,7 +110,6 @@ class _HomePageState extends State<HomePage> {
                                           size: 30,
                                           color: Colors.grey.shade400,
                                         )
-
                                     )
                                   ]
                               ),

@@ -7,6 +7,8 @@ import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/data/dropdown_adding_data.dart';
 import 'package:practise_ui/widgets/adding_workspace/dropdown_adding_workspace.dart';
 
+import '../widgets/adding_workspace/expand_input_adding_space.dart';
+
 class AddingWorkspace extends StatefulWidget {
   const AddingWorkspace({super.key});
 
@@ -119,7 +121,7 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
 
                       decoration: InputDecoration(
                         isDense: true,
-                        contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 10),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
                         border: InputBorder.none,
 
                         hintText: '0',
@@ -190,7 +192,7 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                       ),
                       trailing: const Icon(
                         Icons.keyboard_arrow_right,
-                        color: labelColor,
+                        color: iconColor,
                         size: 33,
                       ),
                       contentPadding: const EdgeInsets.only(left: 16, top: 8, bottom: 8, right: 8),
@@ -218,6 +220,8 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                               'assets/text-align-left.svg',
                               width: 30,
                               height: 30,
+                              colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn),
+
                             ),
                           ),
 
@@ -227,6 +231,7 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                           ),
                           suffixIcon: SvgPicture.asset(
                             'assets/delete.svg',
+                            colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
                           ),
                           suffixIconConstraints: BoxConstraints(
                             minHeight: 15,
@@ -263,7 +268,7 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                       ),
                       trailing: const Icon(
                         Icons.keyboard_arrow_right,
-                        color: labelColor,
+                        color: iconColor,
                         size: 33,
                       ),
                       contentPadding: const EdgeInsets.only(left: 16, top: 8, bottom: 8, right: 8),
@@ -296,17 +301,19 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                       ),
                       trailing: const Icon(
                         Icons.keyboard_arrow_right,
-                        color: labelColor,
+                        color: iconColor,
                         size: 33,
                       ),
                       contentPadding: const EdgeInsets.only(left: 16, top: 8, bottom: 8, right: 8),
-                      onTap: (){
-
-                      },
+                      onTap: (){},
                     ),
                   ],
                 ),
-              )
+              ),
+              // Phần thông tin chi tiết(optional)
+              spaceColumn,
+              //Expanded detailed option
+              CustomDropdownMenu(),
             ],
           ),
         ),

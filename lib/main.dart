@@ -6,7 +6,7 @@ import 'package:practise_ui/pages/home_page.dart';
 import 'package:practise_ui/pages/user_profile.dart';
 import 'package:practise_ui/widgets/adding_workspace/expand_input_adding_space.dart';
 void main() {
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+  SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
   ));
   runApp(const MyApp());
@@ -31,9 +31,10 @@ class _MyAppState extends State<MyApp> {
       'Index 4: School',
     ),
 
-    UserProfile()
-    // CustomDropdownMenu()
+    // UserProfile(),
+    CustomDropdownMenu()
   ];
+
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -42,8 +43,8 @@ class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
+      title: 'Do an co so 3',
+
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue.shade400),
         useMaterial3: true,
@@ -59,12 +60,12 @@ class _MyAppState extends State<MyApp> {
               bottomNavigationBar: BottomNavigationBar(
                 showUnselectedLabels: true,
                 unselectedItemColor: Colors.grey,
-                selectedLabelStyle: TextStyle(fontSize: 14),
+                selectedLabelStyle: const TextStyle(fontSize: 14),
                 backgroundColor: Colors.white,
                 items:  <BottomNavigationBarItem>[
                   BottomNavigationBarItem(
                     icon: Icon(Icons.home),
-                    label: 'Home',
+                    label: 'Trang chủ',
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(Icons.wallet),
@@ -93,6 +94,7 @@ class _MyAppState extends State<MyApp> {
           ),
         ),
       ),
+      debugShowCheckedModeBanner: false,
     );
   }
 }
