@@ -34,7 +34,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
         unselectedItemColor: Colors.grey,
         selectedLabelStyle: const TextStyle(fontSize: 14),
         backgroundColor: Colors.white,
-        items:  <BottomNavigationBarItem>[
+        items: const <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Trang chủ',
@@ -59,7 +59,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
       // currentIndex: _selectedIndex,
       selectedItemColor: Colors.blue,
       selectedFontSize: 20,
-      selectedIconTheme: IconThemeData(size: 34),
+      selectedIconTheme: const IconThemeData(size: 34),
       // onTap: _onItemTapped,
     ),
     );

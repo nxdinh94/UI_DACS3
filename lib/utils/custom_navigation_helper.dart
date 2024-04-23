@@ -126,7 +126,7 @@ class CustomNavigationHelper {
                 path: anotherPath,
                 pageBuilder: (context, state) {
                   return getPage(
-                    child: const AnotherPage(),
+                    child: const UserProfile(),
                     state: state,
                   );
                 },
