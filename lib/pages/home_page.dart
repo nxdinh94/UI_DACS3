@@ -252,10 +252,10 @@ class _HomePageState extends State<HomePage> {
                           mainAxisAlignment: MainAxisAlignment.end,
                           children: [
                             Text(
-                              "Xem thêm >",
-                              style: TextStyle(
-                                color: Colors.blue
-                              ))
+                                "Xem thêm >",
+                                style: TextStyle(
+                                    color: Colors.blue
+                                ))
                           ],
                         )
                       ],
@@ -265,7 +265,6 @@ class _HomePageState extends State<HomePage> {
               ),
             ),
           )
-
         ],
       ),
     );
