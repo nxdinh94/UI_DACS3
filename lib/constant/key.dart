@@ -1,0 +1,1 @@
+const JWT_SECRET_ACCESS_TOKEN = "@financialmanagement@2024#access";

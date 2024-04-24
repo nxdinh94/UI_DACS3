@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/pages/home_page.dart';
+import 'package:practise_ui/pages/signup_page.dart';
 import 'package:practise_ui/providers/auth_provider.dart';
 import 'package:provider/provider.dart';
 class SignInPage extends StatelessWidget {
@@ -23,7 +24,7 @@ class SignInPage extends StatelessWidget {
 
     return Consumer<AuthProvider>(
       builder: (context, auth, child) {
-        return auth.isAuth ? HomePage() : Scaffold(
+        return Scaffold(
           backgroundColor: whiteColor,
           body: SingleChildScrollView(
             padding: const EdgeInsets.all(20),
