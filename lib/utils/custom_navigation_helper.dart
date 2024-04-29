@@ -51,7 +51,6 @@ class CustomNavigationHelper {
   //pages path
   static const String signUpPath = '/signUp';
   static const String signInPath = '/signIn';
-  static const String unverifyAccountPath = '/unverifyAccount';
 
   static const String userProfilePath = '/userProfile';
 
@@ -164,16 +163,6 @@ class CustomNavigationHelper {
           pageBuilder: (context, state) {
             return getPage(
               child: SignInPage(),
-              state: state,
-            );
-          },
-        ),
-        GoRoute(
-          parentNavigatorKey: parentNavigatorKey,
-          path: unverifyAccountPath,
-          pageBuilder: (context, state) {
-            return getPage(
-              child: UnverifyAccountPage(),
               state: state,
             );
           },

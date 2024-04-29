@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:page_transition/page_transition.dart';
 import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/pages/signin_page.dart';
 import 'package:practise_ui/pages/unverify_account.dart';
@@ -59,18 +60,35 @@ class AuthMiddleware extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final authProvider = Provider.of<AuthProvider>(context);
-    // Kiểm tra xem người dùng đã đăng nhập hay chưa
-    if (authProvider.isAuth) {
-      if (authProvider.isVerify == 0) {
-        return UnverifyAccountPage();
-      }
-      // Nếu đã đăng nhập, hiển thị router như thông thường
-      return child;
-    } else {
-      // Nếu chưa đăng nhập, chuyển hướng đến trang đăng nhập
-      return SignInPage();
+    final auth = Provider.of<AuthProvider>(context);
+
+    if (auth.isAuth && auth.isVerify == 0) {
+      return Navigator(
+        onGenerateRoute: (settings) {
+          return PageTransition(
+            type:  PageTransitionType.leftToRight,
+            duration: Duration(milliseconds: 300),
+            child: UnverifyAccountPage(),
+          );
+        },
+      );
     }
+    // Kiểm tra xem người dùng đã đăng nhập hay chưa
+    return auth.isAuth
+        ? child
+        : FutureBuilder(
+          future: auth.autoLogin(),
+          initialData: false,
+          builder: (BuildContext context, AsyncSnapshot snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              // return const Center(
+              //   child: CircularProgressIndicator(
+              //     color: whiteColor,
+              //   ),
+              // );
+            }
+          return snapshot.data ? child : SignInPage();
+        });
   }
 }
 
