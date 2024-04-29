@@ -43,9 +43,9 @@ class _MyAppState extends State<MyApp> {
         child: GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: SafeArea(
-            child: AuthMiddleware(
+            // child: AuthMiddleware(
               child: CustomRouter(), // Use CustomRouter as home
-            ),
+            // ),
           ),
         ),
       ),

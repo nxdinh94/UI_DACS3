@@ -51,7 +51,6 @@ class CustomNavigationHelper {
   //pages path
   static const String signUpPath = '/signUp';
   static const String signInPath = '/signIn';
-
   static const String userProfilePath = '/userProfile';
 
   factory CustomNavigationHelper() {
