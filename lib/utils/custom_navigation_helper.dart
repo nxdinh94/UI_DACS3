@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:practise_ui/pages/account_page.dart';
 import 'package:practise_ui/pages/adding_workspace.dart';
+import 'package:practise_ui/pages/detail_spending_limit_item.dart';
 import 'package:practise_ui/pages/report_page.dart';
 import 'package:practise_ui/pages/unverify_account.dart';
 import 'package:practise_ui/pages/user_profile.dart';
@@ -51,7 +52,9 @@ class CustomNavigationHelper {
   //pages path
   static const String signUpPath = '/signUp';
   static const String signInPath = '/signIn';
+
   static const String userProfilePath = '/userProfile';
+  static const String detailSpendingLimitItemPath = '/detailSpendingLimitItem';
 
   factory CustomNavigationHelper() {
     return _instance;
@@ -172,6 +175,16 @@ class CustomNavigationHelper {
           pageBuilder: (context, state) {
             return getPage(
               child: const UserProfile(),
+              state: state,
+            );
+          },
+        ),
+        GoRoute(
+          parentNavigatorKey: parentNavigatorKey,
+          path: detailSpendingLimitItemPath,
+          pageBuilder: (context, state) {
+            return getPage(
+              child: DetailSpendingLimitItem(),
               state: state,
             );
           },

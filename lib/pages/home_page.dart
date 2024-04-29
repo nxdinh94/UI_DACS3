@@ -1,12 +1,16 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:practise_ui/Section/home_travel_section_item.dart';
 import 'package:practise_ui/constant/color.dart';
+import 'package:practise_ui/constant/font.dart';
+import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/providers/auth_provider.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';
-import 'package:practise_ui/widgets/pie_chart.dart';
-import 'package:practise_ui/widgets/collumn_chart.dart';
+import 'package:practise_ui/widgets/charts/pie_chart.dart';
+import 'package:practise_ui/widgets/charts/collumn_chart.dart';
 import 'package:practise_ui/data/piechart_data.dart';
-import 'package:practise_ui/widgets/custom_legend_column_chart.dart';
+import 'package:practise_ui/widgets/charts/custom_legend_column_chart.dart';
+import 'package:practise_ui/widgets/spendingLimit/spendingLimitItems.dart';
 import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
@@ -34,7 +38,7 @@ class _HomePageState extends State<HomePage> {
                     Container(
                       height: 170,
                       width: double.infinity,
-                      padding: EdgeInsets.all(12),
+                      padding: paddingAll12,
                       decoration: BoxDecoration(
                           color: primaryColor
                       ),
@@ -81,7 +85,7 @@ class _HomePageState extends State<HomePage> {
                               onTap: (){},
                               child: Container(
                                 width: double.infinity,
-                                padding: EdgeInsets.all(10),
+                                padding:const EdgeInsets.all(10),
                                 decoration: BoxDecoration(
                                     color: Colors.white,
                                     borderRadius: BorderRadius.circular(10)
@@ -125,26 +129,23 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
-                    const SizedBox(height: 10,),
+                    spaceColumn,
                     // Tinh hinh thu chi
                     Container(
-                      padding: EdgeInsets.all(12),
+                      padding: paddingAll12,
                       color: Colors.white,
                       child: Column(
                         children: [
                           Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text(
+                              const Text(
                                 "Tình hình thu chi",
-                                style: TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.bold
-                                ),
+                                style: textStyleForTitleSection
                               ),
                               IconButton(
                                 onPressed: () {},
-                                iconSize: 28, // desired size
+                                iconSize: 28,
                                 padding: EdgeInsets.zero,
                                 color: Colors.grey,
                                 constraints: const BoxConstraints(), // override default min size of 48px
@@ -235,18 +236,45 @@ class _HomePageState extends State<HomePage> {
                         ],
                       ),
                     ),
-                    SizedBox(height: 12),
-                    //Hạn mức chi
+                    spaceColumn,
+                    //spending limit
                     Container(
-                      height: 250,
-                      width: MediaQuery.of(context).size.width * 0.95,
-                      color: Colors.blue,
+
+                      width: double.infinity,
+                      color: secondaryColor,
+                      padding: paddingAll12,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text('Hạn mức chi', style: textStyleForTitleSection),
+                          spaceColumn,
+                          SpendingLimitItems(),
+                          spaceColumn,
+                          GestureDetector(
+                            onTap: (){},
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text('Xem thêm', style: TextStyle(
+                                    color: primaryColor,
+                                    fontSize: 17
+                                ),),
+                                const Icon(
+                                  Icons.keyboard_arrow_right,
+                                  color: primaryColor,
+                                  size: 30,
+                                )
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                    SizedBox(height: 12),
+                    spaceColumn,
                     //Du lịch
                     Container(
-                      padding: EdgeInsets.all(12),
-                      width: MediaQuery.of(context).size.width * 0.95,
+                      padding: paddingAll12,
+                      width: double.infinity,
                       color: Colors.white,
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
