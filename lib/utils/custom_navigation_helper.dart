@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:practise_ui/pages/account_page.dart';
 import 'package:practise_ui/pages/adding_workspace.dart';
-import 'package:practise_ui/pages/detail_spending_limit_item.dart';
+import 'package:practise_ui/pages/detail_spending_limit_item_page.dart';
 import 'package:practise_ui/pages/report_page.dart';
 import 'package:practise_ui/pages/unverify_account.dart';
 import 'package:practise_ui/pages/user_profile.dart';
 import 'package:practise_ui/utils/bottom_navigation_bar.dart';
+import 'package:practise_ui/widgets/charts/area_chart.dart';
 
 import '../pages/home_page.dart';
 import '../pages/signin_page.dart';
@@ -128,7 +129,7 @@ class CustomNavigationHelper {
                   path: anotherPath,
                   pageBuilder: (context, state) {
                     return getPage(
-                      child: const UserProfile(),
+                      child: const MyAreaChart(),
                       state: state,
                     );
                   },
