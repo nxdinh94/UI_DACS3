@@ -4,7 +4,6 @@ import 'package:practise_ui/pages/account_page.dart';
 import 'package:practise_ui/pages/adding_workspace.dart';
 import 'package:practise_ui/pages/detail_spending_limit_item_page.dart';
 import 'package:practise_ui/pages/report_page.dart';
-import 'package:practise_ui/pages/unverify_account.dart';
 import 'package:practise_ui/pages/user_profile.dart';
 import 'package:practise_ui/utils/bottom_navigation_bar.dart';
 import 'package:practise_ui/widgets/charts/area_chart.dart';
@@ -185,7 +184,7 @@ class CustomNavigationHelper {
           path: detailSpendingLimitItemPath,
           pageBuilder: (context, state) {
             return getPage(
-              child: DetailSpendingLimitItem(),
+              child: const DetailSpendingLimitItem(),
               state: state,
             );
           },
