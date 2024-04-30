@@ -15,7 +15,7 @@ class DetailSpendingLimitItem extends StatefulWidget {
 }
 
 class _DetailSpendingLimitItemState extends State<DetailSpendingLimitItem> {
-
+  final TextStyle labelStyle = const TextStyle(fontSize: 15, color: labelColor);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -23,28 +23,26 @@ class _DetailSpendingLimitItemState extends State<DetailSpendingLimitItem> {
         backgroundColor: primaryColor,
         title: Text(
           'Tiền sinh hoạt hằng tháng',
-          style: TextStyle(
-            color: secondaryColor,
-            fontSize: textBig,
-            fontWeight: FontWeight.w500
+          style: const TextStyle(
+              color: secondaryColor,
+              fontSize: textBig,
+              fontWeight: FontWeight.w500
           ),
         ),
         centerTitle: true,
         leading: Builder(
           builder: (BuildContext context){
-            if(true){
-              return IconButton(
-                icon: Icon(
+            return IconButton(
+              icon: const Icon(
                   Icons.keyboard_arrow_left,
                   color: secondaryColor,
                   size: 43
-                ),
-                onPressed: () {
-                  CustomNavigationHelper.router.pop();
-                },
-              );
-            }
-          },
+              ),
+              onPressed: () {
+                CustomNavigationHelper.router.pop();
+              },
+            );
+          }
         ),
         actions: [
           GestureDetector(
@@ -58,7 +56,6 @@ class _DetailSpendingLimitItemState extends State<DetailSpendingLimitItem> {
       ),
       body: Container(
         color: backgroundColor,
-        padding: EdgeInsets.only(bottom: 30),
         child: ListView(
           children: [
             Container(
@@ -67,9 +64,9 @@ class _DetailSpendingLimitItemState extends State<DetailSpendingLimitItem> {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('Hạn mức', style: TextStyle(color: textColor, fontSize: textSmall)),
+                  const Text('Hạn mức', style: TextStyle(color: textColor, fontSize: textSmall)),
                   Text('7.000.000đ', style: TextStyle(
-                    fontSize: textSize, fontWeight: FontWeight.w700, color: textColor
+                      fontSize: textSize, fontWeight: FontWeight.w700, color: textColor
                   ),)
                 ],
               ),
@@ -90,8 +87,8 @@ class _DetailSpendingLimitItemState extends State<DetailSpendingLimitItem> {
                 title: const Text(
                   'Chi tiết khoản chi',
                   style: TextStyle(
-                    fontSize: textSize,
-                    color: textColor
+                      fontSize: textSize,
+                      color: textColor
                   ),
                 ),
                 trailing: const Icon(
@@ -105,7 +102,7 @@ class _DetailSpendingLimitItemState extends State<DetailSpendingLimitItem> {
             spaceColumn,
             Container(
               color: secondaryColor,
-              padding: EdgeInsets.only(bottom: 12),
+              padding: const EdgeInsets.only(bottom: 12),
               child: Column(
                 children: [
                   MyAreaChart(),
@@ -115,32 +112,16 @@ class _DetailSpendingLimitItemState extends State<DetailSpendingLimitItem> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [
                       RichText(
-                        text: TextSpan(
+                        text:  TextSpan(
                           children: [
-                            const TextSpan(
+                            TextSpan(
                                 text: "Thực tế chi tiêu",
-                                style: TextStyle(fontSize: 14, color: labelColor)
+                                style: labelStyle
                             ),
                             const TextSpan(text: ' '),
-                            WidgetSpan(
-                                child: JustTheTooltip(
-                                  backgroundColor: Colors.black54,
-                                  preferredDirection: AxisDirection.up,
-                                  tailBaseWidth: 10,
-                                  tailLength: 8,
-                                  content: const Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Text(
-                                      'ST đã chi / Khoảng thời gian chi tiêu',
-                                      style: TextStyle(color: secondaryColor),
-                                    ),
-                                  ),
-                                  child: Material(
-                                    child: SvgPicture.asset(
-                                      'assets/question-mark-round.svg',
-                                      colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn),
-                                    ),
-                                  ),
+                            const WidgetSpan(
+                                child: CustomToolTip(
+                                  tooltipText: 'ST đã chi / Khoảng thời gian chi tiêu',
                                 ),
                                 alignment: PlaceholderAlignment.middle
                             ),
@@ -150,30 +131,14 @@ class _DetailSpendingLimitItemState extends State<DetailSpendingLimitItem> {
                       RichText(
                         text: TextSpan(
                           children: [
-                            const TextSpan(
+                            TextSpan(
                                 text: "Nên chi",
-                                style: TextStyle(fontSize: 14, color: labelColor)
+                                style: labelStyle
                             ),
                             const TextSpan(text: ' '),
-                            WidgetSpan(
-                                child: JustTheTooltip(
-                                  backgroundColor: Colors.black54,
-                                  preferredDirection: AxisDirection.up,
-                                  tailBaseWidth: 10,
-                                  tailLength: 8,
-                                  content: const Padding(
-                                    padding: EdgeInsets.all(8.0),
-                                    child: Text(
-                                      'ST còn lại / Số ngày còn lại',
-                                      style: TextStyle(color: secondaryColor),
-                                    ),
-                                  ),
-                                  child: Material(
-                                    child: SvgPicture.asset(
-                                      'assets/question-mark-round.svg',
-                                      colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn),
-                                    ),
-                                  ),
+                            const WidgetSpan(
+                                child: CustomToolTip(
+                                  tooltipText: 'ST còn lại / Số ngày còn lại',
                                 ),
                                 alignment: PlaceholderAlignment.middle
                             ),
@@ -204,7 +169,7 @@ class _DetailSpendingLimitItemState extends State<DetailSpendingLimitItem> {
                                 alignment: PlaceholderAlignment.bottom
                             ),
                             const TextSpan(text: ' '),
-                            const TextSpan(text: '/ngày',  style: TextStyle(fontSize: 14, color: labelColor)),
+                            const TextSpan(text: '/ngày',  style: TextStyle(fontSize: 15, color: labelColor)),
                           ],
                         ),
                       ),
@@ -225,7 +190,7 @@ class _DetailSpendingLimitItemState extends State<DetailSpendingLimitItem> {
                                 alignment: PlaceholderAlignment.bottom
                             ),
                             const TextSpan(text: ' '),
-                            const TextSpan(text: '/ngày',  style: TextStyle(fontSize: 14, color: labelColor)),
+                            const TextSpan(text: '/ngày',  style: TextStyle(fontSize: 15, color: labelColor)),
                           ],
                         ),
                       ),
@@ -240,32 +205,16 @@ class _DetailSpendingLimitItemState extends State<DetailSpendingLimitItem> {
                       RichText(
                         text: TextSpan(
                           children: [
-                            const TextSpan(
+                            TextSpan(
                                 text: "Dự kiến chi tiêu",
-                                style: TextStyle(fontSize: 15, color: labelColor)
+                                style: labelStyle
                             ),
                             const TextSpan(text: ' '),
-                            WidgetSpan(
-                                child: JustTheTooltip(
-                                  backgroundColor: Colors.black54,
-                                  tailBaseWidth: 10,
-                                  tailLength: 8,
-                                  content: const Padding(
-                                    padding: EdgeInsets.all(4.0),
-                                    child: Text(
-                                      'Thực tế chi tiêu * Số ngày còn lại \n + ST đã chi',
-                                      style: TextStyle(color: secondaryColor),
-                                      textAlign: TextAlign.center,
-                                    ),
-                                  ),
-                                  child: Material(
-                                    child: SvgPicture.asset(
-                                      'assets/question-mark-round.svg',
-                                      colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn),
-                                    ),
-                                  ),
-                                ),
-                                alignment: PlaceholderAlignment.middle
+                            const WidgetSpan(
+                              child: CustomToolTip(
+                                tooltipText: 'Thực tế chi tiêu * Số ngày còn lại \n + ST đã chi',
+                              ),
+                              alignment: PlaceholderAlignment.middle
                             ),
                           ],
                         ),
@@ -279,9 +228,9 @@ class _DetailSpendingLimitItemState extends State<DetailSpendingLimitItem> {
                       RichText(
                         text: TextSpan(
                           children: [
-                            const TextSpan(
+                            TextSpan(
                                 text: "444.333",
-                                style: TextStyle(fontSize: textSmall, color: revenueMoneyColor)
+                                style: const TextStyle(fontSize: textSmall, color: revenueMoneyColor)
                             ),
                             const TextSpan(text: ' '),
                             WidgetSpan(
@@ -300,9 +249,38 @@ class _DetailSpendingLimitItemState extends State<DetailSpendingLimitItem> {
                 ],
               ),
             ),
-
-
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class CustomToolTip extends StatelessWidget {
+  final String tooltipText;
+
+  const CustomToolTip({
+    super.key, required this.tooltipText,
+  });
+  @override
+  Widget build(BuildContext context) {
+    return JustTheTooltip(
+      backgroundColor: Colors.black54,
+      tailBaseWidth: 10,
+      tailLength: 8,
+      preferredDirection: AxisDirection.up,
+      content: Padding(
+        padding: const EdgeInsets.all(4.0),
+        child: Text(
+          tooltipText,
+          style: const TextStyle(color: secondaryColor),
+          textAlign: TextAlign.center,
+        ),
+      ),
+      child: Material(
+        child: SvgPicture.asset(
+          'assets/question-mark-round.svg',
+          colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn),
         ),
       ),
     );
