@@ -4,9 +4,8 @@ import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';
 import 'package:practise_ui/utils/progress_bar.dart';
-import 'package:path/path.dart';
-
 import '../../constant/font.dart';
+import '../custom_stack_three_images.dart';
 class SpendingLimitItems extends StatefulWidget {
   const SpendingLimitItems({super.key});
 
@@ -34,40 +33,10 @@ class _SpendingLimitItemsState extends State<SpendingLimitItems> {
             children: [
               Visibility(
                 visible: isDetailSpendingLimitItemPage ? false: true,
-                child: Container(
-                  width: 65,
-                  color: Colors.blue,
-                  margin: const EdgeInsets.only(right: 12),
-                  child: Stack(
-                    children: [
-                      Positioned(
-                        left: 20,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.redAccent,
-                          radius: 21,
-                        ),
-                      ),
-                      Positioned(
-                        left: 10,
-                        child: CircleAvatar(
-                          backgroundColor: secondaryColor,
-                          radius: 21,
-                          child: CircleAvatar(
-                            backgroundColor: Colors.blue,
-                            radius: 18,
-                          ),
-                        ),
-                      ),
-                      CircleAvatar(
-                        radius: 21,
-                        backgroundColor: secondaryColor,
-                        child: CircleAvatar(
-                          backgroundColor: Colors.green,
-                          radius: 18,
-                        ),
-                      ),
-                    ],
-                  ),
+                child: StackThreeCircleImages(
+                  imageOne: 'assets/sampleImage/aolen.jpg',
+                  imageThree: 'assets/sampleImage/girl1.jpg',
+                  imageTwo: 'assets/sampleImage/girl3.jpg',
                 ),
               ),
               Expanded(
@@ -86,11 +55,11 @@ class _SpendingLimitItemsState extends State<SpendingLimitItems> {
                       children: [
                         Text(
                           '01/04 - 30/4',
-                          style: TextStyle(
+                          style: const TextStyle(
                             color: labelColor,
                             fontSize: textSmall
                           )),
-                        Text('7.000.000đ', style: TextStyle(
+                        Text('7.000.000đ', style: const TextStyle(
                           color: textColor, fontSize: textBig
                         ),),
                       ],
@@ -121,3 +90,5 @@ class _SpendingLimitItemsState extends State<SpendingLimitItems> {
     );
   }
 }
+
+
