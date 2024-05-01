@@ -251,7 +251,11 @@ class _HomePageState extends State<HomePage> {
                           SpendingLimitItems(),
                           spaceColumn,
                           GestureDetector(
-                            onTap: (){},
+                            onTap: (){
+                              CustomNavigationHelper.router.push(
+                                CustomNavigationHelper.listSpendingLimitItemPath
+                              );
+                            },
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [

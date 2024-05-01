@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:practise_ui/pages/account_page.dart';
+import 'package:practise_ui/pages/add_and_edit_spending_limit_page.dart';
 import 'package:practise_ui/pages/adding_workspace.dart';
 import 'package:practise_ui/pages/detail_spending_limit_item_page.dart';
+import 'package:practise_ui/pages/list_spending_limit_item_page.dart';
 import 'package:practise_ui/pages/report_page.dart';
 import 'package:practise_ui/pages/user_profile.dart';
 import 'package:practise_ui/utils/bottom_navigation_bar.dart';
@@ -55,6 +57,9 @@ class CustomNavigationHelper {
 
   static const String userProfilePath = '/userProfile';
   static const String detailSpendingLimitItemPath = '/detailSpendingLimitItem';
+  static const String listSpendingLimitItemPath = '/listSpendingLimitItem';
+  static const String addSpendingLimitPath = '/addSpendingLimit';
+  static const String editSpendingLimitPath = '/editSpendingLimit';
 
   factory CustomNavigationHelper() {
     return _instance;
@@ -128,7 +133,7 @@ class CustomNavigationHelper {
                   path: anotherPath,
                   pageBuilder: (context, state) {
                     return getPage(
-                      child: const MyAreaChart(),
+                      child: const AddAndEditSpendingLimitPage(),
                       state: state,
                     );
                   },
@@ -185,6 +190,36 @@ class CustomNavigationHelper {
           pageBuilder: (context, state) {
             return getPage(
               child: const DetailSpendingLimitItem(),
+              state: state,
+            );
+          },
+        ),
+        GoRoute(
+          parentNavigatorKey: parentNavigatorKey,
+          path: addSpendingLimitPath,
+          pageBuilder: (context, state) {
+            return getPage(
+              child: const AddAndEditSpendingLimitPage(),
+              state: state,
+            );
+          },
+        ),
+        GoRoute(
+          parentNavigatorKey: parentNavigatorKey,
+          path: editSpendingLimitPath,
+          pageBuilder: (context, state) {
+            return getPage(
+              child: const AddAndEditSpendingLimitPage(),
+              state: state,
+            );
+          },
+        ),
+        GoRoute(
+          parentNavigatorKey: parentNavigatorKey,
+          path: listSpendingLimitItemPath,
+          pageBuilder: (context, state) {
+            return getPage(
+              child: const ListSpendingLimitItemPage(),
               state: state,
             );
           },

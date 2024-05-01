@@ -304,59 +304,45 @@ class _inputMoneySection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    const Divider divider = Divider(height: 1, color: underLineColor,indent: 64);
+
     return Container(
-      color: Colors.white,
-      padding: const EdgeInsets.all(12),
+      height: 110,
+      color: secondaryColor,
+      padding: paddingAll12,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: [
-          const Padding(
-            padding: EdgeInsets.only(right: 8),
-            child: Text('Số tiền', style: TextStyle(
-              fontSize: textSize,
-              color: revenueMoneyColor,
-              height: 0.9,
-            )),
-          ),
+          const Text('Số tiền', style: TextStyle(
+              fontSize: textSmall,
+              color: textColor
+          )),
+          spaceColumn6,
           TextField(
-
-            decoration: InputDecoration(
-              isDense: true,
-              contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-              border: InputBorder.none,
-
-              hintText: '0',
-              hintStyle: const TextStyle(
-                color: labelColor,
-              ),
-
-              suffixIcon: SizedBox(
-                height: 10,
-                width: 10,
-                child: SvgPicture.asset(
-                  'assets/dong.svg',
-                  height: 10,
-                  width: 10,
-                  colorFilter: const ColorFilter.mode(textColor, BlendMode.srcIn),
-                ),
-              ),
-              suffixIconConstraints: const BoxConstraints(
-                minWidth: 30,
-                minHeight: 30,
-              ),
-              suffixIconColor: textColor,
-
-            ),
+            // controller: _moneyInputController,
+            style: const TextStyle(fontSize: 35.0, height: 45/35,fontWeight: FontWeight.w500, color: revenueMoneyColor),
             textAlign: TextAlign.end,
-            cursorColor: primaryColor,
+            cursorColor: Colors.deepPurpleAccent,
             keyboardType: TextInputType.number,
-            style: const TextStyle(
-              fontSize: 38,
-              fontWeight: FontWeight.w700,
-              color: revenueMoneyColor
+            decoration: InputDecoration(
+                border: InputBorder.none,
+                contentPadding: EdgeInsets.zero,
+
+                suffixIcon: SvgPicture.asset(
+                  'assets/dong.svg',
+                  colorFilter: const  ColorFilter.mode(textColor, BlendMode.srcIn),
+                ),
+                suffixIconConstraints: const BoxConstraints(
+                    minHeight: 32,
+                    minWidth: 32
+                ),
+                hintText: '0',
+                hintStyle: const TextStyle(fontSize: 35, color: primaryColor)
             ),
+
           ),
-          const Divider(height: 1, color: underLineColor,)
+          spaceColumn6,
+          divider
         ],
       ),
     );

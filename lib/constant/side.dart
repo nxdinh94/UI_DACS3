@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 const sidePadding = EdgeInsets.symmetric(horizontal: 12);
+const verticalPadding = EdgeInsets.symmetric(vertical: 12);
+const verticalPadding6 = EdgeInsets.symmetric(vertical: 6);
 const Widget spaceColumn = SizedBox(height: 12);
 const Widget spaceColumn6 = SizedBox(height: 6);
 const Widget spaceRow = SizedBox(width: 12);

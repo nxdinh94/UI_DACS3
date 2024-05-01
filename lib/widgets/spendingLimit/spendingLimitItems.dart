@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/constant/side.dart';
@@ -43,12 +45,34 @@ class _SpendingLimitItemsState extends State<SpendingLimitItems> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Visibility(
-                      visible: isDetailSpendingLimitItemPage ? false: true,
-                      child: Text(
-                        'Tiền sinh hoạt hằng tháng',
-                        style: textStyleForSpendingLimitItem,
-                      )
+                    Row(
+                      mainAxisAlignment: isDetailSpendingLimitItemPage?
+                      MainAxisAlignment.start : MainAxisAlignment.spaceBetween,
+                      children: [
+                        Visibility(
+                          visible: isDetailSpendingLimitItemPage ? false: true,
+                          child: Flexible(
+                            child: Text(
+                              overflow: TextOverflow.ellipsis,
+                              'Tiền sinh hoạt hằng tháng',
+                              style: textStyleForSpendingLimitItem,
+                            ),
+                          )
+                        ),
+                        Visibility(
+                          visible: true,
+                          child: Container(
+                            padding: const EdgeInsets.all(3),
+                            decoration: BoxDecoration(
+                              border: Border.all(color: spendingMoneyColor, width: 2),
+                              borderRadius: BorderRadius.circular(4),
+                            ),
+                            child: const Text('Hết hạn', style: TextStyle(
+                              color: spendingMoneyColor, fontSize: textSmall
+                            )),
+                          ),
+                        )
+                      ],
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
