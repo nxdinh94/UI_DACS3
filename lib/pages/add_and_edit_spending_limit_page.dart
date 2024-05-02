@@ -206,7 +206,12 @@ class _AddAndEditSpendingLimitPageState extends State<AddAndEditSpendingLimitPag
                     ),
                     centerText: 'Hàng tháng',
                     trailing: trailing,
-                    onTap: (){}
+                    onTap: (){
+                      final result = CustomNavigationHelper.router.push(
+                        CustomNavigationHelper.repeatCyclePath
+                      );
+
+                    }
                   ),
                   divider,
                   MyDateListTile(

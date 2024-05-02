@@ -5,6 +5,7 @@ import 'package:practise_ui/pages/add_and_edit_spending_limit_page.dart';
 import 'package:practise_ui/pages/adding_workspace.dart';
 import 'package:practise_ui/pages/detail_spending_limit_item_page.dart';
 import 'package:practise_ui/pages/list_spending_limit_item_page.dart';
+import 'package:practise_ui/pages/repeat_cycle_page.dart';
 import 'package:practise_ui/pages/report_page.dart';
 import 'package:practise_ui/pages/user_profile.dart';
 import 'package:practise_ui/utils/bottom_navigation_bar.dart';
@@ -60,6 +61,8 @@ class CustomNavigationHelper {
   static const String listSpendingLimitItemPath = '/listSpendingLimitItem';
   static const String addSpendingLimitPath = '/addSpendingLimit';
   static const String editSpendingLimitPath = '/editSpendingLimit';
+  static const String repeatCyclePath = '/repeatCycle';
+
 
   factory CustomNavigationHelper() {
     return _instance;
@@ -220,6 +223,16 @@ class CustomNavigationHelper {
           pageBuilder: (context, state) {
             return getPage(
               child: const ListSpendingLimitItemPage(),
+              state: state,
+            );
+          },
+        ),
+        GoRoute(
+          parentNavigatorKey: parentNavigatorKey,
+          path: repeatCyclePath,
+          pageBuilder: (context, state) {
+            return getPage(
+              child: RepeatCyclePage(),
               state: state,
             );
           },
