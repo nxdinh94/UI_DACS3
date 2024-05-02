@@ -68,7 +68,7 @@ class _avatar_section extends StatelessWidget {
                     child: SvgPicture.asset(
                       'assets/pen.svg',
                       width: 12,
-                      color: Colors.grey,
+                      colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
                     ),
                   ),
             ))
@@ -90,10 +90,9 @@ class _MyFormState extends State<MyForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   final TextEditingController _date =  TextEditingController();
+  DateTime selectedDate = DateTime.now();
 
   //default option for radiobutton
-
-  DateTime selectedDate = DateTime.now();
   SingingCharacter? _intialValue = SingingCharacter.nam;
 
 
