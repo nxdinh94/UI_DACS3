@@ -15,9 +15,19 @@ class AuthProvider extends ChangeNotifier {
   int _isVerify = -1;
   bool _isError = false;
   bool _isRegisterSuccess = false;
+  Map<String, String> _errors = {};
 
   bool get isAuth {
     return _access_token.isNotEmpty;
+  }
+
+  Map<String, String> get errorsRegister {
+    if (_errors.isNotEmpty) {
+      final errors = _errors;
+      _errors = {};
+      return errors;
+    }
+    return {};
   }
 
   bool get isError {
@@ -112,6 +122,11 @@ class AuthProvider extends ChangeNotifier {
 
       if (res.statusCode == 200) {
         _isRegisterSuccess = true;
+      } else {
+        final responseData = jsonDecode(res.body);
+        for (var entry in responseData['errors'].entries) {
+          _errors[entry.key] = entry.value['msg'];
+        }
       }
 
       notifyListeners();

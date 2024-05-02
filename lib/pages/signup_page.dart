@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/models/register_body.dart';
-import 'package:practise_ui/pages/home_page.dart';
-import 'package:practise_ui/pages/signin_page.dart';
-import 'package:practise_ui/pages/unverify_account.dart';
 import 'package:practise_ui/providers/auth_provider.dart';
-import 'package:practise_ui/utils/custom_navigation_helper.dart';
 import 'package:practise_ui/utils/custom_toast.dart';
 import 'package:practise_ui/utils/loading_dialog.dart';
 import 'package:provider/provider.dart';
@@ -21,19 +16,34 @@ class SignUpPage extends StatefulWidget {
 }
 
 class _SignUpPageState extends State<SignUpPage> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
-  TextEditingController _nameController = TextEditingController();
-  TextEditingController _confirmPasswordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _nameController = TextEditingController();
+  final TextEditingController _confirmPasswordController = TextEditingController();
   final _formKey = GlobalKey<FormState>();
   bool _obscureText = true;
   String _name = '';
   String _email = '';
   String _password = '';
   String _confirm_password = '';
+  Map<String, String> _errors = {};
+  bool _hasError = false;
 
   @override
   Widget build(BuildContext context) {
+    bool _basicValidate() {
+      if (_formKey.currentState!.validate()) {
+        _formKey.currentState!.save();
+      }
+
+      if (_name.isEmpty || _email.isEmpty
+          || _password.isEmpty || _confirm_password.isEmpty) {
+        return false;
+      }
+
+      return true;
+    }
+
     void _handleRegister() async {
       if (_formKey.currentState!.validate()) {
         _formKey.currentState!.save();
@@ -48,16 +58,23 @@ class _SignUpPageState extends State<SignUpPage> {
 
       await Provider.of<AuthProvider>(context, listen: false).register(reqBody);
       final isRegisterSucces = await Provider.of<AuthProvider>(context, listen: false).isRegisterSuccess;
+      final errorsRegister = await Provider.of<AuthProvider>(context, listen: false).errorsRegister;
+      print(errorsRegister);
+
+      setState(() {
+        if (errorsRegister.isNotEmpty) {
+          _errors = errorsRegister;
+          _hasError = true;
+        }
+      });
+
       if (isRegisterSucces) {
         showCustomSuccessToast(context, "Đăng ký thành công! Kiểm tra email để xác thực tài khoản");
+        _emailController.clear();
+        _passwordController.clear();
+        _nameController.clear();
+        _confirmPasswordController.clear();
       }
-    }
-
-    void _setEmptyValue() {
-      _emailController.clear();
-      _passwordController.clear();
-      _nameController.clear();
-      _confirmPasswordController.clear();
     }
 
     return Container(
@@ -114,12 +131,18 @@ class _SignUpPageState extends State<SignUpPage> {
                                         prefixIcon: Icon(Icons.account_circle_outlined, color: primaryColor, size: 24,),
                                         border: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(10),
+                                          borderSide: BorderSide(color: _errors.containsKey('name') ? errorsRegisterColor : inputColor, width: 2),
                                         ),
                                         enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(color: inputColor, width: 2),
+                                            borderSide: BorderSide(color: _errors.containsKey('name') ? errorsRegisterColor : inputColor, width: 2),
                                             borderRadius: BorderRadius.circular(10)
                                         ),
-                                        contentPadding: EdgeInsets.only(top: 35)
+                                        contentPadding: EdgeInsets.only(top: 35),
+                                        errorStyle: TextStyle(
+                                            fontSize: 12,
+                                            color: errorsRegisterColor,
+                                            fontWeight: FontWeight.w500
+                                        ),
                                     ),
 
                                     validator: (value) {
@@ -128,10 +151,30 @@ class _SignUpPageState extends State<SignUpPage> {
                                       }
                                       return null;
                                     },
-                                    onSaved: (value) {
-                                      _name = value!;
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _name = value.trim();
+                                      });
                                     },
                                   ),
+                                  if (_hasError)
+                                    if (_errors.containsKey('name')) // Kiểm tra xem _errors có chứa key 'name' không
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 6),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            _errors['name']!, // Hiển thị thông báo lỗi từ _errors
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                              color: errorsRegisterColor, // Màu đỏ cho thông báo lỗi
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    else
+                                      SizedBox(height: 5),
                                   SizedBox(
                                     height: 25,
                                   ),
@@ -146,24 +189,49 @@ class _SignUpPageState extends State<SignUpPage> {
                                         prefixIcon: Icon(Icons.email_outlined, color: primaryColor, size: 24,),
                                         border: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(10),
+                                          borderSide: BorderSide(color: _errors.containsKey('email') ? errorsRegisterColor : inputColor, width: 2),
                                         ),
                                         enabledBorder: OutlineInputBorder(
-                                            borderSide: BorderSide(color: inputColor, width: 2),
+                                            borderSide: BorderSide(color: _errors.containsKey('email') ? errorsRegisterColor : inputColor, width: 2),
                                             borderRadius: BorderRadius.circular(10)
                                         ),
-                                        contentPadding: EdgeInsets.only(top: 35)
+                                        contentPadding: EdgeInsets.only(top: 35),
+                                        errorStyle: TextStyle(
+                                            fontSize: 12,
+                                            color: errorsRegisterColor,
+                                            fontWeight: FontWeight.w500
+                                        ),
                                     ),
-
                                     validator: (value) {
                                       if (value!.isEmpty) {
                                         return 'Email không được để trống';
                                       }
                                       return null;
                                     },
-                                    onSaved: (value) {
-                                      _email = value!;
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _email = value.trim();
+                                      });
                                     },
                                   ),
+                                  if (_hasError)
+                                    if (_errors.containsKey('email')) // Kiểm tra xem _errors có chứa key 'email' không
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 6),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            _errors['email']!, // Hiển thị thông báo lỗi từ _errors
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                              color: errorsRegisterColor, // Màu đỏ cho thông báo lỗi
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    else
+                                      SizedBox(height: 5),
                                   SizedBox(
                                     height: 25,
                                   ),
@@ -179,9 +247,10 @@ class _SignUpPageState extends State<SignUpPage> {
                                       prefixIcon: Icon(Icons.key_outlined, color: primaryColor, size: 24,),
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide(color: _errors.containsKey('password') ? errorsRegisterColor : inputColor, width: 2),
                                       ),
                                       enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(color: inputColor, width: 2),
+                                          borderSide: BorderSide(color: _errors.containsKey('password') ? errorsRegisterColor : inputColor, width: 2),
                                           borderRadius: BorderRadius.circular(10)
                                       ),
                                       contentPadding: EdgeInsets.only(top: 35),
@@ -195,6 +264,11 @@ class _SignUpPageState extends State<SignUpPage> {
                                           });
                                         },
                                       ),
+                                      errorStyle: TextStyle(
+                                          fontSize: 12,
+                                          color: errorsRegisterColor,
+                                          fontWeight: FontWeight.w500
+                                      ),
                                     ),
                                     validator: (value) {
                                       if (value!.isEmpty) {
@@ -202,10 +276,30 @@ class _SignUpPageState extends State<SignUpPage> {
                                       }
                                       return null;
                                     },
-                                    onSaved: (value) {
-                                      _password = value!;
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _password = value.trim();
+                                      });
                                     },
                                   ),
+                                  if (_hasError)
+                                    if (_errors.containsKey('password')) // Kiểm tra xem _errors có chứa key 'password' không
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 6),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            _errors['password']!, // Hiển thị thông báo lỗi từ _errors
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                              color: errorsRegisterColor, // Màu đỏ cho thông báo lỗi
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    else
+                                      SizedBox(height: 5),
                                   SizedBox(
                                     height: 25,
                                   ),
@@ -221,9 +315,10 @@ class _SignUpPageState extends State<SignUpPage> {
                                       prefixIcon: Icon(Icons.key_outlined, color: primaryColor, size: 24,),
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
+                                        borderSide: BorderSide(color: _errors.containsKey('confirm_password') ? errorsRegisterColor : inputColor, width: 2),
                                       ),
                                       enabledBorder: OutlineInputBorder(
-                                          borderSide: BorderSide(color: inputColor, width: 2),
+                                          borderSide: BorderSide(color: _errors.containsKey('confirm_password') ? errorsRegisterColor : inputColor, width: 2),
                                           borderRadius: BorderRadius.circular(10)
                                       ),
                                       contentPadding: EdgeInsets.only(top: 35),
@@ -237,6 +332,11 @@ class _SignUpPageState extends State<SignUpPage> {
                                           });
                                         },
                                       ),
+                                      errorStyle: TextStyle(
+                                          fontSize: 12,
+                                          color: errorsRegisterColor,
+                                          fontWeight: FontWeight.w500
+                                      ),
                                     ),
                                     validator: (value) {
                                       if (value!.isEmpty) {
@@ -244,10 +344,30 @@ class _SignUpPageState extends State<SignUpPage> {
                                       }
                                       return null;
                                     },
-                                    onSaved: (value) {
-                                      _confirm_password = value!;
+                                    onChanged: (value) {
+                                      setState(() {
+                                        _confirm_password = value.trim();
+                                      });
                                     },
                                   ),
+                                  if (_hasError)
+                                    if (_errors.containsKey('confirm_password')) // Kiểm tra xem _errors có chứa key 'confirm_password' không
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 6),
+                                        child: Align(
+                                          alignment: Alignment.centerLeft,
+                                          child: Text(
+                                            _errors['confirm_password']!, // Hiển thị thông báo lỗi từ _errors
+                                            style: TextStyle(
+                                              fontSize: 12,
+                                              fontWeight: FontWeight.w500,
+                                              color: errorsRegisterColor, // Màu đỏ cho thông báo lỗi
+                                            ),
+                                          ),
+                                        ),
+                                      )
+                                    else
+                                      SizedBox(height: 5),
                                   SizedBox(
                                     height: 25,
                                   ),
@@ -256,14 +376,19 @@ class _SignUpPageState extends State<SignUpPage> {
                                     height: 50,
                                     child: ElevatedButton(
                                       onPressed: () {
-                                        showCustomLoadingDialog(context);
-                                        // Hiệu ứng loading
-                                        Future.delayed(Duration(seconds: 3), () => {
-                                          _handleRegister(),
-                                          // Tắt hiệu ứng loading
-                                          hideCustomLoadingDialog(context),
-                                          _setEmptyValue()
+                                        setState(() {
+                                          _errors = {};
+                                          _hasError = false;
                                         });
+                                        if (_basicValidate()) {
+                                          showCustomLoadingDialog(context);
+                                          // Hiệu ứng loading
+                                          Future.delayed(Duration(seconds: 3), () => {
+                                            _handleRegister(),
+                                            // Tắt hiệu ứng loading
+                                            hideCustomLoadingDialog(context),
+                                          });
+                                        }
                                       },
                                       child: const Text('Đăng ký',
                                         style: TextStyle(

@@ -9,6 +9,7 @@ const whiteColor = Color(0xFFFFFFFF);
 const inputColor = Color(0xFFE3E3E3);
 const errorToastColor = Color(0xFFFFA600);
 const successToastColor = Color(0xFF2FFF00);
+const errorsRegisterColor = Color(0xFFF15757);
 
 const chartCollumn1 = Colors.green;
 const chartCollumn2 = Colors.deepOrangeAccent;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/pages/signin_page.dart';
@@ -9,10 +10,17 @@ import 'package:practise_ui/utils/custom_navigation_helper.dart';
 import 'package:provider/provider.dart';
 
 void main() {
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   CustomNavigationHelper.instance;
   SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
     statusBarColor: Colors.transparent,
   ));
+  Future.delayed(
+    Duration(seconds: 3), () {
+      FlutterNativeSplash.remove();
+    }
+  );
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => AuthProvider())
