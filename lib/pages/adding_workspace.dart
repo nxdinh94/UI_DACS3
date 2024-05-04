@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -7,6 +6,7 @@ import 'package:practise_ui/constant/divider.dart';
 import 'package:practise_ui/constant/font.dart';
 import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/data/dropdown_adding_data.dart';
+import 'package:practise_ui/utils/custom_navigation_helper.dart';
 import 'package:practise_ui/widgets/adding_workspace/dropdown_adding_workspace.dart';
 
 import '../widgets/adding_workspace/expand_input_adding_space.dart';
@@ -22,6 +22,12 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
 
   late Map<String, dynamic> currentOption= addingDropdownData[0];
   late String moneyType ;
+  final TextEditingController moneyEditTextController = TextEditingController();
+
+
+  // all value;
+  late  String _money;
+
 
 
   void selectedDropdownItem(String selectedItem){
@@ -60,6 +66,12 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
     super.initState();
   }
   @override
+  void dispose() {
+    moneyEditTextController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.only(top: 20),
@@ -79,8 +91,8 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
           title: Padding(
             padding: paddingNone,
             child: DropDownAddingWorkspace(
-                  addingDropdownData: addingDropdownData,
-                selectedItem: selectedDropdownItem,
+              addingDropdownData: addingDropdownData,
+              selectedItem: selectedDropdownItem,
             ),
           ),
           centerTitle: true,
@@ -89,7 +101,34 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
               padding: const EdgeInsets.only(right: 15),
               child: GestureDetector(
                 onTap: () {
-                  // Your action when the icon is tapped
+                  showDialog(context: context, builder: (BuildContext context){
+                    return AlertDialog(
+                      title: const Text('Basic dialog title'),
+                      content: Text(
+                        'sotien ${moneyEditTextController.text}'
+                      ),
+                      actions: <Widget>[
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            textStyle: Theme.of(context).textTheme.labelLarge,
+                          ),
+                          child: const Text('Disable'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        TextButton(
+                          style: TextButton.styleFrom(
+                            textStyle: Theme.of(context).textTheme.labelLarge,
+                          ),
+                          child: const Text('Enable'),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                      ],
+                    );
+                  });
                 },
                 child: SvgPicture.asset(
                   'assets/tick.svg',
@@ -107,7 +146,7 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
             children: [
               spaceColumn,
               //Phần điền số tiền
-              _inputMoneySection(),
+              _inputMoneySection(controller: moneyEditTextController,),
               spaceColumn,
               // Phần điền thông tin cần thiết
               Container(
@@ -204,16 +243,28 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
   }
 }
 
-class _decribeSection extends StatelessWidget {
+class _decribeSection extends StatefulWidget {
   const _decribeSection({
     super.key,
   });
 
   @override
+  State<_decribeSection> createState() => _decribeSectionState();
+}
+
+class _decribeSectionState extends State<_decribeSection> {
+  final TextEditingController _controller = TextEditingController();
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+  @override
   Widget build(BuildContext context) {
     return Container(
       padding: paddingR16L24,
       child: TextField(
+        controller: _controller,
         style: const TextStyle(
           color: textColor,
           fontSize: textSize,
@@ -241,9 +292,12 @@ class _decribeSection extends StatelessWidget {
             maxWidth: 50,
             maxHeight: 50
           ),
-          suffixIcon: SvgPicture.asset(
-            'assets/delete.svg',
-            colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+          suffixIcon: GestureDetector(
+            onTap: _controller.clear,
+            child: SvgPicture.asset(
+              'assets/delete.svg',
+              colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+            ),
           ),
           suffixIconConstraints: BoxConstraints(
             minHeight: 15,
@@ -297,15 +351,23 @@ class _borrowerOrLenderSection extends StatelessWidget {
   }
 }
 
-class _inputMoneySection extends StatelessWidget {
-  const _inputMoneySection({
-    super.key,
-  });
+class _inputMoneySection extends StatefulWidget {
 
+   _inputMoneySection({required this.controller});
+   final TextEditingController controller;
+  @override
+  State<_inputMoneySection> createState() => _inputMoneySectionState();
+}
+
+class _inputMoneySectionState extends State<_inputMoneySection> {
+  @override
+  void dispose() {
+    widget.controller.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     const Divider divider = Divider(height: 1, color: underLineColor,indent: 64);
-
     return Container(
       height: 110,
       color: secondaryColor,
@@ -319,7 +381,7 @@ class _inputMoneySection extends StatelessWidget {
           )),
           spaceColumn6,
           TextField(
-            // controller: _moneyInputController,
+            controller: widget.controller,
             style: const TextStyle(fontSize: 35.0, height: 45/35,fontWeight: FontWeight.w500, color: revenueMoneyColor),
             textAlign: TextAlign.end,
             cursorColor: Colors.deepPurpleAccent,
@@ -327,7 +389,6 @@ class _inputMoneySection extends StatelessWidget {
             decoration: InputDecoration(
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.zero,
-
                 suffixIcon: SvgPicture.asset(
                   'assets/dong.svg',
                   colorFilter: const  ColorFilter.mode(textColor, BlendMode.srcIn),
@@ -337,7 +398,7 @@ class _inputMoneySection extends StatelessWidget {
                     minWidth: 32
                 ),
                 hintText: '0',
-                hintStyle: const TextStyle(fontSize: 35, color: primaryColor)
+                hintStyle: const TextStyle(fontSize: 35, color: revenueMoneyColor)
             ),
 
           ),
@@ -385,7 +446,11 @@ class _categorySection extends StatelessWidget {
         size: 33,
       ),
       contentPadding: const EdgeInsets.only(left: 16, top: 8, bottom: 8, right: 8),
-      onTap: (){},
+      onTap: (){
+        CustomNavigationHelper.router.push(
+          '${CustomNavigationHelper.addingWorkspacePath}/${CustomNavigationHelper.selectCategoryPath}'
+        );
+      },
     );
   }
 }
