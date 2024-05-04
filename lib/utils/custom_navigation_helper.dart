@@ -9,7 +9,6 @@ import 'package:practise_ui/pages/repeat_cycle_page.dart';
 import 'package:practise_ui/pages/report_page.dart';
 import 'package:practise_ui/pages/user_profile.dart';
 import 'package:practise_ui/utils/bottom_navigation_bar.dart';
-import 'package:practise_ui/widgets/charts/area_chart.dart';
 
 import '../pages/home_page.dart';
 import '../pages/signin_page.dart';

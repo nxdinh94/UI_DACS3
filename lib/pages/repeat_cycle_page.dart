@@ -61,7 +61,7 @@ class _RepeatCyclePageState extends State<RepeatCyclePage> {
                     }
                   }
                   myList[index]['ischosen'] = true;
-                  CustomNavigationHelper.router.pop(myList[index]['title']);
+                  Navigator.pop(context, myList[index]['title'].toString());
                 });
               },
               title: Text(

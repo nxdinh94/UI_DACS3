@@ -19,13 +19,15 @@ class _AddAndEditSpendingLimitPageState extends State<AddAndEditSpendingLimitPag
   late final TextEditingController _nameSpendingLitmit    = TextEditingController();
 
   bool isNextPeriod = false;
-
+  String repeat = 'Hằng tháng';
   @override
   void dispose() {
     _moneyInputController.dispose();
     _nameSpendingLitmit.dispose();
     super.dispose();
   }
+  // A method that launches the SelectionScreen and awaits the result from
+// Navigator.pop.
 
   @override
   Widget build(BuildContext context) {
@@ -204,13 +206,16 @@ class _AddAndEditSpendingLimitPageState extends State<AddAndEditSpendingLimitPag
                       width: 25,
                       colorFilter: const ColorFilter.mode(labelColor, BlendMode.srcIn),
                     ),
-                    centerText: 'Hàng tháng',
+                    centerText: repeat,
                     trailing: trailing,
-                    onTap: (){
-                      final result = CustomNavigationHelper.router.push(
-                        CustomNavigationHelper.repeatCyclePath
+                    onTap: () async {
+                      final result = await CustomNavigationHelper.router.push(
+                          CustomNavigationHelper.repeatCyclePath
                       );
-
+                      if(!context.mounted) return;
+                      setState(() {
+                        repeat= result as String;
+                      });
                     }
                   ),
                   divider,
