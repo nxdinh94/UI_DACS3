@@ -42,7 +42,7 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu>  {
                         leading: SvgPicture.asset(
                           'assets/travel-bus.svg',
                           colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn),
-                          width: 30,
+                          width: 29,
                         ),
 
                         title: const Text(

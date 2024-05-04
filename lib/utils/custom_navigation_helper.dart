@@ -7,6 +7,7 @@ import 'package:practise_ui/pages/detail_spending_limit_item_page.dart';
 import 'package:practise_ui/pages/list_spending_limit_item_page.dart';
 import 'package:practise_ui/pages/repeat_cycle_page.dart';
 import 'package:practise_ui/pages/report_page.dart';
+import 'package:practise_ui/pages/select_category_page.dart';
 import 'package:practise_ui/pages/user_profile.dart';
 import 'package:practise_ui/utils/bottom_navigation_bar.dart';
 
@@ -63,6 +64,11 @@ class CustomNavigationHelper {
   static const String repeatCyclePath = '/repeatCycle';
 
 
+  static const String selectCategoryPath = 'selectCategory';
+
+
+
+
   factory CustomNavigationHelper() {
     return _instance;
   }
@@ -111,6 +117,17 @@ class CustomNavigationHelper {
                       state: state,
                     );
                   },
+                  routes: <RouteBase>[
+                    GoRoute(
+                      path: selectCategoryPath,
+                      pageBuilder: (context, state) {
+                        return getPage(
+                          child: const SelectCategoryPage(),
+                          state: state,
+                        );
+                      },
+                    )
+                  ]
                 ),
               ],
             ),
