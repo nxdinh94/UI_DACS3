@@ -1,6 +1,5 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
+import 'package:practise_ui/widgets/rounded_checkbox_icon.dart';
 import '../constant/color.dart';
 import '../constant/font.dart';
 import '../utils/custom_navigation_helper.dart';
@@ -29,6 +28,8 @@ class _SelectCategoryPageState extends State<SelectCategoryPage> {
       Tab(child: Text('VAY NỢ')),
     ],
   );
+
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -85,25 +86,140 @@ class FirstTabView extends StatefulWidget {
 }
 
 class _FirstTabViewState extends State<FirstTabView> {
-
+  List data = [
+    {
+      'parentIcon' : <String, dynamic>{
+        'iconPath': 'assets/icon_category/spending_money_icon/anUong/burger_parent.png',
+        'title': 'Ăn uống',
+        'isChosen': false,
+        'isExpanded': true,
+      },
+      'subIcon' : [
+        {
+          'iconPath': 'assets/icon_category/spending_money_icon/anUong/breakfast.png',
+          'title': 'Ăn sáng',
+          'isChosen': false,
+        },
+        {
+          'iconPath': 'assets/icon_category/spending_money_icon/anUong/coffee.png',
+          'title': 'Cà phê',
+          'isChosen': false,
+        },
+      ]
+    },
+    {
+      'parentIcon' : <String, dynamic>{
+        'iconPath': 'assets/icon_category/spending_money_icon/conCai/children-parent.png',
+        'title': 'Con cái',
+        'isChosen': true,
+        'isExpanded': false,
+      },
+      'subIcon' : [
+        {
+          'iconPath': 'assets/icon_category/spending_money_icon/conCai/book.png',
+          'title': 'Sách',
+          'isChosen': false,
+        },
+        {
+          'iconPath': 'assets/icon_category/spending_money_icon/conCai/milk.png',
+          'title': 'Sữa',
+          'isChosen': false,
+        },
+      ]
+    },
+    {
+      'parentIcon' : <String, dynamic>{
+        'iconPath': 'assets/icon_category/spending_money_icon/dichVuSinhHoat/clothes-rack-parent.png',
+        'title': 'Dịch vụ sinh hoạt',
+        'isChosen': true,
+        'isExpanded': false,
+      },
+      'subIcon' : [
+        {
+          'iconPath': 'assets/icon_category/spending_money_icon/dichVuSinhHoat/electrical-energy.png',
+          'title': 'Điện',
+          'isChosen': false,
+        },
+        {
+          'iconPath': 'assets/icon_category/spending_money_icon/dichVuSinhHoat/gas-cylinder.png',
+          'title': 'Gas',
+          'isChosen': false,
+        },
+      ]
+    },
+  ];
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Image.asset('assets/icon_category/loan_icon/borrow.png'),
+    const Divider divider =  Divider(color: underLineColor, height: 0, indent: 0, thickness: 1,);
+    return SingleChildScrollView(
+      child: ExpansionPanelList(
+        expandedHeaderPadding: EdgeInsets.zero,
+        elevation: 0,
+        dividerColor: Colors.transparent,
+
+        materialGapSize: 0,
+          expansionCallback: (int index, bool isExpanded) {
+            setState(() {
+              data[index]['parentIcon']['isExpanded'] = !data[index]['parentIcon']['isExpanded'];
+            });
+        },
+        children: data.map<ExpansionPanel>((e) {
+            return ExpansionPanel(
+              canTapOnHeader: false,
+              // backgroundColor: Colors.green,
+              headerBuilder: (BuildContext context, bool isExpanded) {
+                return Column(
+                  children: [
+                    ListTile(
+                      onTap: (){},
+                      leading: Image.asset(
+                          e['parentIcon']['iconPath'], width: 50, height: 50,
+                      ),
+
+                      title: Text(e['parentIcon']['title'], style: const TextStyle(
+                        color: textColor, fontSize: textSize
+                      ),),
+                      trailing: Visibility(
+                        visible: e['parentIcon']['isChosen'],
+                        child: const RoundedCheckboxIcon(),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                    ),
+                    divider
+                  ],
+                );
+              },
+              body: Column(
+                children: e['subIcon'].map<Widget>((subIcon) {
+                  return Column(
+                    children: [
+
+                      ListTile(
+                        leading: Image.asset(
+                            subIcon['iconPath'], width: 50, height: 50,
+                        ),
+                        contentPadding: const EdgeInsets.only(left: 45, right: 18, top: 3, bottom: 3),
+                        title: Text(subIcon['title'], style: const TextStyle(
+                  color: textColor, fontSize: textSize
+                  ),),
+                        trailing: Visibility(
+                          visible: subIcon['isChosen'],
+                          child: const RoundedCheckboxIcon()
+                        ),
+
+                        onTap: () {},
+                      ),
+                      divider,
+                    ]
+                  );
+                }).toList(),
+              ),
+              isExpanded: e['parentIcon']['isExpanded'],
+            );
+          },
+        ).toList(),
+      ),
     );
   }
-}
-class Item{
-  Item({
-    required this.iconPath,
-    required this.title,
-    this.isChosen = false,
-    this.isExpended = true
-  });
 
-  String iconPath;
-  String title;
-  bool isChosen;
-  bool isExpended;
 }
-

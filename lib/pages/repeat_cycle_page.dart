@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practise_ui/constant/side.dart';
+import 'package:practise_ui/widgets/rounded_checkbox_icon.dart';
 import '../constant/color.dart';
 import '../constant/font.dart';
 import '../utils/custom_navigation_helper.dart';
@@ -45,7 +46,6 @@ class _RepeatCyclePageState extends State<RepeatCyclePage> {
               );
             }
         ),
-
       ),
       body: Container(
         padding: sidePadding,
@@ -56,9 +56,7 @@ class _RepeatCyclePageState extends State<RepeatCyclePage> {
               onTap: (){
                 setState(() {
                   for (int e = 0 ;e< myList.length; e++) {
-                    if(myList[e]['ischosen'] != myList[index]['ischosen']){
                       myList[e]['ischosen'] = false;
-                    }
                   }
                   myList[index]['ischosen'] = true;
                   Navigator.pop(context, myList[index]['title'].toString());
@@ -72,11 +70,7 @@ class _RepeatCyclePageState extends State<RepeatCyclePage> {
               ),
               trailing: Visibility(
                 visible: myList[index]['ischosen'],
-                child: CircleAvatar(
-                  radius: 12,
-                  backgroundColor: Colors.green,
-                  child: SvgPicture.asset('assets/tick.svg', width: 20, color: secondaryColor,),
-                ),
+                child: RoundedCheckboxIcon(),
               ),
               dense: true,
               contentPadding: EdgeInsets.zero,
