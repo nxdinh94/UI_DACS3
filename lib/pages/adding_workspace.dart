@@ -272,10 +272,10 @@ class _decribeSectionState extends State<_decribeSection> {
         ),
         decoration: InputDecoration(
           isDense: true,
-          contentPadding: EdgeInsets.symmetric(vertical: 20),
+          contentPadding: const EdgeInsets.symmetric(vertical: 20),
           border: InputBorder.none,
           hintText: 'Diễn giải',
-          hintStyle: TextStyle(
+          hintStyle:const TextStyle(
             color: labelColor
           ),
           prefixIcon: Padding(
@@ -289,7 +289,7 @@ class _decribeSectionState extends State<_decribeSection> {
             ),
           ),
 
-          prefixIconConstraints: BoxConstraints(
+          prefixIconConstraints:const  BoxConstraints(
             maxWidth: 50,
             maxHeight: 50
           ),
@@ -297,10 +297,10 @@ class _decribeSectionState extends State<_decribeSection> {
             onTap: _controller.clear,
             child: SvgPicture.asset(
               'assets/delete.svg',
-              colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+              colorFilter:const  ColorFilter.mode(iconColor, BlendMode.srcIn),
             ),
           ),
-          suffixIconConstraints: BoxConstraints(
+          suffixIconConstraints: const BoxConstraints(
             minHeight: 15,
             minWidth: 15,
             maxHeight: 18,
@@ -377,7 +377,13 @@ class _borrowerOrLenderSectionState extends State<_borrowerOrLenderSection> {
         onTap: ()async{
           Contact? contact = await _contactPicker.selectContact();
           setState(() {
-            _contact = contact?.fullName;
+            if(contact == null){
+              if(_contact != null){
+                return;
+              }else {
+                _contact = '';
+              }
+            }else {_contact = contact.fullName;}
           });
         },
       ),
