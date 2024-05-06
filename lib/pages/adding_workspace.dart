@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -313,9 +313,16 @@ class _decribeSectionState extends State<_decribeSection> {
   }
 }
 
-class _borrowerOrLenderSection extends StatelessWidget {
+class _borrowerOrLenderSection extends StatefulWidget {
   const _borrowerOrLenderSection();
 
+  @override
+  State<_borrowerOrLenderSection> createState() => _borrowerOrLenderSectionState();
+}
+
+class _borrowerOrLenderSectionState extends State<_borrowerOrLenderSection> {
+  final FlutterContactPicker _contactPicker = FlutterContactPicker();
+  String? _contact = '';
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -331,14 +338,35 @@ class _borrowerOrLenderSection extends StatelessWidget {
           ),
         ),
         title: Transform.translate(
-          offset: const Offset(-8, 0),
-          child: Text(
-              'Người cho vay',
-              style: TextStyle(
-                  fontSize: textSize,
-                  color: textColor
-              )
-          ),
+          offset:  Offset(_contact == '' ? -8: -61, 0),
+          child: Builder(builder: (context){
+            if(_contact != ''){
+              return Chip(
+                deleteIcon:  CircleAvatar(
+                    radius: 10,
+                    backgroundColor: Colors.grey.shade400,
+                    child: const Icon(Icons.close, size: 15, color: secondaryColor,)
+                ),
+                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                elevation: 0,
+                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
+                backgroundColor: backgroundColor,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide.none),
+                side: BorderSide.none,
+                label: Text(_contact!, style: const TextStyle(color: textColor, fontSize: textSize),),
+                onDeleted: () {
+                  setState(() {
+                    _contact = '';
+                  });
+                },
+              );
+            }
+            return const Text(
+                'Chọn người vay',
+                style: TextStyle( fontSize: textSize, color: textColor)
+            );
+
+          })
         ),
         trailing: const Icon(
           Icons.keyboard_arrow_right,
@@ -346,7 +374,12 @@ class _borrowerOrLenderSection extends StatelessWidget {
           size: 33,
         ),
         contentPadding: const EdgeInsets.only(left: 0, top: 8, bottom: 8, right: 0),
-        onTap: (){},
+        onTap: ()async{
+          Contact? contact = await _contactPicker.selectContact();
+          setState(() {
+            _contact = contact?.fullName;
+          });
+        },
       ),
     );
   }
@@ -420,7 +453,7 @@ class _categorySection extends StatefulWidget {
 }
 
 class _categorySectionState extends State<_categorySection> {
-  late Map<String, dynamic> chosenCategory;
+  late Map<String, dynamic> chosenCategory = {};
   @override
   Widget build(BuildContext context) {
     return ListTile(

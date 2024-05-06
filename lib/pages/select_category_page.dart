@@ -89,7 +89,11 @@ class _FirstTabViewState extends State<FirstTabView> {
                   children: [
                     ListTile(
                       onTap: (){
-
+                        Map<String, dynamic> chosenCategory ={
+                          'iconPath': e['parentIcon']['iconPath'],
+                          'title': e['parentIcon']['title']
+                        };
+                        Navigator.pop(context, chosenCategory);
                       },
                       leading: Image.asset(
                           e['parentIcon']['iconPath'], width: 50, height: 50,
@@ -126,7 +130,13 @@ class _FirstTabViewState extends State<FirstTabView> {
                           child: const RoundedCheckboxIcon()
                         ),
 
-                        onTap: () {},
+                        onTap: () {
+                          Map<String, dynamic> chosenCategory ={
+                            'iconPath': subIcon['iconPath'],
+                            'title': subIcon['title']
+                          };
+                          Navigator.pop(context, chosenCategory);
+                        },
                       ),
                       divider,
                     ]

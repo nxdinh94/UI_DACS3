@@ -54,6 +54,7 @@ dependencies:
   animate_do: ^3.3.4
   percent_indicator: ^4.2.3
   just_the_tooltip: ^0.0.12
+  flutter_native_contact_picker: ^0.0.6
 
 dev_dependencies:
   flutter_test:
