@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/widgets/rounded_checkbox_icon.dart';
 import '../constant/color.dart';
@@ -161,7 +162,9 @@ class _SecondTabViewState extends State<SecondTabView> {
           return Column(
             children: [
               ListTile(
-                onTap: (){},
+                onTap: (){
+                  Navigator.pop(context, e);
+                },
                 leading: Image.asset(e['iconPath'].toString(), width: 50, height: 50,),
                 title: Text(e['title'].toString(), style: const TextStyle(
                   color: textColor, fontSize: textSize

@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -410,30 +411,23 @@ class _inputMoneySectionState extends State<_inputMoneySection> {
   }
 }
 
-class _categorySection extends StatelessWidget {
-  const _categorySection({
-    required this.currentOption,
-  });
-
+class _categorySection extends StatefulWidget {
+  const _categorySection({required this.currentOption});
   final Map<String, dynamic> currentOption;
 
   @override
+  State<_categorySection> createState() => _categorySectionState();
+}
+
+class _categorySectionState extends State<_categorySection> {
+  late Map<String, dynamic> chosenCategory;
+  @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Container(
-          padding: const EdgeInsets.all(6),
-          color: currentOption['backgroundColor'],
-          child: SvgPicture.asset(
-            currentOption['icon'],
-            width: 30,
-            height: 30,
-
-          ),
-        ),
+      leading: Image.asset(
+        chosenCategory['iconPath'] ?? 'assets/question-mark.png', width: 40, height: 40,
       ),
-      title: Text(currentOption['text'],
+      title: Text(chosenCategory['title']??'Chọn hạng mục',
         style: const TextStyle(
           fontSize: 22,
           fontWeight: FontWeight.w500,
@@ -447,11 +441,14 @@ class _categorySection extends StatelessWidget {
       ),
       contentPadding: const EdgeInsets.only(left: 16, top: 8, bottom: 8, right: 8),
       onTap: ()async{
-        final result = await CustomNavigationHelper.router.push(
-          '${CustomNavigationHelper.addingWorkspacePath}/${CustomNavigationHelper.selectCategoryPath}',
-          extra: currentOption['text']
+        final result = await CustomNavigationHelper.router.pushNamed(
+          'selectCategory',
+          pathParameters: {'type': widget.currentOption['text']}
         );
         if(!context.mounted) return;
+        setState(() {
+          chosenCategory = result as Map<String, dynamic>;
+        });
 
       },
     );

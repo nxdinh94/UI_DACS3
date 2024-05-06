@@ -64,7 +64,7 @@ class CustomNavigationHelper {
   static const String repeatCyclePath = '/repeatCycle';
 
 
-  static const String selectCategoryPath = 'selectCategory';
+  static const String selectCategoryPath = 'selectCategory/:type';
 
 
 
@@ -120,9 +120,10 @@ class CustomNavigationHelper {
                   routes: <RouteBase>[
                     GoRoute(
                       path: selectCategoryPath,
+                      name: 'selectCategory',
                       pageBuilder: (context, state) {
                         return getPage(
-                          child: SelectCategoryPage(type: state.extra.toString(),),
+                          child: SelectCategoryPage(type: state.pathParameters['type']),
                           state: state,
                         );
                       },

@@ -56,7 +56,6 @@ class _DropDownAddingWorkspaceState extends State<DropDownAddingWorkspace> {
               text: item['text'],
               icon: item['icon'],
               isChosen: item['isChosen'],
-              backgroundColor: item['backgroundColor'],
             )
           )).toList(),
 
@@ -149,12 +148,10 @@ class _DropdownMenuItem extends StatefulWidget {
     // super.key,
     required this.icon,
     required this.text,
-    this.backgroundColor = Colors.transparent,
     this.isChosen = false
   });
   final String icon;
   final String text;
-  final Color backgroundColor;
   final bool isChosen;
   @override
   State<_DropdownMenuItem> createState() => _DropdownMenuItemState();
@@ -165,47 +162,26 @@ class _DropdownMenuItemState extends State<_DropdownMenuItem> {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Stack(
-          children: [
-            Row(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(30),
-                  child: Container(
-                    width: 40,
-                    height: 40,
-                    padding: const EdgeInsets.all(4),
-                    color: widget.backgroundColor,
-                    child: SvgPicture.asset(
-                      widget.icon,
-                      width: 24,
-                      height: 24,
-                    ),
-                  ),
-                ),
-                const SizedBox(width: 10,),
-                Text(
-                  widget.text,
-                  style: const TextStyle(color: textColor, fontSize: textSize),
-                ),
-              ],
+        ListTile(
+          contentPadding: EdgeInsets.zero,
+          leading: Image.asset(
+            widget.icon,
+            width: 35,
+            height: 35,
+          ),
+            title: Text(
+              widget.text,
+              style: const TextStyle(color: textColor, fontSize: textSize),
             ),
-            Positioned(
-              right: 10,
-              bottom: 0,
-              child: SvgPicture.asset(
-                'assets/tick.svg',
-                colorFilter: widget.isChosen ?
-                const ColorFilter.mode(primaryColor, BlendMode.srcIn):
-                const ColorFilter.mode(Colors.transparent, BlendMode.srcIn),
-                width: 35,
-              ),
-            )
-          ],
+            trailing:  SvgPicture.asset(
+              'assets/tick.svg',
+              colorFilter: widget.isChosen ?
+              const ColorFilter.mode(primaryColor, BlendMode.srcIn):
+              const ColorFilter.mode(Colors.transparent, BlendMode.srcIn),
+              width: 39,
+            ),
         ),
-        const SizedBox(height: 12),
         const Divider(height: 1, color: underLineColor),
-        const SizedBox(height: 12)
       ],
     );
   }
