@@ -446,10 +446,13 @@ class _categorySection extends StatelessWidget {
         size: 33,
       ),
       contentPadding: const EdgeInsets.only(left: 16, top: 8, bottom: 8, right: 8),
-      onTap: (){
-        CustomNavigationHelper.router.push(
-          '${CustomNavigationHelper.addingWorkspacePath}/${CustomNavigationHelper.selectCategoryPath}'
+      onTap: ()async{
+        final result = await CustomNavigationHelper.router.push(
+          '${CustomNavigationHelper.addingWorkspacePath}/${CustomNavigationHelper.selectCategoryPath}',
+          extra: currentOption['text']
         );
+        if(!context.mounted) return;
+
       },
     );
   }

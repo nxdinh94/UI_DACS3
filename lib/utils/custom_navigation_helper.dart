@@ -122,7 +122,7 @@ class CustomNavigationHelper {
                       path: selectCategoryPath,
                       pageBuilder: (context, state) {
                         return getPage(
-                          child: const SelectCategoryPage(),
+                          child: SelectCategoryPage(type: state.extra.toString(),),
                           state: state,
                         );
                       },
