@@ -12,6 +12,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class AuthProvider extends ChangeNotifier {
   String _access_token = '';
+  String _refresh_token = '';
+  bool _isLogoutSuccess = false;
   int _isVerify = -1;
   bool _isError = false;
   bool _isRegisterSuccess = false;
@@ -74,9 +76,15 @@ class AuthProvider extends ChangeNotifier {
       if (res.statusCode == 200) {
         if (responseData['result']['access_token'].toString().isNotEmpty) {
           _access_token = responseData['result']['access_token'];
+          _refresh_token = responseData['result']['refresh_token'];
           // SharedPreferences: dùng để lưu vô bộ nhớ đệm
           final prefs = await SharedPreferences.getInstance();
-          final userData = jsonEncode({ 'access_token': _access_token });
+          final userData = jsonEncode(
+              {
+                'access_token': _access_token,
+                'refresh_token': _refresh_token
+              }
+          );
           await prefs.setString('userData', userData);
 
           final _decoded_authorization = await verifyToken(
@@ -145,6 +153,41 @@ class AuthProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> _authenticationLogout(String refresh_token) async {
+    const url = "$PORT/users/logout";
+
+    try {
+      final res = await http.post(
+        Uri.parse(url),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $_access_token',
+        },
+        body: jsonEncode(
+            { "refresh_token": refresh_token }
+        ),
+      );
+
+      if (res.statusCode == 200) {
+        _isLogoutSuccess = true;
+      }
+
+      notifyListeners();
+    } on SocketException catch (e) { // Catch specific exception types
+      print('Socket Exception: $e');
+      notifyListeners();
+    } on HttpException catch (e) {
+      print('HTTP Exception: $e');
+      notifyListeners();
+    } on FormatException catch (e) {
+      print('Format Exception: $e');
+      notifyListeners();
+    } catch (e) {
+      print('Unexpected Exception: $e');
+      notifyListeners();
+    }
+  }
+
   Future<bool> autoLogin() async {
     final prefs = await SharedPreferences.getInstance();
     if (!prefs.containsKey('userData')) {
@@ -161,10 +204,15 @@ class AuthProvider extends ChangeNotifier {
     await _authenticationRegister(reqBody);
   }
 
-  void logout() async {
-    _access_token = '';
-    notifyListeners();
-    final prefs = await SharedPreferences.getInstance();
-    prefs.remove('userData');
+  logout() async {
+    await _authenticationLogout(_refresh_token);
+    if (_isLogoutSuccess) {
+      // Xoá data lưu trong máy
+      _access_token = '';
+      _refresh_token = '';
+      notifyListeners();
+      final prefs = await SharedPreferences.getInstance();
+      prefs.remove('userData');
+    }
   }
 }

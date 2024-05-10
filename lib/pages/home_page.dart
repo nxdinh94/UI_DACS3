@@ -45,8 +45,7 @@ class _HomePageState extends State<HomePage> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Container(
+      return Container(
         color: backgroundColor,
         child: Column(
           children: [
@@ -324,7 +323,6 @@ class _HomePageState extends State<HomePage> {
             )
           ],
         ),
-      ),
-    );
+      );
   }
 }

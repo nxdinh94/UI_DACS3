@@ -59,7 +59,6 @@ class _SignUpPageState extends State<SignUpPage> {
       await Provider.of<AuthProvider>(context, listen: false).register(reqBody);
       final isRegisterSucces = await Provider.of<AuthProvider>(context, listen: false).isRegisterSuccess;
       final errorsRegister = await Provider.of<AuthProvider>(context, listen: false).errorsRegister;
-      print(errorsRegister);
 
       setState(() {
         if (errorsRegister.isNotEmpty) {
