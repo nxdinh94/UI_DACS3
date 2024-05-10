@@ -1,5 +1,15 @@
-List<Map<String, dynamic>> addingDropdownData = [
-  {'icon': 'assets/icon_money_flow/minus.png', 'text': 'Chi tiền', 'isChosen': true, 'type' : 'spendMoney'},
-  {'icon': 'assets/icon_money_flow/plus.png', 'text': 'Thu tiền', 'isChosen': false, 'type' : 'revenueMoney'},
-  {'icon': 'assets/icon_money_flow/loan.png', 'text': 'Vay nợ', 'isChosen': false, 'type' : 'spendMoney'},
+import 'package:practise_ui/models/cashs_flow_model.dart';
+
+List<CashFlowModel> addingDropdownData = [
+  CashFlowModel(
+      id: 'df',
+      iconPath: 'https://twitter-clone-ap-southeast1-2024.s3.ap-southeast-1.amazonaws.com/icons/cashflow/3d8ed2b8b6861fe6583077000.png',
+      name: 'Chii Tiền', isChosen: 0
+  ),
+  CashFlowModel(
+      id: 'df',
+      iconPath: 'https://twitter-clone-ap-southeast1-2024.s3.ap-southeast-1.amazonaws.com/icons/cashflow/3d8ed2b8b6861fe6583077000.png',
+      name: 'Thu Tiền', isChosen: 0
+  ),
+
 ];

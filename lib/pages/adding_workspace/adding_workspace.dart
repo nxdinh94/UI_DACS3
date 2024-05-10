@@ -7,10 +7,12 @@ import 'package:practise_ui/constant/divider.dart';
 import 'package:practise_ui/constant/font.dart';
 import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/data/dropdown_adding_data.dart';
+import 'package:practise_ui/models/cashs_flow_model.dart';
+import 'package:practise_ui/providers/app_provider.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';
 import 'package:practise_ui/widgets/adding_workspace/dropdown_adding_workspace.dart';
-
-import '../widgets/adding_workspace/expand_input_adding_space.dart';
+import 'package:provider/provider.dart';
+import '../../widgets/adding_workspace/expand_input_adding_space.dart';
 
 class AddingWorkspace extends StatefulWidget {
   const AddingWorkspace({super.key});
@@ -21,25 +23,19 @@ class AddingWorkspace extends StatefulWidget {
 
 class _AddingWorkspaceState extends State<AddingWorkspace> {
 
-  late Map<String, dynamic> currentOption= addingDropdownData[0];
+  late CashFlowModel currentCashFlowOption;
   late String moneyType ;
+  List<CashFlowModel> cashFlowData = [];
   final TextEditingController moneyEditTextController = TextEditingController();
 
 
   // all value;
   late  String _money;
 
-
-
-  void selectedDropdownItem(String selectedItem){
-    for(var item in addingDropdownData){
-      if(item['text'] == selectedItem){
-        setState(() {
-          currentOption  = item;
-        });
-        return;
-      }
-    }
+  void selectedDropdownItem(CashFlowModel selectedItem){
+    setState(() {
+      currentCashFlowOption  = selectedItem;
+    });
   }
   String _selectedDate= '';
   DateTime currentDate = DateTime.now();
@@ -62,10 +58,25 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
   }
   @override
   void initState() {
-    moneyType =currentOption['type'];
+    cashFlowData = context.read<AppProvider>().cashFlowData;
+
+    //
+    // print('cashFlowData');
+    // print(cashFlowData);
+
+    currentCashFlowOption = cashFlowData[0];
+    for(var item in cashFlowData){
+      if(item.isChosen == 1 ){
+        currentCashFlowOption = item;
+        break;
+      }
+    }
+    moneyType = currentCashFlowOption.name;
     _selectedDate = DateFormat('dd/MM/yyyy').format(currentDate);
+
     super.initState();
   }
+
   @override
   void dispose() {
     moneyEditTextController.dispose();
@@ -91,11 +102,15 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
           ),
           title: Padding(
             padding: paddingNone,
-            child: DropDownAddingWorkspace(
-              addingDropdownData: addingDropdownData,
-              selectedItem: selectedDropdownItem,
-            ),
+            child: cashFlowData.isEmpty
+                ? const Text('None')
+                : DropDownAddingWorkspace(
+                    addingDropdownDataApi: cashFlowData,
+                    currentOption: currentCashFlowOption,
+                    selectedItem: selectedDropdownItem,
+                  ),
           ),
+
           centerTitle: true,
           actions: [
             Padding(
@@ -143,99 +158,101 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
         ),
         body: Container(
           color: backgroundColor,
-          child: ListView(
-            children: [
-              spaceColumn,
-              //Phần điền số tiền
-              _inputMoneySection(controller: moneyEditTextController,),
-              spaceColumn,
-              // Phần điền thông tin cần thiết
-              Container(
-                color: Colors.white,
-                child: Column(
-                  children: [
-                    // Phần chọn lý do dùng tiền
-                    _categorySection(currentOption: currentOption),
-                    dividerI76,
-                    _borrowerOrLenderSection(),
-                    dividerI76,
-                    _decribeSection(),
-                    dividerI76,
+          child: SingleChildScrollView(
+            child: Column(
+              children: [
+                spaceColumn,
+                //Phần điền số tiền
+                _inputMoneySection(controller: moneyEditTextController,),
+                spaceColumn,
+                // Phần điền thông tin cần thiết
+                Container(
+                  color: Colors.white,
+                  child: Column(
+                    children: [
+                      // Phần chọn lý do dùng tiền
+                      _categorySection(cashFlowType:  currentCashFlowOption.name,),
+                      dividerI76,
+                      _borrowerOrLenderSection(),
+                      dividerI76,
+                      _decribeSection(),
+                      dividerI76,
 
-                    Container(
-                      padding: paddingR8L24,
-                      child: ListTile(
-                        leading: Container(
-                          margin: const EdgeInsets.only(right: 13),
-                          child: SvgPicture.asset(
-                            'assets/calendar.svg',
-                            width: 26,
-                            height: 26,
-                            colorFilter: ColorFilter.mode(Colors.grey[400]!, BlendMode.srcIn),
+                      Container(
+                        padding: paddingR8L24,
+                        child: ListTile(
+                          leading: Container(
+                            margin: const EdgeInsets.only(right: 13),
+                            child: SvgPicture.asset(
+                              'assets/calendar.svg',
+                              width: 26,
+                              height: 26,
+                              colorFilter: ColorFilter.mode(Colors.grey[400]!, BlendMode.srcIn),
+                            ),
                           ),
-                        ),
-                        title: Transform.translate(
-                          offset: const Offset(-8, 0),
-                          child: Text(
-                              _selectedDate,
-                              style: const TextStyle(
-                                  fontSize: textSize,
-                                  color: textColor
-                              )
+                          title: Transform.translate(
+                            offset: const Offset(-8, 0),
+                            child: Text(
+                                _selectedDate,
+                                style: const TextStyle(
+                                    fontSize: textSize,
+                                    color: textColor
+                                )
+                            ),
                           ),
+                          trailing: const Icon(
+                            Icons.keyboard_arrow_right,
+                            color: iconColor,
+                            size: 33,
+                          ),
+                          contentPadding: const EdgeInsets.only(left: 2, top: 8, bottom: 8, right: 0),
+                          onTap: (){
+                                _selectDate(context);
+                          },
                         ),
-                        trailing: const Icon(
-                          Icons.keyboard_arrow_right,
-                          color: iconColor,
-                          size: 33,
-                        ),
-                        contentPadding: const EdgeInsets.only(left: 2, top: 8, bottom: 8, right: 0),
-                        onTap: (){
-                              _selectDate(context);
-                        },
                       ),
-                    ),
-                    dividerI76,
+                      dividerI76,
 
-                    Container(
-                      padding: paddingR8L24,
-                      child: ListTile(
-                        leading: Container(
-                          margin: const EdgeInsets.only(right: 13),
-                          child: SvgPicture.asset(
-                            'assets/calendar.svg',
-                            width: 26,
-                            height: 26,
-                            colorFilter: ColorFilter.mode(Colors.grey[400]!, BlendMode.srcIn),
+                      Container(
+                        padding: paddingR8L24,
+                        child: ListTile(
+                          leading: Container(
+                            margin: const EdgeInsets.only(right: 13),
+                            child: SvgPicture.asset(
+                              'assets/calendar.svg',
+                              width: 26,
+                              height: 26,
+                              colorFilter: ColorFilter.mode(Colors.grey[400]!, BlendMode.srcIn),
+                            ),
                           ),
-                        ),
-                        title: Transform.translate(
-                          offset: const Offset(-8, 0),
-                          child: Text(
-                              'Ví',
-                              style: TextStyle(
-                                  fontSize: textSize,
-                                  color: textColor
-                              )
+                          title: Transform.translate(
+                            offset: const Offset(-8, 0),
+                            child: Text(
+                                'Ví',
+                                style: TextStyle(
+                                    fontSize: textSize,
+                                    color: textColor
+                                )
+                            ),
                           ),
+                          trailing: const Icon(
+                            Icons.keyboard_arrow_right,
+                            color: iconColor,
+                            size: 33,
+                          ),
+                          contentPadding: const EdgeInsets.only(left: 2, top: 8, bottom: 8, right: 0),
+                          onTap: (){},
                         ),
-                        trailing: const Icon(
-                          Icons.keyboard_arrow_right,
-                          color: iconColor,
-                          size: 33,
-                        ),
-                        contentPadding: const EdgeInsets.only(left: 2, top: 8, bottom: 8, right: 0),
-                        onTap: (){},
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              // Phần thông tin chi tiết(optional)
-              spaceColumn,
-              //Expanded detailed option
-              CustomDropdownMenu(),
-            ],
+                // Phần thông tin chi tiết(optional)
+                spaceColumn,
+                //Expanded detailed option
+                CustomDropdownMenu(),
+              ],
+            ),
           ),
         ),
       ),
@@ -451,28 +468,29 @@ class _inputMoneySectionState extends State<_inputMoneySection> {
 }
 
 class _categorySection extends StatefulWidget {
-  const _categorySection({required this.currentOption});
-  final Map<String, dynamic> currentOption;
+   _categorySection({required this.cashFlowType});
+
+  final String cashFlowType;
 
   @override
   State<_categorySection> createState() => _categorySectionState();
 }
 
 class _categorySectionState extends State<_categorySection> {
-  late Map<String, dynamic> chosenCategory = {};
+  late Map<String, dynamic> currentOption = {'iconPath' :'', 'title':''};
+  final TextStyle textStyle = const TextStyle(
+      fontSize: 22,
+      fontWeight: FontWeight.w500,
+      color: textColor
+  );
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Image.asset(
-        chosenCategory['iconPath'] ?? 'assets/question-mark.png', width: 40, height: 40,
-      ),
-      title: Text(chosenCategory['title']??'Chọn hạng mục',
-        style: const TextStyle(
-          fontSize: 22,
-          fontWeight: FontWeight.w500,
-          color: textColor
-        )
-      ),
+      leading:currentOption['iconPath'] !='' ?  Image.asset(
+        currentOption['iconPath'], width: 40, height: 40,
+      ) : Image.asset('assets/question-mark.png', width: 45, height: 45,),
+      title: currentOption['title'] != '' ?  Text(currentOption['title'], style: textStyle):Text('Chọn hạng mục', style: textStyle,),
+
       trailing: const Icon(
         Icons.keyboard_arrow_right,
         color: iconColor,
@@ -482,11 +500,13 @@ class _categorySectionState extends State<_categorySection> {
       onTap: ()async{
         final result = await CustomNavigationHelper.router.pushNamed(
           'selectCategory',
-          pathParameters: {'type': widget.currentOption['text']}
+          pathParameters: {'type': widget.cashFlowType}
         );
         if(!context.mounted) return;
+
         setState(() {
-          chosenCategory = result as Map<String, dynamic>;
+
+          currentOption = result as  Map<String , dynamic>;
         });
 
       },

@@ -3,24 +3,23 @@ import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/constant/font.dart';
+import 'package:practise_ui/models/cashs_flow_model.dart';
 // import 'package:practise_ui/data/dropdown_adding_data.dart';
 class DropDownAddingWorkspace extends StatefulWidget {
-  const DropDownAddingWorkspace({super.key, required this.addingDropdownData, required this.selectedItem});
-  final List<Map<String, dynamic>> addingDropdownData;
+  const DropDownAddingWorkspace({super.key, required this.addingDropdownDataApi, required this.selectedItem, required this.currentOption});
+  final List<CashFlowModel> addingDropdownDataApi;
   final Function? selectedItem;
+  final CashFlowModel currentOption;
 
   @override
   State<DropDownAddingWorkspace> createState() => _DropDownAddingWorkspaceState();
 }
 
 class _DropDownAddingWorkspaceState extends State<DropDownAddingWorkspace> {
-
-  String? selectedValue ;
-
+  String? selectedValue;
   @override
   void initState() {
-    selectedValue = widget.addingDropdownData[0]['text'];
-
+    selectedValue = widget.currentOption.name;
     super.initState();
   }
 
@@ -32,13 +31,13 @@ class _DropDownAddingWorkspaceState extends State<DropDownAddingWorkspace> {
           isExpanded: true,
           hint: Container(
             color: Colors.grey,
-            child: const Row(
+            child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
                   child: Text(
-                    'Tiêu tiền',
-                    style: TextStyle(
+                    widget.addingDropdownDataApi[0].name,
+                    style: const TextStyle(
                       fontSize: 14,
                       fontWeight: FontWeight.bold,
                       color: Colors.yellow,
@@ -49,13 +48,13 @@ class _DropDownAddingWorkspaceState extends State<DropDownAddingWorkspace> {
               ],
             ),
           ),
-          items: widget.addingDropdownData.map((Map<String, dynamic> item) => DropdownMenuItem<String>(
-            value: item['text'],
+          items: widget.addingDropdownDataApi.map((CashFlowModel item) => DropdownMenuItem<String>(
+            value: item.name,
             //custom dropdown item
             child: _DropdownMenuItem(
-              text: item['text'],
-              icon: item['icon'],
-              isChosen: item['isChosen'],
+              text: item.name,
+              icon: item.iconPath,
+              isChosen: item.isChosen == 0 ? false : true,
             )
           )).toList(),
 
@@ -64,13 +63,14 @@ class _DropDownAddingWorkspaceState extends State<DropDownAddingWorkspace> {
             setState(() {
               selectedValue = value;
             });
-            widget.selectedItem!(value);
-            for(var item in widget.addingDropdownData){
-              if(item['text'] == value){
-                item['isChosen'] = true;
+            for(var item in widget.addingDropdownDataApi){
+              if(item.name == value){
+                item.isChosen = 1;
+                widget.selectedItem!(item);
               }else {
-                item['isChosen'] = false;
+                item.isChosen = 0;
               }
+              CashFlowModel.saveCashFlow(widget.addingDropdownDataApi);
             }
           },
           // buttonStyleData: ButtonStyleData(
@@ -164,7 +164,7 @@ class _DropdownMenuItemState extends State<_DropdownMenuItem> {
       children: [
         ListTile(
           contentPadding: EdgeInsets.zero,
-          leading: Image.asset(
+          leading: Image.network(
             widget.icon,
             width: 35,
             height: 35,

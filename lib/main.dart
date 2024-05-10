@@ -5,6 +5,7 @@ import 'package:page_transition/page_transition.dart';
 import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/pages/signin_page.dart';
 import 'package:practise_ui/pages/unverify_account.dart';
+import 'package:practise_ui/providers/app_provider.dart';
 import 'package:practise_ui/providers/auth_provider.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';
 import 'package:provider/provider.dart';
@@ -17,16 +18,23 @@ void main() {
     statusBarColor: Colors.transparent,
   ));
   Future.delayed(
-    Duration(seconds: 3), () {
+    const Duration(seconds: 3), () {
       FlutterNativeSplash.remove();
     }
   );
-  runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider(create: (_) => AuthProvider())
-    ],
-    child: MyApp(),
-  ));
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (_) => AuthProvider()
+        ),
+        ChangeNotifierProvider<AppProvider>(
+          create: (_)=> AppProvider()
+        )
+      ],
+      child: MyApp(),
+    )
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -51,9 +59,9 @@ class _MyAppState extends State<MyApp> {
         child: GestureDetector(
           onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
           child: SafeArea(
-            // child: AuthMiddleware(
+            child: AuthMiddleware(
               child: CustomRouter(), // Use CustomRouter as home
-            // ),
+            ),
           ),
         ),
       ),
@@ -75,7 +83,7 @@ class AuthMiddleware extends StatelessWidget {
         onGenerateRoute: (settings) {
           return PageTransition(
             type:  PageTransitionType.leftToRight,
-            duration: Duration(milliseconds: 300),
+            duration:const Duration(milliseconds: 300),
             child: UnverifyAccountPage(),
           );
         },

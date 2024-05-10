@@ -4,6 +4,8 @@ import 'package:practise_ui/Section/home_travel_section_item.dart';
 import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/constant/font.dart';
 import 'package:practise_ui/constant/side.dart';
+import 'package:practise_ui/models/cashs_flow_model.dart';
+import 'package:practise_ui/providers/app_provider.dart';
 import 'package:practise_ui/providers/auth_provider.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';
 import 'package:practise_ui/widgets/charts/pie_chart.dart';
@@ -12,6 +14,7 @@ import 'package:practise_ui/data/piechart_data.dart';
 import 'package:practise_ui/widgets/charts/custom_legend_column_chart.dart';
 import 'package:practise_ui/widgets/spendingLimit/spendingLimitItems.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -21,6 +24,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  @override
+  void initState() {
+    super.initState();
+    fetchDataCashFlow().whenComplete((){
+      Provider.of<AppProvider>(context, listen: false).getAllCashFlowCache();
+    });
+  }
+
+  Future<void> fetchDataCashFlow() async {
+    final List<CashFlowModel> data = await CashFlowModel.getCashFlow();
+    if(data.isEmpty) {
+      Provider.of<AppProvider>(context, listen: false).saveCashFlowApi();
+    } else {
+      // print(data.length);
+    }
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,7 +88,9 @@ class _HomePageState extends State<HomePage> {
                                       )
                                   ),
                                   IconButton(
-                                      onPressed: (){},
+                                      onPressed: ()async{
+
+                                      },
                                       icon: Icon(
                                         Icons.add_alert,
                                         color: Colors.white,

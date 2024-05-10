@@ -17,7 +17,7 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu>  {
   bool isNotReport = false;
   @override
   void initState() {
-    isShow = true;
+    isShow = false;
     super.initState();
   }
 

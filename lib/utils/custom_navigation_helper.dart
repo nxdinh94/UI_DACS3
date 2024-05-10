@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:practise_ui/pages/account_page.dart';
 import 'package:practise_ui/pages/add_and_edit_spending_limit_page.dart';
-import 'package:practise_ui/pages/adding_workspace.dart';
+import 'package:practise_ui/pages/adding_workspace/adding_workspace.dart';
 import 'package:practise_ui/pages/detail_spending_limit_item_page.dart';
 import 'package:practise_ui/pages/list_spending_limit_item_page.dart';
 import 'package:practise_ui/pages/repeat_cycle_page.dart';
 import 'package:practise_ui/pages/report_page.dart';
-import 'package:practise_ui/pages/select_category_page.dart';
+import 'package:practise_ui/pages/adding_workspace/select_category_page.dart';
 import 'package:practise_ui/pages/user_profile.dart';
 import 'package:practise_ui/utils/bottom_navigation_bar.dart';
 
