@@ -16,6 +16,8 @@ import 'package:practise_ui/widgets/spendingLimit/spendingLimitItems.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../constant/share_prefercence_key.dart';
+
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -27,17 +29,18 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
+    //get cashflowData from cache in homepage
     fetchDataCashFlow().whenComplete((){
       Provider.of<AppProvider>(context, listen: false).getAllCashFlowCache();
     });
   }
-
+  // if cache empty, fetch data api, then save to cache
   Future<void> fetchDataCashFlow() async {
     final List<CashFlowModel> data = await CashFlowModel.getCashFlow();
     if(data.isEmpty) {
       Provider.of<AppProvider>(context, listen: false).saveCashFlowApi();
     } else {
-      // print(data.length);
+      print(data.length);
     }
   }
   @override
@@ -47,8 +50,6 @@ class _HomePageState extends State<HomePage> {
         color: backgroundColor,
         child: Column(
           children: [
-            //DASHBOARD
-
             //CHART
             Expanded(
               child: Container(
@@ -58,7 +59,7 @@ class _HomePageState extends State<HomePage> {
                       height: 170,
                       width: double.infinity,
                       padding: paddingAll12,
-                      decoration: BoxDecoration(
+                      decoration: const BoxDecoration(
                           color: primaryColor
                       ),
                       child: Column(
@@ -81,20 +82,17 @@ class _HomePageState extends State<HomePage> {
                                       onPressed: (){
                                         Provider.of<AuthProvider>(context, listen: false).logout();
                                       },
-                                      icon: Icon(
-                                        Icons.refresh,
-                                        color: Colors.white,
-                                        size: 29,
+                                      icon: const Icon(
+                                        Icons.refresh, color: Colors.white, size: 29,
                                       )
                                   ),
                                   IconButton(
                                       onPressed: ()async{
-
+                                        SharedPreferences pref = await SharedPreferences.getInstance();
+                                        pref.remove(cashFlow);
                                       },
-                                      icon: Icon(
-                                        Icons.add_alert,
-                                        color: Colors.white,
-                                        size: 26,
+                                      icon: const Icon(
+                                        Icons.add_alert, color: Colors.white, size: 26,
                                       )
                                   )
                                 ],

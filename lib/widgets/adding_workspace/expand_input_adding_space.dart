@@ -40,7 +40,7 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu>  {
                     children: [
                       ListTile(
                         leading: SvgPicture.asset(
-                          'assets/travel-bus.svg',
+                          'assets/svg/travel-bus.svg',
                           colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn),
                           width: 29,
                         ),
@@ -63,7 +63,7 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu>  {
                       const Divider(height: 1, color: underLineColor,indent: 64),
                       ListTile(
                         leading: SvgPicture.asset(
-                          'assets/person.svg',
+                          'assets/svg/person.svg',
                           colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn),
                           width: 33,
                         ),
@@ -89,7 +89,7 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu>  {
                       const Divider(height: 1, color: underLineColor,indent: 64),
                       ListTile(
                         leading: SvgPicture.asset(
-                          'assets/location.svg',
+                          'assets/svg/location.svg',
                           colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn),
                           width: 30,
                         ),
@@ -204,7 +204,7 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu>  {
                                       height: 10,
                                       width: 10,
                                       child: SvgPicture.asset(
-                                        'assets/dong.svg',
+                                        'assets/svg/dong.svg',
                                         height: 10,
                                         width: 10,
                                         colorFilter: const ColorFilter.mode(textColor, BlendMode.srcIn),
@@ -231,7 +231,7 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu>  {
                             ),
                             ListTile(
                               leading: SvgPicture.asset(
-                                'assets/location.svg',
+                                'assets/svg/location.svg',
                                 colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn),
                                 width: 30,
                               ),

@@ -164,7 +164,7 @@ class _DropdownMenuItemState extends State<_DropdownMenuItem> {
       children: [
         ListTile(
           contentPadding: EdgeInsets.zero,
-          leading: Image.network(
+          leading: Image.asset(
             widget.icon,
             width: 35,
             height: 35,
@@ -174,7 +174,7 @@ class _DropdownMenuItemState extends State<_DropdownMenuItem> {
               style: const TextStyle(color: textColor, fontSize: textSize),
             ),
             trailing:  SvgPicture.asset(
-              'assets/tick.svg',
+              'assets/svg/tick.svg',
               colorFilter: widget.isChosen ?
               const ColorFilter.mode(primaryColor, BlendMode.srcIn):
               const ColorFilter.mode(Colors.transparent, BlendMode.srcIn),

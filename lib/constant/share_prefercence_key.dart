@@ -1,2 +1,2 @@
-const String cashFlowD = 'cashFlow';
+const String cashFlow = 'cashFlow';
 const String cashFlowCategories = 'cashFlowCategories';

@@ -10,12 +10,14 @@ class AppProvider extends ChangeNotifier {
   List<CashFlowModel> _cashFlowData = [];
   List<CashFlowModel> get cashFlowData => _cashFlowData;
 
+  //call api and save to cache
   Future<void> saveCashFlowApi() async {
     notifyListeners();
     final data = await _service.getAllCashsFlow();
     await CashFlowModel.saveCashFlow(data);
     notifyListeners();
   }
+  // get data from cache
   Future<void> getAllCashFlowCache() async{
     notifyListeners();
     _cashFlowData = await CashFlowModel.getCashFlow();

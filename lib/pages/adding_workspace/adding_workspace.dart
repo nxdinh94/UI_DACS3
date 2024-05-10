@@ -95,7 +95,7 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
           leading: Padding(
             padding: const EdgeInsets.all(14),
             child: SvgPicture.asset(
-              'assets/history.svg',
+              'assets/svg/history.svg',
               fit: BoxFit.fitWidth,
               colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
             ),
@@ -147,7 +147,7 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                   });
                 },
                 child: SvgPicture.asset(
-                  'assets/tick.svg',
+                  'assets/svg/tick.svg',
                   colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
                   width: 38, // Adjust the width as needed
                   height: 38, // Adjust the height as needed
@@ -184,7 +184,7 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                           leading: Container(
                             margin: const EdgeInsets.only(right: 13),
                             child: SvgPicture.asset(
-                              'assets/calendar.svg',
+                              'assets/svg/calendar.svg',
                               width: 26,
                               height: 26,
                               colorFilter: ColorFilter.mode(Colors.grey[400]!, BlendMode.srcIn),
@@ -219,7 +219,7 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                           leading: Container(
                             margin: const EdgeInsets.only(right: 13),
                             child: SvgPicture.asset(
-                              'assets/calendar.svg',
+                              'assets/svg/calendar.svg',
                               width: 26,
                               height: 26,
                               colorFilter: ColorFilter.mode(Colors.grey[400]!, BlendMode.srcIn),
@@ -298,7 +298,7 @@ class _decribeSectionState extends State<_decribeSection> {
           prefixIcon: Padding(
             padding: const EdgeInsets.only(right: 20),
             child: SvgPicture.asset(
-              'assets/text-align-left.svg',
+              'assets/svg/text-align-left.svg',
               width: 30,
               height: 30,
               colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn),
@@ -313,7 +313,7 @@ class _decribeSectionState extends State<_decribeSection> {
           suffixIcon: GestureDetector(
             onTap: _controller.clear,
             child: SvgPicture.asset(
-              'assets/delete.svg',
+              'assets/svg/delete.svg',
               colorFilter:const  ColorFilter.mode(iconColor, BlendMode.srcIn),
             ),
           ),
@@ -348,7 +348,7 @@ class _borrowerOrLenderSectionState extends State<_borrowerOrLenderSection> {
         leading: Container(
           margin: const EdgeInsets.only(right: 13),
           child: SvgPicture.asset(
-            'assets/person.svg',
+            'assets/svg/person.svg',
             width: 32,
             height: 32,
             colorFilter: ColorFilter.mode(Colors.grey[400]!, BlendMode.srcIn),
@@ -447,7 +447,7 @@ class _inputMoneySectionState extends State<_inputMoneySection> {
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.zero,
                 suffixIcon: SvgPicture.asset(
-                  'assets/dong.svg',
+                  'assets/svg/dong.svg',
                   colorFilter: const  ColorFilter.mode(textColor, BlendMode.srcIn),
                 ),
                 suffixIconConstraints: const BoxConstraints(
@@ -488,7 +488,7 @@ class _categorySectionState extends State<_categorySection> {
     return ListTile(
       leading:currentOption['iconPath'] !='' ?  Image.asset(
         currentOption['iconPath'], width: 40, height: 40,
-      ) : Image.asset('assets/question-mark.png', width: 45, height: 45,),
+      ) : Image.asset('assets/another_icon/question-mark.png', width: 45, height: 45,),
       title: currentOption['title'] != '' ?  Text(currentOption['title'], style: textStyle):Text('Chọn hạng mục', style: textStyle,),
 
       trailing: const Icon(

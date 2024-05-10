@@ -75,7 +75,7 @@ class _AddAndEditSpendingLimitPageState extends State<AddAndEditSpendingLimitPag
             child: Padding(
               padding: const EdgeInsets.only(right: 16),
               child: SvgPicture.asset(
-                'assets/tick.svg',
+                'assets/svg/tick.svg',
                 colorFilter: const ColorFilter.mode(secondaryColor, BlendMode.srcIn),
                 width: 38,
               ),
@@ -111,7 +111,7 @@ class _AddAndEditSpendingLimitPageState extends State<AddAndEditSpendingLimitPag
                       contentPadding: EdgeInsets.zero,
 
                       suffixIcon: SvgPicture.asset(
-                        'assets/dong.svg',
+                        'assets/svg/dong.svg',
                         colorFilter: const  ColorFilter.mode(textColor, BlendMode.srcIn),
                       ),
                       suffixIconConstraints: const BoxConstraints(
@@ -145,7 +145,7 @@ class _AddAndEditSpendingLimitPageState extends State<AddAndEditSpendingLimitPag
                           width: 35, // Adjust the width as needed
                           height: 35, // Adjust the height as needed
                           child: SvgPicture.asset(
-                            'assets/abc.svg',
+                            'assets/svg/abc.svg',
                             colorFilter: const ColorFilter.mode(labelColor, BlendMode.srcIn),
                           ),
                         ),
@@ -183,7 +183,7 @@ class _AddAndEditSpendingLimitPageState extends State<AddAndEditSpendingLimitPag
                   divider,
                   MyListTile(
                     leading: SvgPicture.asset(
-                      'assets/wallet.svg', height: 30,
+                      'assets/svg/wallet.svg', height: 30,
                       colorFilter: const ColorFilter.mode(labelColor, BlendMode.srcIn),
                     ),
                     centerText: 'Tất cả tài khoản',
@@ -202,7 +202,7 @@ class _AddAndEditSpendingLimitPageState extends State<AddAndEditSpendingLimitPag
                 children: [
                   MyListTile(
                     leading: SvgPicture.asset(
-                      'assets/refresh.svg',
+                      'assets/svg/refresh.svg',
                       width: 25,
                       colorFilter: const ColorFilter.mode(labelColor, BlendMode.srcIn),
                     ),
@@ -221,7 +221,7 @@ class _AddAndEditSpendingLimitPageState extends State<AddAndEditSpendingLimitPag
                   divider,
                   MyDateListTile(
                       leading: SvgPicture.asset(
-                        'assets/calendar.svg',
+                        'assets/svg/calendar.svg',
                         width: 25,
                         colorFilter: const ColorFilter.mode(labelColor, BlendMode.srcIn),
                       ),
@@ -235,7 +235,7 @@ class _AddAndEditSpendingLimitPageState extends State<AddAndEditSpendingLimitPag
                   divider,
                   MyDateListTile(
                       leading: SvgPicture.asset(
-                        'assets/calendar.svg',
+                        'assets/svg/calendar.svg',
                         width: 25,
                         colorFilter: const ColorFilter.mode(labelColor, BlendMode.srcIn),
                       ),

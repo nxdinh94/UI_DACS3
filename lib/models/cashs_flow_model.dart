@@ -2,6 +2,8 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../constant/share_prefercence_key.dart';
+
 class CashFlowModel{
   CashFlowModel({
     required this.id,
@@ -30,13 +32,13 @@ class CashFlowModel{
   static Future<void> saveCashFlow(List<CashFlowModel> items) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     List<String> itemsJson = items.map((item) => jsonEncode(item.toJson())).toList();
-    await prefs.setStringList('items', itemsJson);
+    await prefs.setStringList(cashFlow, itemsJson);
   }
 
 // Get list of model objects from SharedPreferences
   static Future<List<CashFlowModel>> getCashFlow() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    List<String>? itemsJson = prefs.getStringList('items');
+    List<String>? itemsJson = prefs.getStringList(cashFlow);
     if (itemsJson == null) return [];
     return itemsJson.map((itemJson) => CashFlowModel.fromJson(jsonDecode(itemJson))).toList();
   }

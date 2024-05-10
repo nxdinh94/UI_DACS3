@@ -11,7 +11,7 @@ class RoundedCheckboxIcon extends StatelessWidget {
       radius: 12,
       backgroundColor: Colors.green,
       child: SvgPicture.asset(
-        'assets/tick.svg', width: 20,
+        'assets/svg/tick.svg', width: 20,
         colorFilter: const ColorFilter.mode(secondaryColor, BlendMode.srcIn),),
     );
   }

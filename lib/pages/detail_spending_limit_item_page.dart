@@ -49,7 +49,7 @@ class _DetailSpendingLimitItemState extends State<DetailSpendingLimitItem> {
             onTap: (){},
             child: Padding(
               padding: const EdgeInsets.only(right: 16),
-              child: SvgPicture.asset('assets/pen-appbar.svg'),
+              child: SvgPicture.asset('assets/svg/pen-appbar.svg'),
             ),
           )
         ],
@@ -162,7 +162,7 @@ class _DetailSpendingLimitItemState extends State<DetailSpendingLimitItem> {
                             // const TextSpan(text: ' '),
                             WidgetSpan(
                                 child: SvgPicture.asset(
-                                  'assets/dong.svg',
+                                  'assets/svg/dong.svg',
                                   height: 16,
                                   colorFilter: const ColorFilter.mode(textColor, BlendMode.srcIn),
                                 ),
@@ -183,7 +183,7 @@ class _DetailSpendingLimitItemState extends State<DetailSpendingLimitItem> {
                             // const TextSpan(text: ' '),
                             WidgetSpan(
                                 child: SvgPicture.asset(
-                                  'assets/dong.svg',
+                                  'assets/svg/dong.svg',
                                   height: 16,
                                   colorFilter: const ColorFilter.mode(textColor, BlendMode.srcIn),
                                 ),
@@ -235,7 +235,7 @@ class _DetailSpendingLimitItemState extends State<DetailSpendingLimitItem> {
                             const TextSpan(text: ' '),
                             WidgetSpan(
                                 child: SvgPicture.asset(
-                                  'assets/dong.svg',
+                                  'assets/svg/dong.svg',
                                   height: 16,
                                   colorFilter: const ColorFilter.mode(revenueMoneyColor, BlendMode.srcIn),
                                 ),
