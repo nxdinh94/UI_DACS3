@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practise_ui/constant/color.dart';
 import 'package:intl/intl.dart';
 import 'package:practise_ui/constant/font.dart';
+import 'package:practise_ui/utils/custom_navigation_helper.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
@@ -66,7 +67,7 @@ class _avatar_section extends StatelessWidget {
                     backgroundColor: Colors.white,
                     radius: 10,
                     child: SvgPicture.asset(
-                      'assets/pen.svg',
+                      'assets/svg/pen.svg',
                       width: 12,
                       colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
                     ),
@@ -349,12 +350,10 @@ class _actionBar extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: (){
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Processing Data')),
-              );
+              CustomNavigationHelper.router.pop();
             },
             child:  SvgPicture.asset(
-                "assets/angle-left-svgrepo-com.svg",
+                "assets/svg/angle-left-svgrepo-com.svg",
                 height: 40,
                 semanticsLabel: 'Back'
             )
@@ -366,13 +365,11 @@ class _actionBar extends StatelessWidget {
               );
             },
             child:  SvgPicture.asset(
-                "assets/qrcode.svg",
+                "assets/svg/qrcode.svg",
                 height: 40,
                 semanticsLabel: 'Qrcode',
-
             )
           ),
-
         ]
       ),
     );

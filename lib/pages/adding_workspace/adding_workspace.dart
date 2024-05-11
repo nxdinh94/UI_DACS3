@@ -35,7 +35,9 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
   void selectedDropdownItem(CashFlowModel selectedItem){
     setState(() {
       currentCashFlowOption  = selectedItem;
+      moneyType = selectedItem.name;
     });
+    print(moneyType);
   }
   String _selectedDate= '';
   DateTime currentDate = DateTime.now();
@@ -457,7 +459,6 @@ class _inputMoneySectionState extends State<_inputMoneySection> {
                 hintText: '0',
                 hintStyle: const TextStyle(fontSize: 35, color: revenueMoneyColor)
             ),
-
           ),
           spaceColumn6,
           divider

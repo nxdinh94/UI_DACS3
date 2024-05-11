@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:practise_ui/pages/account_page.dart';
+import 'package:practise_ui/pages/account_setting_page.dart';
 import 'package:practise_ui/pages/add_and_edit_spending_limit_page.dart';
 import 'package:practise_ui/pages/adding_workspace/adding_workspace.dart';
+import 'package:practise_ui/pages/another_page.dart';
 import 'package:practise_ui/pages/detail_spending_limit_item_page.dart';
 import 'package:practise_ui/pages/list_spending_limit_item_page.dart';
 import 'package:practise_ui/pages/repeat_cycle_page.dart';
-import 'package:practise_ui/pages/report_page.dart';
+import 'package:practise_ui/pages/report/report_page.dart';
 import 'package:practise_ui/pages/adding_workspace/select_category_page.dart';
 import 'package:practise_ui/pages/user_profile.dart';
 import 'package:practise_ui/utils/bottom_navigation_bar.dart';
@@ -56,14 +58,14 @@ class CustomNavigationHelper {
   static const String signUpPath = '/signUp';
   static const String signInPath = '/signIn';
 
-  static const String userProfilePath = '/userProfile';
+  static const String userProfilePath = 'userProfile';
   static const String detailSpendingLimitItemPath = '/detailSpendingLimitItem';
   static const String listSpendingLimitItemPath = '/listSpendingLimitItem';
   static const String addSpendingLimitPath = '/addSpendingLimit';
   static const String editSpendingLimitPath = '/editSpendingLimit';
   static const String repeatCyclePath = '/repeatCycle';
 
-
+  static const String accountSettingPath = 'accountSetting';
   static const String selectCategoryPath = 'selectCategory/:type';
 
 
@@ -143,6 +145,9 @@ class CustomNavigationHelper {
                       state: state,
                     );
                   },
+                  routes: <RouteBase>[
+
+                  ]
                 ),
               ],
             ),
@@ -153,10 +158,41 @@ class CustomNavigationHelper {
                   path: anotherPath,
                   pageBuilder: (context, state) {
                     return getPage(
-                      child: const AddAndEditSpendingLimitPage(),
+                      child: const AnotherPage(),
                       state: state,
                     );
                   },
+                  routes: <RouteBase>[
+                    GoRoute(
+                      path: accountSettingPath,
+                      pageBuilder: (context, state){
+                        return getPage(
+                          child: const AccountSettingPage(),
+                          state: state
+                        );
+                      },
+                      routes: [
+                        GoRoute(
+                          path: userProfilePath,
+                          pageBuilder: (context, state){
+                            return CustomTransitionPage(
+                              key: state.pageKey,
+                              child: UserProfile(),
+                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                // Change the opacity of the screen using a Curve based on the the animation's
+                                // value
+                                return FadeTransition(
+                                  opacity:
+                                  CurveTween(curve: Curves.easeInOutCirc).animate(animation),
+                                  child: child,
+                                );
+                              },
+                            );
+                          }
+                        )
+                      ]
+                    )
+                  ]
                 ),
               ],
             ),
@@ -190,16 +226,6 @@ class CustomNavigationHelper {
           pageBuilder: (context, state) {
             return getPage(
               child: SignInPage(),
-              state: state,
-            );
-          },
-        ),
-        GoRoute(
-          parentNavigatorKey: parentNavigatorKey,
-          path: userProfilePath,
-          pageBuilder: (context, state) {
-            return getPage(
-              child: const UserProfile(),
               state: state,
             );
           },
