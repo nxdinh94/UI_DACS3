@@ -66,7 +66,7 @@ class CustomNavigationHelper {
   static const String repeatCyclePath = '/repeatCycle';
 
   static const String accountSettingPath = 'accountSetting';
-  static const String selectCategoryPath = 'selectCategory/:type';
+  static const String selectCategoryPath = 'selectCategory';
 
 
 
@@ -124,8 +124,11 @@ class CustomNavigationHelper {
                       path: selectCategoryPath,
                       name: 'selectCategory',
                       pageBuilder: (context, state) {
+                        String cashFlowType = state.extra.toString();
                         return getPage(
-                          child: SelectCategoryPage(type: state.pathParameters['type']),
+                          child: SelectCategoryPage(
+                              cashFlowType: cashFlowType
+                          ),
                           state: state,
                         );
                       },

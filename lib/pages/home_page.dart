@@ -7,6 +7,7 @@ import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/models/cashs_flow_model.dart';
 import 'package:practise_ui/providers/app_provider.dart';
 import 'package:practise_ui/providers/auth_provider.dart';
+import 'package:practise_ui/services/app_services.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';
 import 'package:practise_ui/widgets/charts/pie_chart.dart';
 import 'package:practise_ui/widgets/charts/collumn_chart.dart';
@@ -33,6 +34,10 @@ class _HomePageState extends State<HomePage> {
     fetchDataCashFlow().whenComplete((){
       Provider.of<AppProvider>(context, listen: false).getAllCashFlowCache();
     });
+    fetchDataCashFlowCate().whenComplete((){
+      Provider.of<AppProvider>(context, listen: false).getAllCashFlowCateCache();
+    });
+
   }
   // if cache empty, fetch data api, then save to cache
   Future<void> fetchDataCashFlow() async {
@@ -43,6 +48,16 @@ class _HomePageState extends State<HomePage> {
       print(data.length);
     }
   }
+  Future<void> fetchDataCashFlowCate()async{
+    SharedPreferences pref = await SharedPreferences.getInstance();
+    final String dataFromCache = pref.getString(cashFlowCategoriesKey) ?? '';
+    if(dataFromCache.isNotEmpty){
+      return;
+    }else {
+      Provider.of<AppProvider>(context, listen: false).saveCashFlowCateApi();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
       return Container(
@@ -87,8 +102,11 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   IconButton(
                                       onPressed: ()async{
-                                        SharedPreferences pref = await SharedPreferences.getInstance();
-                                        pref.remove(cashFlow);
+                                        // SharedPreferences pref = await SharedPreferences.getInstance();
+                                        // pref.remove(cashFlowCategoriesKey);
+
+                                        print('object');
+                                        print(context.read<AppProvider>().cashFlowCateData);
                                       },
                                       icon: const Icon(
                                         Icons.add_alert, color: Colors.white, size: 26,

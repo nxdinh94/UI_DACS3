@@ -1,3 +1,4 @@
+
 import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -6,7 +7,6 @@ import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/constant/divider.dart';
 import 'package:practise_ui/constant/font.dart';
 import 'package:practise_ui/constant/side.dart';
-import 'package:practise_ui/data/dropdown_adding_data.dart';
 import 'package:practise_ui/models/cashs_flow_model.dart';
 import 'package:practise_ui/providers/app_provider.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';
@@ -30,14 +30,22 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
 
 
   // all value;
-  late  String _money;
+  late String _money;
+  late String idCashFlowCate;
 
-  void selectedDropdownItem(CashFlowModel selectedItem){
+  void onSelectCashFlowCate(String value){
+    setState(() {
+      idCashFlowCate = value;
+    });
+  }
+
+
+  void onSelectedDropdownItem(CashFlowModel selectedItem){
     setState(() {
       currentCashFlowOption  = selectedItem;
       moneyType = selectedItem.name;
     });
-    print(moneyType);
+    // print(moneyType);
   }
   String _selectedDate= '';
   DateTime currentDate = DateTime.now();
@@ -61,10 +69,9 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
   @override
   void initState() {
     cashFlowData = context.read<AppProvider>().cashFlowData;
-
     //
     // print('cashFlowData');
-    // print(cashFlowData);
+    // print(cashFlowCateData);
 
     currentCashFlowOption = cashFlowData[0];
     for(var item in cashFlowData){
@@ -109,7 +116,7 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                 : DropDownAddingWorkspace(
                     addingDropdownDataApi: cashFlowData,
                     currentOption: currentCashFlowOption,
-                    selectedItem: selectedDropdownItem,
+                    selectedItem: onSelectedDropdownItem,
                   ),
           ),
 
@@ -122,8 +129,11 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                   showDialog(context: context, builder: (BuildContext context){
                     return AlertDialog(
                       title: const Text('Basic dialog title'),
-                      content: Text(
-                        'sotien ${moneyEditTextController.text}'
+                      content: Column(
+                        children: [
+                          Text('idCashFlowCate: $idCashFlowCate'),
+                          Text('soTien: ${moneyEditTextController.text}'),
+                        ],
                       ),
                       actions: <Widget>[
                         TextButton(
@@ -173,7 +183,10 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                   child: Column(
                     children: [
                       // Phần chọn lý do dùng tiền
-                      _categorySection(cashFlowType:  currentCashFlowOption.name,),
+                      _categorySection(
+                        cashFlowType:  moneyType,
+                        onSelectCashFlowCate: onSelectCashFlowCate,
+                      ),
                       dividerI76,
                       _borrowerOrLenderSection(),
                       dividerI76,
@@ -264,9 +277,7 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
 }
 
 class _decribeSection extends StatefulWidget {
-  const _decribeSection({
-    super.key,
-  });
+  const _decribeSection();
 
   @override
   State<_decribeSection> createState() => _decribeSectionState();
@@ -469,16 +480,16 @@ class _inputMoneySectionState extends State<_inputMoneySection> {
 }
 
 class _categorySection extends StatefulWidget {
-   _categorySection({required this.cashFlowType});
+   _categorySection({required this.cashFlowType, required this.onSelectCashFlowCate});
 
   final String cashFlowType;
-
+  final Function onSelectCashFlowCate;
   @override
   State<_categorySection> createState() => _categorySectionState();
 }
 
 class _categorySectionState extends State<_categorySection> {
-  late Map<String, dynamic> currentOption = {'iconPath' :'', 'title':''};
+  late Map<String, dynamic> currentOption = {'icon' :'', 'name':'', 'id': '', 'cash_flow_id': ''};
   final TextStyle textStyle = const TextStyle(
       fontSize: 22,
       fontWeight: FontWeight.w500,
@@ -486,12 +497,12 @@ class _categorySectionState extends State<_categorySection> {
   );
   @override
   Widget build(BuildContext context) {
-    return ListTile(
-      leading:currentOption['iconPath'] !='' ?  Image.asset(
-        currentOption['iconPath'], width: 40, height: 40,
-      ) : Image.asset('assets/another_icon/question-mark.png', width: 45, height: 45,),
-      title: currentOption['title'] != '' ?  Text(currentOption['title'], style: textStyle):Text('Chọn hạng mục', style: textStyle,),
 
+    return ListTile(
+      leading: Image.asset(
+        currentOption['icon'] != '' ? currentOption['icon'] : 'assets/another_icon/question-mark.png', width: 40, height: 40,
+      ),
+      title: currentOption['name'] != '' ?  Text(currentOption['name'], style: textStyle):Text('Chọn hạng mục', style: textStyle,),
       trailing: const Icon(
         Icons.keyboard_arrow_right,
         color: iconColor,
@@ -500,16 +511,14 @@ class _categorySectionState extends State<_categorySection> {
       contentPadding: const EdgeInsets.only(left: 16, top: 8, bottom: 8, right: 8),
       onTap: ()async{
         final result = await CustomNavigationHelper.router.pushNamed(
-          'selectCategory',
-          pathParameters: {'type': widget.cashFlowType}
+          'selectCategory', extra: widget.cashFlowType
         );
         if(!context.mounted) return;
-
         setState(() {
-
           currentOption = result as  Map<String , dynamic>;
-        });
 
+        });
+        widget.onSelectCashFlowCate(currentOption['_id']);
       },
     );
   }

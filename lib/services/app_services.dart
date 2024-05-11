@@ -7,10 +7,9 @@ import 'package:http/http.dart' as http;
 class AppServices{
 
   Future<List<CashFlowModel>> getAllCashsFlow() async {
-    // Assuming you have a class named CashFlowModel to represent your data
     List<CashFlowModel> cashFlows = [];
     try {
-      const url = '$PORT/app/get-cash-flow'; // Assuming SERVER_URL is defined in server_url.dart
+      const url = getCashFlowApi;
       final uri = Uri.parse(url);
       final response = await http.get(uri);
       if (response.statusCode == 200) {
@@ -29,4 +28,24 @@ class AppServices{
       return cashFlows;
     }
   }
+
+  Future<Map<String, dynamic>> getCashFlowCateService()async{
+    Map<String, dynamic> data = {};
+    try{
+      final uri = Uri.parse(getCashFlowCateApi);
+      final res = await http.get(uri);
+      if(res.statusCode == 200){
+        final dynamic result = jsonDecode(res.body);
+        data = result['result'];
+      }else {
+        throw Exception('Failed to load cash flows');
+      }
+    }catch(e){
+      print('Error fetching: $e');
+      return data;
+    }
+    return data;
+  }
+
+
 }
