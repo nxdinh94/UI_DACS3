@@ -82,6 +82,7 @@ flutter:
   assets:
     - assets/
     - assets/another_icon/
+    - assets/account_type/
     - assets/svg/
     - assets/cash_flow_icon/
     - assets/lotties/

@@ -203,7 +203,13 @@ class _ChooseListViewState extends State<ChooseListView> {
             children: [
               ListTile(
                 onTap: (){
-                  // Navigator.pop(context, e);
+                  Map<String, dynamic> chosenCategory ={
+                    'icon': e['parent_category']['icon'],
+                    'name': e['parent_category']['name'],
+                    '_id': e['parent_category']['_id'],
+                    'cash_flow_id': e['parent_category']['cash_flow_id'],
+                  };
+                  Navigator.pop(context, chosenCategory);
                 },
                 leading: Image.asset(e['parent_category']['icon'].toString(), width: 50, height: 50,),
                 title: Text(e['parent_category']['name'].toString(), style: const TextStyle(
