@@ -3,6 +3,7 @@ import 'package:go_router/go_router.dart';
 import 'package:practise_ui/pages/account_wallet/account_page.dart';
 import 'package:practise_ui/pages/account_setting_page.dart';
 import 'package:practise_ui/pages/account_wallet/add_account_wallet_page.dart';
+import 'package:practise_ui/pages/account_wallet/select_account_wallet_type_page.dart';
 import 'package:practise_ui/pages/spending_limit/add_and_edit_spending_limit_page.dart';
 import 'package:practise_ui/pages/adding_workspace/adding_workspace.dart';
 import 'package:practise_ui/pages/another_page.dart';
@@ -10,7 +11,7 @@ import 'package:practise_ui/pages/spending_limit/detail_spending_limit_item_page
 import 'package:practise_ui/pages/spending_limit/list_spending_limit_item_page.dart';
 import 'package:practise_ui/pages/repeat_cycle_page.dart';
 import 'package:practise_ui/pages/report/report_page.dart';
-import 'package:practise_ui/pages/adding_workspace/select_category_page.dart';
+import 'package:practise_ui/pages/adding_workspace/select_cashflow_category_page.dart';
 import 'package:practise_ui/pages/user_profile.dart';
 import 'package:practise_ui/utils/bottom_navigation_bar.dart';
 
@@ -70,6 +71,8 @@ class CustomNavigationHelper {
   static const String selectCategoryPath = 'selectCategory';
 
 
+  static const String selectAccountWalletTypePath = 'selectAccountWalletType';
+
   static const String addAccountWalletPath = 'addAccountWallet';
 
   factory CustomNavigationHelper() {
@@ -114,7 +117,20 @@ class CustomNavigationHelper {
                           child: AddAccountWalletPage(),
                           state: state
                         );
-                      }
+                      },
+                      routes: <RouteBase>[
+                        GoRoute(
+                          path: selectAccountWalletTypePath,
+                          pageBuilder: (context, state){
+                          List<dynamic> dataFromExtra = state.extra as List<dynamic>;
+                          return getPage(
+                              child: SelectAccountWalletTypePage(
+                                accountWalletTypeData: dataFromExtra),
+                              state: state
+                            );
+                          }
+                        )
+                      ]
                     )
                   ]
                 ),

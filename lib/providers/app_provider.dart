@@ -19,6 +19,10 @@ class AppProvider extends ChangeNotifier {
   Map<String, dynamic> _cashFlowCateData = {};
   Map<String, dynamic> get cashFlowCateData => _cashFlowCateData;
 
+  //accountWalletType variable;
+  List<dynamic> _accountWalletType = [];
+  List<dynamic> get accountWalletType => _accountWalletType;
+
 
   //call api and save to cache
   Future<void> saveCashFlowApi() async {
@@ -54,6 +58,11 @@ class AppProvider extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getAccountWalletType()async{
+    final appServices = AppServices();
+    final data = await appServices.getAccountWalletTypeService();
+    _accountWalletType = data;
+  }
 
 
 }

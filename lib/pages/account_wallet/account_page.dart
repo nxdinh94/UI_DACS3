@@ -1,13 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practise_ui/constant/side.dart';
+import 'package:practise_ui/providers/app_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../../constant/color.dart';
 import '../../constant/font.dart';
 import '../../utils/custom_navigation_helper.dart';
-class AccountPage extends StatelessWidget {
+class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
 
+  @override
+  State<AccountPage> createState() => _AccountPageState();
+}
+
+class _AccountPageState extends State<AccountPage> {
+  @override
+  void initState() {
+    Provider.of<AppProvider>(context, listen: false).getAccountWalletType();
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -28,7 +40,7 @@ class AccountPage extends StatelessWidget {
                   height: 22, width: 22,
                 ),
                 onPressed: () {
-                  CustomNavigationHelper.router.pop();
+
                 },
               );
             }

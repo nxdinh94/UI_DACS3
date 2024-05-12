@@ -46,6 +46,22 @@ class AppServices{
     }
     return data;
   }
-
+  Future<List<dynamic>> getAccountWalletTypeService()async{
+    List<dynamic> data = [];
+    try{
+      final uri = Uri.parse(getAccountWalletTypeApi);
+      final res = await http.get(uri);
+      if(res.statusCode == 200){
+        final result = jsonDecode(res.body);
+        data = result['result'];
+        return data;
+      }else {
+        throw Exception('Fail to load getAccountWalletTypeService');
+      }
+    }catch(e){
+      print('Error while fetching $e');
+    }
+    return data;
+  }
 
 }
