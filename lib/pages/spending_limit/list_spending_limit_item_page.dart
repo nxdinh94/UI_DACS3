@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
-import '../constant/color.dart';
-import '../constant/font.dart';
-import '../utils/custom_navigation_helper.dart';
+import '../../constant/color.dart';
+import '../../constant/font.dart';
+import '../../utils/custom_navigation_helper.dart';
 class ListSpendingLimitItemPage extends StatefulWidget {
   const ListSpendingLimitItemPage({super.key});
 
@@ -45,7 +45,7 @@ class _ListSpendingLimitItemPageState extends State<ListSpendingLimitItemPage> {
             onTap: (){},
             child: Padding(
               padding: const EdgeInsets.only(right: 24),
-              child: SvgPicture.asset('assets/information-button.svg',width: 23),
+              child: SvgPicture.asset('assets/svg/information-button.svg',width: 23),
             ),
           ),
           GestureDetector(
@@ -56,7 +56,7 @@ class _ListSpendingLimitItemPageState extends State<ListSpendingLimitItemPage> {
             },
             child: Padding(
               padding: const EdgeInsets.only(right: 16),
-              child: SvgPicture.asset('assets/plus.svg', width: 36,),
+              child: SvgPicture.asset('assets/svg/plus.svg', width: 36,),
             ),
           ),
         ],

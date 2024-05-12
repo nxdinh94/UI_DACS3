@@ -7,7 +7,7 @@ import 'package:lottie/lottie.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/pages/home_page.dart';
-import 'package:practise_ui/pages/signup_page.dart';
+import 'package:practise_ui/pages/auth/signup_page.dart';
 import 'package:practise_ui/pages/user_profile.dart';
 import 'package:practise_ui/providers/auth_provider.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';

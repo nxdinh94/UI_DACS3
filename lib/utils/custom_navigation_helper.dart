@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:practise_ui/pages/account_page.dart';
+import 'package:practise_ui/pages/account_wallet/account_page.dart';
 import 'package:practise_ui/pages/account_setting_page.dart';
-import 'package:practise_ui/pages/add_and_edit_spending_limit_page.dart';
+import 'package:practise_ui/pages/account_wallet/add_account_wallet_page.dart';
+import 'package:practise_ui/pages/spending_limit/add_and_edit_spending_limit_page.dart';
 import 'package:practise_ui/pages/adding_workspace/adding_workspace.dart';
 import 'package:practise_ui/pages/another_page.dart';
-import 'package:practise_ui/pages/detail_spending_limit_item_page.dart';
-import 'package:practise_ui/pages/list_spending_limit_item_page.dart';
+import 'package:practise_ui/pages/spending_limit/detail_spending_limit_item_page.dart';
+import 'package:practise_ui/pages/spending_limit/list_spending_limit_item_page.dart';
 import 'package:practise_ui/pages/repeat_cycle_page.dart';
 import 'package:practise_ui/pages/report/report_page.dart';
 import 'package:practise_ui/pages/adding_workspace/select_category_page.dart';
@@ -14,8 +15,8 @@ import 'package:practise_ui/pages/user_profile.dart';
 import 'package:practise_ui/utils/bottom_navigation_bar.dart';
 
 import '../pages/home_page.dart';
-import '../pages/signin_page.dart';
-import '../pages/signup_page.dart';
+import '../pages/auth/signin_page.dart';
+import '../pages/auth/signup_page.dart';
 
 class CustomNavigationHelper {
   static final CustomNavigationHelper _instance =
@@ -49,7 +50,7 @@ class CustomNavigationHelper {
 
   //tab
   static const String homePath = '/home';
-  static const String accountPath = '/account';
+  static const String accountWalletPath = '/account';
   static const String addingWorkspacePath = '/adding';
   static const String reportPath= '/report';
   static const String anotherPath = '/another';
@@ -69,7 +70,7 @@ class CustomNavigationHelper {
   static const String selectCategoryPath = 'selectCategory';
 
 
-
+  static const String addAccountWalletPath = 'addAccountWallet';
 
   factory CustomNavigationHelper() {
     return _instance;
@@ -98,13 +99,24 @@ class CustomNavigationHelper {
               navigatorKey: accountTabNavigatorKey,
               routes: [
                 GoRoute(
-                  path: accountPath,
+                  path: accountWalletPath,
                   pageBuilder: (context, state) {
                     return getPage(
                       child: const AccountPage(),
                       state: state,
                     );
                   },
+                  routes: <RouteBase>[
+                    GoRoute(
+                      path: addAccountWalletPath,
+                      pageBuilder: (context, state){
+                        return getPage(
+                          child: AddAccountWalletPage(),
+                          state: state
+                        );
+                      }
+                    )
+                  ]
                 ),
               ],
             ),

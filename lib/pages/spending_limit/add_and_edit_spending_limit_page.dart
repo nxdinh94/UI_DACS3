@@ -4,9 +4,11 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/widgets/custom_stack_three_images.dart';
-import '../constant/color.dart';
-import '../constant/font.dart';
-import '../utils/custom_navigation_helper.dart';
+import 'package:practise_ui/widgets/input_money_textfield.dart';
+import '../../constant/color.dart';
+import '../../constant/font.dart';
+import '../../utils/custom_navigation_helper.dart';
+import '../../widgets/my_listtitle.dart';
 class AddAndEditSpendingLimitPage extends StatefulWidget {
   const AddAndEditSpendingLimitPage({super.key});
 
@@ -20,12 +22,6 @@ class _AddAndEditSpendingLimitPageState extends State<AddAndEditSpendingLimitPag
 
   bool isNextPeriod = false;
   String repeat = 'Hằng tháng';
-  @override
-  void dispose() {
-    _moneyInputController.dispose();
-    _nameSpendingLitmit.dispose();
-    super.dispose();
-  }
   // A method that launches the SelectionScreen and awaits the result from
 // Navigator.pop.
 
@@ -88,45 +84,9 @@ class _AddAndEditSpendingLimitPageState extends State<AddAndEditSpendingLimitPag
         height: 2000,
         child: ListView(
           children: [
-            Container(
-              height: 110,
-              color: secondaryColor,
-              padding: paddingAll12,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  const Text('Số tiền', style: TextStyle(
-                   fontSize: textSmall,
-                    color: textColor
-                  )),
-                  spaceColumn6,
-                  TextField(
-                    controller: _moneyInputController,
-                    style: const TextStyle(fontSize: 35.0, height: 45/35,fontWeight: FontWeight.w500, color: primaryColor),
-                    textAlign: TextAlign.end,
-                    cursorColor: Colors.deepPurpleAccent,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      border: InputBorder.none,
-                      contentPadding: EdgeInsets.zero,
-
-                      suffixIcon: SvgPicture.asset(
-                        'assets/svg/dong.svg',
-                        colorFilter: const  ColorFilter.mode(textColor, BlendMode.srcIn),
-                      ),
-                      suffixIconConstraints: const BoxConstraints(
-                        minHeight: 32,
-                        minWidth: 32
-                      ),
-                      hintText: '0',
-                      hintStyle: const TextStyle(fontSize: 35, color: primaryColor)
-                    ),
-                    
-                  ),
-                  spaceColumn6,
-                  const Divider(height: 1, color: underLineColor,indent: 72),
-                ],
-              ),
+            InputMoneyTextField(
+              controller: _moneyInputController,
+              title: 'Số tiền'
             ),
             spaceColumn,
             Container(
@@ -334,34 +294,6 @@ class MyStackListTile extends StatelessWidget {
   }
 }
 
-class MyListTile extends StatelessWidget {
-  const MyListTile({
-    super.key, required this.leading, required this.centerText, required this.trailing,required this.onTap,
-  });
-  final Widget leading;
-  final String centerText;
-  final Widget trailing;
-  final VoidCallback onTap;
-  @override
-  Widget build(BuildContext context) {
-    const sidePaddingRL = EdgeInsets.only(right: 2, left: 20);
-    return Padding(
-      padding: sidePaddingRL,
-      child: ListTile(
-        // dense: true,
-        onTap: onTap,
-        contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 0),
-        horizontalTitleGap: 35,
-        leading: leading,
-        title: Text(
-          centerText,
-          style: const TextStyle(fontSize: textSize, color: textColor),
-        ),
-        trailing: trailing,
-      ),
-    );
-  }
-}
 class MyDateListTile extends StatelessWidget {
   const MyDateListTile({
     super.key, required this.leading, required this.title, required this.subtitle, required this.trailing,required this.onTap,

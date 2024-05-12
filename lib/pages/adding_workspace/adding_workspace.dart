@@ -13,6 +13,9 @@ import 'package:practise_ui/utils/custom_navigation_helper.dart';
 import 'package:practise_ui/widgets/adding_workspace/dropdown_adding_workspace.dart';
 import 'package:provider/provider.dart';
 import '../../widgets/adding_workspace/expand_input_adding_space.dart';
+import '../../widgets/input_money_textfield.dart';
+import '../../widgets/listtitle_textfield.dart';
+import '../account_wallet/add_account_wallet_page.dart';
 
 class AddingWorkspace extends StatefulWidget {
   const AddingWorkspace({super.key});
@@ -26,12 +29,14 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
   late CashFlowModel currentCashFlowOption;
   late String moneyType ;
   List<CashFlowModel> cashFlowData = [];
+
   final TextEditingController moneyEditTextController = TextEditingController();
+  final TextEditingController descriptEditTextController = TextEditingController();
 
 
   // all value;
   late String _money;
-  late String idCashFlowCate;
+  late String idCashFlowCate = '';
 
   void onSelectCashFlowCate(String value){
     setState(() {
@@ -88,7 +93,6 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
 
   @override
   void dispose() {
-    moneyEditTextController.dispose();
     super.dispose();
   }
 
@@ -133,6 +137,7 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                         children: [
                           Text('idCashFlowCate: $idCashFlowCate'),
                           Text('soTien: ${moneyEditTextController.text}'),
+                          Text('description: ${descriptEditTextController.text}'),
                         ],
                       ),
                       actions: <Widget>[
@@ -175,7 +180,7 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
               children: [
                 spaceColumn,
                 //Phần điền số tiền
-                _inputMoneySection(controller: moneyEditTextController,),
+                InputMoneyTextField(controller: moneyEditTextController, title: 'Số tiền',),
                 spaceColumn,
                 // Phần điền thông tin cần thiết
                 Container(
@@ -190,7 +195,15 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                       dividerI76,
                       _borrowerOrLenderSection(),
                       dividerI76,
-                      _decribeSection(),
+                      //_decribeSection
+                      ListTitleTextField(
+                        leading: SvgPicture.asset(
+                          'assets/svg/text-align-left.svg', width: 30, height: 30,
+                          colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn),
+                        ),
+                        hintText: 'Diễn giải',
+                        controller: descriptEditTextController
+                      ),
                       dividerI76,
 
                       Container(
@@ -276,73 +289,6 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
   }
 }
 
-class _decribeSection extends StatefulWidget {
-  const _decribeSection();
-
-  @override
-  State<_decribeSection> createState() => _decribeSectionState();
-}
-
-class _decribeSectionState extends State<_decribeSection> {
-  final TextEditingController _controller = TextEditingController();
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: paddingR16L24,
-      child: TextField(
-        controller: _controller,
-        style: const TextStyle(
-          color: textColor,
-          fontSize: textSize,
-        ),
-        decoration: InputDecoration(
-          isDense: true,
-          contentPadding: const EdgeInsets.symmetric(vertical: 20),
-          border: InputBorder.none,
-          hintText: 'Diễn giải',
-          hintStyle:const TextStyle(
-            color: labelColor
-          ),
-          prefixIcon: Padding(
-            padding: const EdgeInsets.only(right: 20),
-            child: SvgPicture.asset(
-              'assets/svg/text-align-left.svg',
-              width: 30,
-              height: 30,
-              colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn),
-
-            ),
-          ),
-
-          prefixIconConstraints:const  BoxConstraints(
-            maxWidth: 50,
-            maxHeight: 50
-          ),
-          suffixIcon: GestureDetector(
-            onTap: _controller.clear,
-            child: SvgPicture.asset(
-              'assets/svg/delete.svg',
-              colorFilter:const  ColorFilter.mode(iconColor, BlendMode.srcIn),
-            ),
-          ),
-          suffixIconConstraints: const BoxConstraints(
-            minHeight: 15,
-            minWidth: 15,
-            maxHeight: 18,
-            maxWidth: 18
-          ),
-          // suffixIconColor: Colors.grey,
-        ),
-      ),
-    );
-  }
-}
-
 class _borrowerOrLenderSection extends StatefulWidget {
   const _borrowerOrLenderSection();
 
@@ -421,63 +367,6 @@ class _borrowerOrLenderSectionState extends State<_borrowerOrLenderSection> {
   }
 }
 
-class _inputMoneySection extends StatefulWidget {
-
-   _inputMoneySection({required this.controller});
-   final TextEditingController controller;
-  @override
-  State<_inputMoneySection> createState() => _inputMoneySectionState();
-}
-
-class _inputMoneySectionState extends State<_inputMoneySection> {
-  @override
-  void dispose() {
-    widget.controller.dispose();
-    super.dispose();
-  }
-  @override
-  Widget build(BuildContext context) {
-    const Divider divider = Divider(height: 1, color: underLineColor,indent: 64);
-    return Container(
-      height: 110,
-      color: secondaryColor,
-      padding: paddingAll12,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.end,
-        children: [
-          const Text('Số tiền', style: TextStyle(
-              fontSize: textSmall,
-              color: textColor
-          )),
-          spaceColumn6,
-          TextField(
-            controller: widget.controller,
-            style: const TextStyle(fontSize: 35.0, height: 45/35,fontWeight: FontWeight.w500, color: revenueMoneyColor),
-            textAlign: TextAlign.end,
-            cursorColor: Colors.deepPurpleAccent,
-            keyboardType: TextInputType.number,
-            decoration: InputDecoration(
-                border: InputBorder.none,
-                contentPadding: EdgeInsets.zero,
-                suffixIcon: SvgPicture.asset(
-                  'assets/svg/dong.svg',
-                  colorFilter: const  ColorFilter.mode(textColor, BlendMode.srcIn),
-                ),
-                suffixIconConstraints: const BoxConstraints(
-                    minHeight: 32,
-                    minWidth: 32
-                ),
-                hintText: '0',
-                hintStyle: const TextStyle(fontSize: 35, color: revenueMoneyColor)
-            ),
-          ),
-          spaceColumn6,
-          divider
-        ],
-      ),
-    );
-  }
-}
 
 class _categorySection extends StatefulWidget {
    _categorySection({required this.cashFlowType, required this.onSelectCashFlowCate});
