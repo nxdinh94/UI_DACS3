@@ -9,6 +9,7 @@ import '../../constant/color.dart';
 import '../../constant/font.dart';
 import '../../providers/app_provider.dart';
 import '../../utils/custom_navigation_helper.dart';
+import '../../widgets/back_toolbar_button.dart';
 import '../../widgets/input_money_textfield.dart';
 class AddAccountWalletPage extends StatefulWidget {
   const AddAccountWalletPage({super.key});
@@ -54,18 +55,7 @@ class _AddAccountWalletPageState extends State<AddAccountWalletPage> {
           ),
         ),
         centerTitle: true,
-        leading: Builder(
-            builder: (BuildContext context){
-              return IconButton(
-                icon: const Icon(
-                    Icons.keyboard_arrow_left, color: secondaryColor, size: 43
-                ),
-                onPressed: () {
-                  CustomNavigationHelper.router.pop();
-                },
-              );
-            }
-        ),
+        leading:  const BackToolbarButton(),
       ),
       body: SingleChildScrollView(
         child: Column(

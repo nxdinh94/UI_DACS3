@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../../constant/color.dart';
 import '../../constant/font.dart';
 import '../../utils/custom_navigation_helper.dart';
+import '../../widgets/back_toolbar_button.dart';
 class SelectCategoryPage extends StatefulWidget {
   const SelectCategoryPage({super.key, required this.cashFlowType});
   final String cashFlowType;
@@ -38,18 +39,7 @@ class _SelectCategoryPageState extends State<SelectCategoryPage> {
               ),
             ),
             centerTitle: true,
-            leading: Builder(
-                builder: (BuildContext context){
-                  return IconButton(
-                    icon: const Icon(
-                        Icons.keyboard_arrow_left, color: secondaryColor, size: 43
-                    ),
-                    onPressed: () {
-                      CustomNavigationHelper.router.pop();
-                    },
-                );
-              }
-            ),
+            leading: const BackToolbarButton(),
           ),
           body:  Builder(builder: (BuildContext context){
             List<Map<String, dynamic>> dataToRender = [];

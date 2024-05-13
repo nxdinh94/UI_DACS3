@@ -5,6 +5,7 @@ import 'package:practise_ui/widgets/rounded_checkbox_icon.dart';
 import '../constant/color.dart';
 import '../constant/font.dart';
 import '../utils/custom_navigation_helper.dart';
+import '../widgets/back_toolbar_button.dart';
 class RepeatCyclePage extends StatefulWidget {
   RepeatCyclePage({super.key});
 
@@ -34,18 +35,7 @@ class _RepeatCyclePageState extends State<RepeatCyclePage> {
           ),
         ),
         centerTitle: true,
-        leading: Builder(
-            builder: (BuildContext context){
-              return IconButton(
-                icon: const Icon(
-                    Icons.keyboard_arrow_left, color: secondaryColor, size: 43
-                ),
-                onPressed: () {
-                  CustomNavigationHelper.router.pop();
-                },
-              );
-            }
-        ),
+        leading: const BackToolbarButton(),
       ),
       body: Container(
         padding: sidePadding,

@@ -6,6 +6,7 @@ import '../../constant/color.dart';
 import '../../constant/font.dart';
 import '../../providers/app_provider.dart';
 import '../../utils/custom_navigation_helper.dart';
+import '../../widgets/back_toolbar_button.dart';
 class SelectBankPage extends StatefulWidget {
   const SelectBankPage({super.key});
 
@@ -35,18 +36,7 @@ class _SelectBankPageState extends State<SelectBankPage> {
           ),
         ),
         centerTitle: true,
-        leading: Builder(
-            builder: (BuildContext context){
-              return IconButton(
-                icon: const Icon(
-                    Icons.keyboard_arrow_left, color: secondaryColor, size: 43
-                ),
-                onPressed: () {
-                  CustomNavigationHelper.router.pop();
-                },
-              );
-            }
-        ),
+        leading: const BackToolbarButton(),
       ),
       body: Container(
         padding: const EdgeInsets.symmetric(vertical: 12),
