@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/providers/app_provider.dart';
+import 'package:practise_ui/services/app_services.dart';
 import 'package:provider/provider.dart';
 
 import '../../constant/color.dart';
@@ -39,9 +40,9 @@ class _AccountPageState extends State<AccountPage> {
                   'assets/svg/magnifying-glass.svg',
                   height: 22, width: 22,
                 ),
-                onPressed: () {
-
+                onPressed: () async {
                 },
+
               );
             }
         ),

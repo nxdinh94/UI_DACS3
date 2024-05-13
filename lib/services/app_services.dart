@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:practise_ui/constant/server_url.dart';
 import 'package:practise_ui/models/cashs_flow_model.dart';
 import 'package:http/http.dart' as http;
@@ -63,5 +62,25 @@ class AppServices{
     }
     return data;
   }
+
+  Future<List<dynamic>> getBankService() async {
+    List<dynamic> data = [];
+    try {
+      final url ="https://api.vietqr.io/v2/banks";
+      var res = await http.get(Uri.parse(url));
+      if(res.statusCode == 200) {
+        final result = jsonDecode(res.body);
+        data = result['data'];
+        return data;
+      } else {
+        print('Error: Status code ${res.statusCode}'); // Print error with status code
+        return data;
+      }
+    }catch(e){
+      print('Error fetch bank $e');
+    }
+    return data;
+  }
+
 
 }

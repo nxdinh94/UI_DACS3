@@ -18,23 +18,26 @@ class AddAccountWalletPage extends StatefulWidget {
 }
 
 class _AddAccountWalletPageState extends State<AddAccountWalletPage> {
-
+  //mainly variable
   final TextEditingController moneyTextFieldController  = TextEditingController();
   final TextEditingController describeTextFieldController  = TextEditingController();
   final TextEditingController nameWalletTextFieldController  = TextEditingController();
   bool isNotReport = false;
-  Map<String, dynamic> resultChosenMoneyAccountType = {};
   String idMoneyAccountType = '';
+  int idChosenBank = 0;
 
+  //another variable
+  Map<String, dynamic> resultChosenMoneyAccountType = {};
+  Map<String, dynamic> resultChosenBank = {};
   List<dynamic> accountWalletTypeData = [];
-
+  String nameChosenAccountWalletType = '';
   @override
   void initState() {
+    Provider.of<AppProvider>(context, listen:  false).getBank();
     accountWalletTypeData = context.read<AppProvider>().accountWalletType;
-    // idMoneyAccountType = accountWalletTypeData[0]['_id'];
-
     super.initState();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -107,9 +110,47 @@ class _AddAccountWalletPageState extends State<AddAccountWalletPage> {
                         setState(() {
                           resultChosenMoneyAccountType  = result;
                           idMoneyAccountType = result['_id'];
+                          nameChosenAccountWalletType = result['name'];
                         });
                       }
                     }
+                  ),
+                  divider,
+                  Visibility(
+                    maintainState: false,
+                    visible: nameChosenAccountWalletType.toLowerCase().contains('tài khoản ngân hàng'),
+                    child: Column(
+                      children: [
+                        MyListTile(
+                          leading: CircleAvatar(
+                            radius: 20,
+                            child: ClipOval(
+                              child: Image.network(
+                                resultChosenBank.isNotEmpty ? resultChosenBank['logo'] :
+                                'https://icones.pro/wp-content/uploads/2021/10/symbole-bancaire-gris.png',
+                                width: 45,
+                              ),
+                            ),
+                          ),
+                          centerText: resultChosenBank['shortName'] ?? 'Ngân hàng',
+                          trailing: trailing,
+                          horizontalTitleGap: 20,
+                          vertiCalPadding: 5,
+                          onTap: ()async{
+                            Map<String, dynamic> result = await CustomNavigationHelper.router.push(
+                                '${CustomNavigationHelper.accountWalletPath}/'
+                                    '${CustomNavigationHelper.addAccountWalletPath}/'
+                                    '${CustomNavigationHelper.selectBankPath}'
+                            ) as  Map<String, dynamic>;
+                            if(!context.mounted){ return ; }
+                            if(result.isNotEmpty){
+                              resultChosenBank = result;
+                              idChosenBank = result['id'];
+                            }
+                          }
+                        )
+                      ],
+                    )
                   ),
                   divider,
                   ListTitleTextField(
@@ -119,8 +160,8 @@ class _AddAccountWalletPageState extends State<AddAccountWalletPage> {
                     ),
                     hintText: 'Diễn giải',
                     controller: describeTextFieldController,
-                    paddingLeftLeading: 21,
-                    horizontalTitleGap: 30,
+                    paddingLeftLeading: 22,
+                    horizontalTitleGap: 28,
                   ),
                   divider,
                   // is include in report?
@@ -166,20 +207,19 @@ class _AddAccountWalletPageState extends State<AddAccountWalletPage> {
                   elevation: 0
                 ),
                 onPressed: (){
-
-                  if(
-                    nameWalletTextFieldController.text.isNotEmpty &&
+                  if(nameWalletTextFieldController.text.isNotEmpty &&
                     moneyTextFieldController.text.isNotEmpty &&
-                    idMoneyAccountType.isNotEmpty
-                  ){
+                    idMoneyAccountType.isNotEmpty){
                     //do something
                   }
 
-                  print(nameWalletTextFieldController.text);
-                  print(moneyTextFieldController.text);
-                  print(describeTextFieldController.text);
-                  print(isNotReport);
-                  print(idMoneyAccountType);
+                  // print(nameWalletTextFieldController.text);
+                  // print(moneyTextFieldController.text);
+                  // print(describeTextFieldController.text);
+                  // print(isNotReport);
+                  // print(idMoneyAccountType);
+                  // print(idChosenBank);
+
                 },
                 child: const Text('LƯU', style: TextStyle(
                   color: secondaryColor, fontSize: textBig, letterSpacing: 2
@@ -191,6 +231,7 @@ class _AddAccountWalletPageState extends State<AddAccountWalletPage> {
       ),
     );
   }
+
 }
 
 

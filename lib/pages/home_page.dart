@@ -104,9 +104,6 @@ class _HomePageState extends State<HomePage> {
                                       onPressed: ()async{
                                         // SharedPreferences pref = await SharedPreferences.getInstance();
                                         // pref.remove(cashFlowCategoriesKey);
-
-                                        print('object');
-                                        print(context.read<AppProvider>().cashFlowCateData);
                                       },
                                       icon: const Icon(
                                         Icons.add_alert, color: Colors.white, size: 26,

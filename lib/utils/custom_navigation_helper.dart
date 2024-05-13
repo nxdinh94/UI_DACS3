@@ -4,6 +4,7 @@ import 'package:practise_ui/pages/account_wallet/account_page.dart';
 import 'package:practise_ui/pages/account_setting_page.dart';
 import 'package:practise_ui/pages/account_wallet/add_account_wallet_page.dart';
 import 'package:practise_ui/pages/account_wallet/select_account_wallet_type_page.dart';
+import 'package:practise_ui/pages/account_wallet/select_bank_page.dart';
 import 'package:practise_ui/pages/spending_limit/add_and_edit_spending_limit_page.dart';
 import 'package:practise_ui/pages/adding_workspace/adding_workspace.dart';
 import 'package:practise_ui/pages/another_page.dart';
@@ -72,7 +73,7 @@ class CustomNavigationHelper {
 
 
   static const String selectAccountWalletTypePath = 'selectAccountWalletType';
-
+  static const String selectBankPath = 'selectBankPath';
   static const String addAccountWalletPath = 'addAccountWallet';
 
   factory CustomNavigationHelper() {
@@ -126,6 +127,15 @@ class CustomNavigationHelper {
                           return getPage(
                               child: SelectAccountWalletTypePage(
                                 accountWalletTypeData: dataFromExtra),
+                              state: state
+                            );
+                          }
+                        ),
+                        GoRoute(
+                          path: selectBankPath,
+                          pageBuilder: (context, state){
+                            return getPage(
+                              child: SelectBankPage(),
                               state: state
                             );
                           }

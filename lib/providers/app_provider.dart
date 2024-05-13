@@ -23,6 +23,10 @@ class AppProvider extends ChangeNotifier {
   List<dynamic> _accountWalletType = [];
   List<dynamic> get accountWalletType => _accountWalletType;
 
+  //bank variable
+  List<dynamic> _bank = [];
+  List<dynamic> get bank =>_bank;
+
 
   //call api and save to cache
   Future<void> saveCashFlowApi() async {
@@ -63,6 +67,13 @@ class AppProvider extends ChangeNotifier {
     final data = await appServices.getAccountWalletTypeService();
     _accountWalletType = data;
   }
+
+  Future<void> getBank()async{
+    final appServices = AppServices();
+    final data = await appServices.getBankService();
+    _bank = data;
+  }
+
 
 
 }
