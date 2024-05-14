@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:intl/intl.dart';
 import 'package:practise_ui/constant/side.dart';
+import 'package:practise_ui/providers/user_provider.dart';
 import 'package:practise_ui/widgets/listtitle_textfield.dart';
 import 'package:practise_ui/widgets/my_listtitle.dart';
 import 'package:provider/provider.dart';
@@ -9,6 +11,7 @@ import '../../constant/color.dart';
 import '../../constant/font.dart';
 import '../../providers/app_provider.dart';
 import '../../utils/custom_navigation_helper.dart';
+import '../../utils/custom_toast.dart';
 import '../../widgets/back_toolbar_button.dart';
 import '../../widgets/input_money_textfield.dart';
 class AddAccountWalletPage extends StatefulWidget {
@@ -21,6 +24,7 @@ class AddAccountWalletPage extends StatefulWidget {
 class _AddAccountWalletPageState extends State<AddAccountWalletPage> {
   //mainly variable
   final TextEditingController moneyTextFieldController  = TextEditingController();
+  final TextEditingController creditTextFieldController  = TextEditingController();
   final TextEditingController describeTextFieldController  = TextEditingController();
   final TextEditingController nameWalletTextFieldController  = TextEditingController();
   bool isNotReport = false;
@@ -32,9 +36,9 @@ class _AddAccountWalletPageState extends State<AddAccountWalletPage> {
   Map<String, dynamic> resultChosenBank = {};
   List<dynamic> accountWalletTypeData = [];
   String nameChosenAccountWalletType = '';
+  bool alertNullNameWallet = false;
   @override
   void initState() {
-    Provider.of<AppProvider>(context, listen:  false).getBank();
     accountWalletTypeData = context.read<AppProvider>().accountWalletType;
     super.initState();
   }
@@ -64,6 +68,20 @@ class _AddAccountWalletPageState extends State<AddAccountWalletPage> {
               title: 'Số dư ban đầu', controller: moneyTextFieldController,
             ),
             spaceColumn,
+            
+            Visibility(
+              visible: nameChosenAccountWalletType.toLowerCase().contains('thẻ tín dụng'),
+              maintainState: false,
+              child: Column(
+                children: [
+                  InputMoneyTextField(
+                    title: 'Hạn mức tín dụng', controller: creditTextFieldController,
+                  ),
+                  spaceColumn,
+                ],
+              )
+            ),
+            
             Container(
               color: secondaryColor,
               padding: EdgeInsets.zero,
@@ -74,6 +92,7 @@ class _AddAccountWalletPageState extends State<AddAccountWalletPage> {
                     hintText: 'Tên tài khoản',
                     controller: nameWalletTextFieldController,
                     paddingLeftLeading: 20,
+                    alertWarming: alertNullNameWallet,
                   ),
                   divider,
                   MyListTile(
@@ -108,7 +127,9 @@ class _AddAccountWalletPageState extends State<AddAccountWalletPage> {
                   divider,
                   Visibility(
                     maintainState: false,
-                    visible: nameChosenAccountWalletType.toLowerCase().contains('tài khoản ngân hàng'),
+                    visible:
+                    nameChosenAccountWalletType.toLowerCase().contains('tài khoản ngân hàng') ||
+                    nameChosenAccountWalletType.toLowerCase().contains('thẻ tín dụng') ,
                     child: Column(
                       children: [
                         MyListTile(
@@ -196,20 +217,79 @@ class _AddAccountWalletPageState extends State<AddAccountWalletPage> {
                   ),
                   elevation: 0
                 ),
-                onPressed: (){
+                onPressed: () async {
+                  Map<String, String> dataToPass = {
+                    "name":"",
+                    "account_balance": '0',
+                    "money_account_type_id":"",
+                    "description":"",
+                    "report":'0',
+                    "select_bank":'0',
+                    "credit_limit_number" : '0',
+                  };
+                  dynamic result ;
+                  //if 3 required field is not empty
                   if(nameWalletTextFieldController.text.isNotEmpty &&
                     moneyTextFieldController.text.isNotEmpty &&
                     idMoneyAccountType.isNotEmpty){
-                    //do something
+
+                    dataToPass.update('name', (value)=>nameWalletTextFieldController.text);
+                    dataToPass.update('account_balance', (value)=>moneyTextFieldController.text);
+                    dataToPass.update('money_account_type_id', (value)=>idMoneyAccountType);
+                    dataToPass.update('description', (value)=>describeTextFieldController.text);
+                    dataToPass.update('report', (value)=> isNotReport == true ? '1': '0');
+                    if(
+                        nameChosenAccountWalletType.toLowerCase().contains('tài khoản ngân hàng') ||
+                        nameChosenAccountWalletType.toLowerCase().contains('thẻ tín dụng')
+                    ){
+                      dataToPass.update('select_bank', (value)=>idChosenBank.toString());
+                    }else {
+                      dataToPass.update('select_bank', (value)=>0.toString());
+                    }
+
+                    if(nameChosenAccountWalletType.toLowerCase().contains('thẻ tín dụng')){
+                      if(creditTextFieldController.text.isNotEmpty){
+                        dataToPass.update('credit_limit_number', (value) => creditTextFieldController.text);
+                      }else {
+                        dataToPass.update('credit_limit_number', (value) => '0');
+                        showCustomErrorToast(context, 'Hạn mức tín dụng phải lớn hơn 0!', 3);
+                        return;
+                      }
+                    //doesnot credit money type option
+                    }else {
+                      dataToPass.remove('credit_limit_number');
+                      // showCustomSuccessToast(context, dataToPass['credit_limit_number'].toString());
+                    }
+                    result = await Provider.of<UserProvider>(context, listen: false).addMoneyAccount(dataToPass);
+
+                    if(result['status']== 422){
+
+                      showCustomErrorToast(context, result['result'], 2);
+
+                    }else if(result['status'] == 200){
+                      showCustomSuccessToast(context, result['result']);
+                      setState(() {
+                        moneyTextFieldController.text = '0';
+                        creditTextFieldController.text = '0';
+                        nameWalletTextFieldController.text = '';
+                        describeTextFieldController.text = '';
+                      });
+                    }
+
+                  //if 3 required field is empty
+                  }else {
+                    if(nameWalletTextFieldController.text.isEmpty){
+                      setState(() {
+                        alertNullNameWallet = true;
+                      });
+                    }
+                    if(moneyTextFieldController.text.isEmpty){
+                      showCustomErrorToast(context, 'Số tiền phải lớn hơn 0', 3);
+                    }
+                    if(idMoneyAccountType.isEmpty){
+                      showCustomErrorToast(context, 'Vui lòng chọn loại tài khoản', 2);
+                    }
                   }
-
-                  // print(nameWalletTextFieldController.text);
-                  // print(moneyTextFieldController.text);
-                  // print(describeTextFieldController.text);
-                  // print(isNotReport);
-                  // print(idMoneyAccountType);
-                  // print(idChosenBank);
-
                 },
                 child: const Text('LƯU', style: TextStyle(
                   color: secondaryColor, fontSize: textBig, letterSpacing: 2

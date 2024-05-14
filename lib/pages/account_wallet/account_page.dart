@@ -18,7 +18,6 @@ class AccountPage extends StatefulWidget {
 class _AccountPageState extends State<AccountPage> {
   @override
   void initState() {
-    Provider.of<AppProvider>(context, listen: false).getAccountWalletType();
     super.initState();
   }
   @override

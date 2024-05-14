@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:practise_ui/constant/key.dart';
 import 'package:http/http.dart' as http;
 import 'package:practise_ui/constant/server_url.dart';
+import 'package:practise_ui/constant/share_prefercence_key.dart';
 import 'package:practise_ui/models/register_body.dart';
 import 'package:practise_ui/utils/jwt.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -54,7 +55,7 @@ class AuthProvider extends ChangeNotifier {
 
   void checkVerify(Map<String, dynamic> decoded_authorization) {
     if (decoded_authorization.isNotEmpty) {
-      _isVerify = decoded_authorization['verify'];
+    _isVerify = decoded_authorization['verify'];
     }
   }
 
@@ -85,8 +86,9 @@ class AuthProvider extends ChangeNotifier {
                 'refresh_token': _refresh_token
               }
           );
-          await prefs.setString('userData', userData);
+          await prefs.setString(userDataKey, userData);
 
+          //decode access_token to original data
           final _decoded_authorization = await verifyToken(
               token: _access_token,
               secretOrPublicKey: JWT_SECRET_ACCESS_TOKEN
@@ -122,9 +124,11 @@ class AuthProvider extends ChangeNotifier {
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
         },
-        body: jsonEncode(
-            { "name": reqBody.name, "email": reqBody.email,
-              "password": reqBody.password, "confirm_password": reqBody.confirmPassword }
+        body: jsonEncode({"name": reqBody.name,
+                          "email": reqBody.email,
+                          "password": reqBody.password,
+                          "confirm_password": reqBody.confirmPassword
+                          }
         ),
       );
 
@@ -190,7 +194,7 @@ class AuthProvider extends ChangeNotifier {
 
   Future<bool> autoLogin() async {
     final prefs = await SharedPreferences.getInstance();
-    if (!prefs.containsKey('userData')) {
+    if (!prefs.containsKey(userDataKey)) {
       return false;
     }
     return true;
@@ -205,14 +209,14 @@ class AuthProvider extends ChangeNotifier {
   }
 
   logout() async {
-    await _authenticationLogout(_refresh_token);
-    if (_isLogoutSuccess) {
+    // await _authenticationLogout(_refresh_token);
+    // if (_isLogoutSuccess) {
       // Xoá data lưu trong máy
       _access_token = '';
       _refresh_token = '';
       notifyListeners();
       final prefs = await SharedPreferences.getInstance();
-      prefs.remove('userData');
-    }
+      prefs.remove(userDataKey);
+    // }
   }
 }

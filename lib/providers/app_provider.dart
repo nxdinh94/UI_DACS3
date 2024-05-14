@@ -63,15 +63,20 @@ class AppProvider extends ChangeNotifier {
   }
 
   Future<void> getAccountWalletType()async{
+    notifyListeners();
+
     final appServices = AppServices();
     final data = await appServices.getAccountWalletTypeService();
     _accountWalletType = data;
+    notifyListeners();
   }
 
   Future<void> getBank()async{
+    notifyListeners();
     final appServices = AppServices();
     final data = await appServices.getBankService();
     _bank = data;
+    notifyListeners();
   }
 
 

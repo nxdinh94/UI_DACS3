@@ -12,12 +12,14 @@ class ListTitleTextField extends StatefulWidget {
     required this.controller,
     this.horizontalTitleGap = 20,
     this.paddingLeftLeading = 24,
+    this.alertWarming = false,
   });
   final Widget leading;
   final String hintText;
   final TextEditingController controller;
   final double horizontalTitleGap;
   final double paddingLeftLeading;
+  final bool alertWarming;
   @override
   State<ListTitleTextField> createState() => _ListTitleTextFieldState();
 }
@@ -47,8 +49,8 @@ class _ListTitleTextFieldState extends State<ListTitleTextField> {
           contentPadding: const EdgeInsets.symmetric(vertical: 15),
           border: InputBorder.none,
           hintText: widget.hintText,
-          hintStyle:const TextStyle(
-              color: labelColor
+          hintStyle:TextStyle(
+              color: widget.alertWarming ? spendingMoneyColor :  labelColor
           ),
           suffixIcon: Visibility(
             visible: isSufficIconVisible,

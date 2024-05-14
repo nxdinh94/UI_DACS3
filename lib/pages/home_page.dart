@@ -7,6 +7,7 @@ import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/models/cashs_flow_model.dart';
 import 'package:practise_ui/providers/app_provider.dart';
 import 'package:practise_ui/providers/auth_provider.dart';
+import 'package:practise_ui/providers/user_provider.dart';
 import 'package:practise_ui/services/app_services.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';
 import 'package:practise_ui/widgets/charts/pie_chart.dart';
@@ -36,8 +37,11 @@ class _HomePageState extends State<HomePage> {
     });
     fetchDataCashFlowCate().whenComplete((){
       Provider.of<AppProvider>(context, listen: false).getAllCashFlowCateCache();
-    });
 
+      //start all necessary provider
+      Provider.of<AppProvider>(context, listen: false).getAccountWalletType();
+      Provider.of<AppProvider>(context, listen:  false).getBank();
+    });
   }
   // if cache empty, fetch data api, then save to cache
   Future<void> fetchDataCashFlow() async {
@@ -102,8 +106,6 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   IconButton(
                                       onPressed: ()async{
-                                        // SharedPreferences pref = await SharedPreferences.getInstance();
-                                        // pref.remove(cashFlowCategoriesKey);
                                       },
                                       icon: const Icon(
                                         Icons.add_alert, color: Colors.white, size: 26,

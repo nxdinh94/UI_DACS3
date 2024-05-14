@@ -7,6 +7,7 @@ import 'package:practise_ui/pages/auth/signin_page.dart';
 import 'package:practise_ui/pages/auth/unverify_account.dart';
 import 'package:practise_ui/providers/app_provider.dart';
 import 'package:practise_ui/providers/auth_provider.dart';
+import 'package:practise_ui/providers/user_provider.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';
 import 'package:provider/provider.dart';
 
@@ -30,7 +31,10 @@ void main() {
         ),
         ChangeNotifierProvider<AppProvider>(
           create: (_)=> AppProvider()
-        )
+        ),
+        ChangeNotifierProvider<UserProvider>(
+          create: (_)=> UserProvider()
+        ),
       ],
       child: MyApp(),
     )

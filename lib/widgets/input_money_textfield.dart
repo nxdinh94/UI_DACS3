@@ -7,9 +7,10 @@ import '../constant/side.dart';
 
 class InputMoneyTextField extends StatefulWidget {
 
-  const InputMoneyTextField({super.key, required this.controller, required this.title});
+  const InputMoneyTextField({super.key, required this.controller, required this.title, this.textColor = primaryColor});
   final TextEditingController controller;
   final String title;
+  final Color textColor;
   @override
   State<InputMoneyTextField> createState() => InputMoneyTextFieldState();
 }
@@ -37,7 +38,7 @@ class InputMoneyTextFieldState extends State<InputMoneyTextField> {
           spaceColumn6,
           TextField(
             controller: widget.controller,
-            style: const TextStyle(fontSize: 35.0, height: 45/35,fontWeight: FontWeight.w500, color: revenueMoneyColor),
+            style: TextStyle(fontSize: 35.0, height: 45/35,fontWeight: FontWeight.w500, color: widget.textColor),
             textAlign: TextAlign.end,
             cursorColor: Colors.deepPurpleAccent,
             keyboardType: TextInputType.number,
@@ -53,7 +54,7 @@ class InputMoneyTextFieldState extends State<InputMoneyTextField> {
                     minWidth: 32
                 ),
                 hintText: '0',
-                hintStyle: const TextStyle(fontSize: 35, color: revenueMoneyColor)
+                hintStyle: TextStyle(fontSize: 35, color: widget.textColor)
             ),
           ),
           spaceColumn6,

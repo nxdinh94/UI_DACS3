@@ -38,11 +38,11 @@ class _SignInPageState extends State<SignInPage> {
         _formKey.currentState!.save();
       }
       if (_email.isEmpty) {
-        showCustomErrorToast(context, "Vui lòng điền email");
+        showCustomErrorToast(context, "Vui lòng điền email", 3);
         return false;
       }
       if (_password.isEmpty) {
-        showCustomErrorToast(context, "Vui lòng điền mật khẩu");
+        showCustomErrorToast(context, "Vui lòng điền mật khẩu", 3);
         return false;
       }
 
@@ -53,7 +53,7 @@ class _SignInPageState extends State<SignInPage> {
       await Provider.of<AuthProvider>(context, listen: false).login(_email, _password);
       final isError = await Provider.of<AuthProvider>(context, listen: false).isError;
       if (isError) {
-        showCustomErrorToast(context, "Email hoặc mật khẩu không đúng");
+        showCustomErrorToast(context, "Email hoặc mật khẩu không đúng", 3);
       }
     }
 
