@@ -268,6 +268,8 @@ class _AddAccountWalletPageState extends State<AddAccountWalletPage> {
 
                     }else if(result['status'] == 200){
                       showCustomSuccessToast(context, result['result']);
+                      //trigger getData from db to update ui
+                      await Provider.of<UserProvider>(context, listen: false).getAllAccountWallet();
                       setState(() {
                         moneyTextFieldController.text = '0';
                         creditTextFieldController.text = '0';

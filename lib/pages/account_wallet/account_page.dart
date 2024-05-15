@@ -1,12 +1,13 @@
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practise_ui/constant/side.dart';
-import 'package:practise_ui/providers/app_provider.dart';
-import 'package:practise_ui/services/app_services.dart';
 import 'package:provider/provider.dart';
 
 import '../../constant/color.dart';
 import '../../constant/font.dart';
+import '../../providers/user_provider.dart';
+import '../../utils/currency_format.dart';
 import '../../utils/custom_navigation_helper.dart';
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
@@ -25,9 +26,7 @@ class _AccountPageState extends State<AccountPage> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: primaryColor,
-        title: const Text(
-          'Tài khoản',
-          style: TextStyle(
+        title: const Text('Tài khoản', style: TextStyle(
               color: secondaryColor,fontSize: textBig, fontWeight: FontWeight.w500
           ),
         ),
@@ -39,28 +38,137 @@ class _AccountPageState extends State<AccountPage> {
                   'assets/svg/magnifying-glass.svg',
                   height: 22, width: 22,
                 ),
-                onPressed: () async {
-                },
-
+                onPressed: (){},
               );
             }
         ),
       ),
-      body: const NoAccountCase(),
+      body:  Consumer<UserProvider>(
+        builder: (context, value, child){
+          return value.accountWalletList.isNotEmpty? HaveAccountCase(accountWalletData: value.accountWalletList): NoAccountCase();
+        }
+    ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: (){
+          CustomNavigationHelper.router.push(
+              '${CustomNavigationHelper.accountWalletPath}/${CustomNavigationHelper.addAccountWalletPath}'
+          );
+        },
+        backgroundColor: primaryColor,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+        child: SvgPicture.asset('assets/svg/plus.svg', height: 45, width: 45, ),
+      ),
     );
   }
 }
 class HaveAccountCase extends StatefulWidget {
-  const HaveAccountCase({super.key});
-
+  const HaveAccountCase({super.key, required this.accountWalletData});
+  final List<dynamic> accountWalletData;
   @override
   State<HaveAccountCase> createState() => _HaveAccountCaseState();
 }
 
 class _HaveAccountCaseState extends State<HaveAccountCase> {
+  double totalMoney = 0;
+  @override
+  void initState() {
+    for(var item in widget.accountWalletData){
+      totalMoney += double.parse(item['account_balance'][r'$numberDecimal']);
+    }
+    super.initState();
+  }
+  @override
+  void didUpdateWidget(covariant HaveAccountCase oldWidget) {
+    if(oldWidget.accountWalletData != widget.accountWalletData){
+      totalMoney = 0;
+      for(var item in widget.accountWalletData){
+        totalMoney += double.parse(item['account_balance'][r'$numberDecimal']);
+      }
+    }
+    super.didUpdateWidget(oldWidget);
+  }
+   TextStyle richText1 = const TextStyle(
+      color: textColor, fontSize: textBig, fontWeight: FontWeight.w600
+  );
   @override
   Widget build(BuildContext context) {
-    return const Placeholder();
+    return RefreshIndicator(
+      onRefresh: ()async{
+        await Provider.of<UserProvider>(context, listen: false).getAllAccountWallet();
+      },
+      child: Container(
+        color: backgroundColor,
+        child: Column(
+          children: [
+            Container(
+              color: secondaryColor,
+              padding: paddingAll12,
+              child: Center(
+                child: RichText(
+                  text: TextSpan(
+                  text: 'Tổng tiền: ', style: richText1,
+                  children: [
+                    TextSpan(text: formatCurrencyVND(totalMoney), style: const  TextStyle(fontWeight: FontWeight.bold)),
+                    WidgetSpan(
+                      alignment: PlaceholderAlignment.middle,
+                      child: SvgPicture.asset(
+                        'assets/svg/dong-svg-repo.svg', width: 15,
+                        colorFilter: const ColorFilter.mode(Colors.black , BlendMode.srcIn),
+                      ),
+                    ),
+                  ],
+                  ),
+                )
+              ),
+            ),
+            spaceColumn,
+            Container(
+              color: secondaryColor,
+              child: ListView.builder(
+                physics: const AlwaysScrollableScrollPhysics(),
+                itemCount: widget.accountWalletData.length,
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemBuilder:(BuildContext context, int index) {
+                  return Column(
+                    children: [
+                      ListTile(
+                        leading: Image.asset('assets/another_icon/question-mark.png', width: 40, height: 40,),
+                        title: Padding(
+                          padding: const EdgeInsets.only(bottom: 7.0),
+                          child: Text(widget.accountWalletData[index]['name']),
+                        ),
+                        titleTextStyle: const TextStyle(color: textColor, fontSize: textSize, fontWeight: FontWeight.w500),
+                        trailing: SvgPicture.asset('assets/svg/three-dots-vertical.svg', width: 18,),
+                        subtitle: RichText(
+                          text: TextSpan(
+                            text: formatCurrencyVND(double.parse(widget.accountWalletData[index]['account_balance'][r'$numberDecimal'])),
+                            style: const TextStyle(color: labelColor, fontSize: textSmall),
+                            children: [
+                              WidgetSpan(
+                                child: SvgPicture.asset('assets/svg/dong-svg-repo.svg', width: 12, height: 12,
+                                  colorFilter: const ColorFilter.mode(labelColor, BlendMode.srcIn)
+                                ),
+                                alignment: PlaceholderAlignment.middle
+                            )]
+                          ),
+                        ),
+                        subtitleTextStyle: const TextStyle(color: labelColor,fontSize: textSize),
+                        horizontalTitleGap: 10,
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                        onTap: (){
+                        }
+                      ),
+                      const Divider(color: underLineColor, height: 0,)
+                    ],
+                  );
+                }
+              ),
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
 

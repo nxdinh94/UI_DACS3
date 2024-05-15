@@ -41,6 +41,7 @@ class _HomePageState extends State<HomePage> {
       //start all necessary provider
       Provider.of<AppProvider>(context, listen: false).getAccountWalletType();
       Provider.of<AppProvider>(context, listen:  false).getBank();
+      Provider.of<UserProvider>(context, listen:  false).getAllAccountWallet();
     });
   }
   // if cache empty, fetch data api, then save to cache

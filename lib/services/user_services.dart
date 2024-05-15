@@ -1,18 +1,12 @@
 
 import 'dart:convert';
-
 import 'package:http/http.dart' as http;
-
-import 'package:flutter/material.dart';
 import 'package:practise_ui/constant/server_url.dart';
 class UserServices{
 
-  Future<Map<String, dynamic>> addAccountMoneyService(
-    String refreshToken, String accessToken, Map<String, String> dataToPass
-  )async{
+  Future<Map<String, dynamic>> addAccountMoneyService(String refreshToken, String accessToken, Map<String, String> dataToPass)async{
     Map<String, dynamic> result = {};
-    // print(dataToPass);
-    // print(accessToken);
+
     try{
       final res = await http.post(
         Uri.parse(postAddingAccountMoney),
@@ -35,6 +29,11 @@ class UserServices{
           'status' : 422,
           'result' : "Tên tài khoản đã tồn tại"
         };
+      }else if(res.statusCode == 401){
+        result =  {
+          'status' : 401,
+          'result' : "Kết thúc phiên làm việc "
+        };
       }else {
         throw Exception(res.body);
       }
@@ -47,5 +46,31 @@ class UserServices{
 
     return result;
   }
+  Future<Map<String, dynamic>> getAllAccountMoneyService(String accessToken)async{
+    Map<String, dynamic> result = {};
+    try{
 
+      final uri = Uri.parse(getAllAccountWalletApi);
+      final res = await http.get(
+        uri,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken'
+        }
+      );
+      if(res.statusCode == 200){
+        final resResult = jsonDecode(res.body);
+        return result = {
+          "data": resResult['result'],
+        };
+      }else {
+        return result={
+          'result':"Error fetching data"
+        };
+    }
+    }catch(e){
+      print('$e');
+    }
+    return result;
+  }
 }

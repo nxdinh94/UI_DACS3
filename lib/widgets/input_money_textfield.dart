@@ -46,12 +46,13 @@ class InputMoneyTextFieldState extends State<InputMoneyTextField> {
                 border: InputBorder.none,
                 contentPadding: EdgeInsets.zero,
                 suffixIcon: SvgPicture.asset(
-                  'assets/svg/dong.svg',
+                  'assets/svg/dong-svg-repo.svg',
+                  width: 13,
                   colorFilter: const  ColorFilter.mode(textColor, BlendMode.srcIn),
                 ),
                 suffixIconConstraints: const BoxConstraints(
-                    minHeight: 32,
-                    minWidth: 32
+                    minHeight: 25,
+                    minWidth: 25
                 ),
                 hintText: '0',
                 hintStyle: TextStyle(fontSize: 35, color: widget.textColor)

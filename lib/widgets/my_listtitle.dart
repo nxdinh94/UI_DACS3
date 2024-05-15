@@ -34,6 +34,7 @@ class MyListTile extends StatelessWidget {
           centerText,
           style: const TextStyle(fontSize: textSize, color: textColor),
         ),
+
         trailing: trailing,
       ),
     );

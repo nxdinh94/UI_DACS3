@@ -4,6 +4,7 @@ const String PORT = "http://192.168.1.7:4000";
 const String getCashFlowApi = '$PORT/app/get-cash-flow';
 const String getCashFlowCateApi = '$PORT/app/get-cash-flow-category';
 const String getAccountWalletTypeApi = '$PORT/app/get-money-account-type';
+const String getAllAccountWalletApi = '$PORT/app/get-money-account';
 
 const String postAddingAccountMoney = '$PORT/app/add-money-account';
 
