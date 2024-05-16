@@ -55,7 +55,7 @@ class _SpendingLimitItemsState extends State<SpendingLimitItems> {
                             child: Text(
                               overflow: TextOverflow.ellipsis,
                               'Tiền sinh hoạt hằng tháng',
-                              style: textStyleForSpendingLimitItem,
+                              style: defaultTextStyle,
                             ),
                           )
                         ),

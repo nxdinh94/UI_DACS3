@@ -1,21 +1,21 @@
 
-import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/constant/divider.dart';
 import 'package:practise_ui/constant/font.dart';
+import 'package:practise_ui/constant/icon_key_board_arrow_right.dart';
 import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/models/cashs_flow_model.dart';
 import 'package:practise_ui/providers/app_provider.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';
 import 'package:practise_ui/widgets/adding_workspace/dropdown_adding_workspace.dart';
+import 'package:practise_ui/widgets/adding_workspace/pick_contact_listtitle.dart';
 import 'package:provider/provider.dart';
 import '../../widgets/adding_workspace/expand_input_adding_space.dart';
 import '../../widgets/input_money_textfield.dart';
 import '../../widgets/listtitle_textfield.dart';
-import '../account_wallet/add_account_wallet_page.dart';
 
 class AddingWorkspace extends StatefulWidget {
   const AddingWorkspace({super.key});
@@ -27,23 +27,57 @@ class AddingWorkspace extends StatefulWidget {
 class _AddingWorkspaceState extends State<AddingWorkspace> {
 
   late CashFlowModel currentCashFlowOption;
-  late String moneyType ;
+  late String moneyType;// 3 options of dropdown
   List<CashFlowModel> cashFlowData = [];
-
-  final TextEditingController moneyEditTextController = TextEditingController();
-  final TextEditingController descriptEditTextController = TextEditingController();
-
+  Map<String, dynamic> chosenAccountWallet = {};
+  late String nameCashFlowCate = '';
 
   // all value;
-  late String _money;
   late String idCashFlowCate = '';
+  final TextEditingController moneyEditTextController = TextEditingController();
+  final TextEditingController descriptEditTextController = TextEditingController();
+  late String idChosenAccountWallet = '';
+  String _selectedDate= '';
+  late String contactPerson = '';
+  final TextEditingController eventEditTextController = TextEditingController();
+  late String revenueOrSpendingPerson= '';
+  late int isBorrowToPay = 0;
+  final TextEditingController costIncurredEditTextController = TextEditingController();
+  late String idCostIncuredCategory = '';
+  late int isIncludeInReport  = 0;
 
-  void onSelectCashFlowCate(String value){
+  void onSetIsIncludeInReport(int value){
     setState(() {
-      idCashFlowCate = value;
+      isIncludeInReport = value;
+    });
+  }
+  void onSelectCostIncuredCategory(String value, String fakeValue){
+    setState(() {
+      idCostIncuredCategory = value;
+    });
+  }
+  void onSetIsBorrowToPay(int value){
+    setState(() {
+      isBorrowToPay = value;
     });
   }
 
+  void onResetChosenContact(){
+    setState(() {
+      contactPerson = '';
+    });
+  }
+  void onSelectContact(String value){
+    setState(() {
+      contactPerson = value;
+    });
+  }
+  void onSelectCashFlowCate(String id, String name){
+    setState(() {
+      idCashFlowCate = id;
+      nameCashFlowCate = name;
+    });
+  }
 
   void onSelectedDropdownItem(CashFlowModel selectedItem){
     setState(() {
@@ -52,7 +86,6 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
     });
     // print(moneyType);
   }
-  String _selectedDate= '';
   DateTime currentDate = DateTime.now();
 
 
@@ -74,10 +107,6 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
   @override
   void initState() {
     cashFlowData = context.read<AppProvider>().cashFlowData;
-    //
-    // print('cashFlowData');
-    // print(cashFlowCateData);
-
     currentCashFlowOption = cashFlowData[0];
     for(var item in cashFlowData){
       if(item.isChosen == 1 ){
@@ -138,6 +167,13 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                           Text('idCashFlowCate: $idCashFlowCate'),
                           Text('soTien: ${moneyEditTextController.text}'),
                           Text('description: ${descriptEditTextController.text}'),
+                          Text('idAccountWallet: $idChosenAccountWallet'),
+                          Text('selectedDate: $_selectedDate'),
+                          Text('nameLoanPerson: $contactPerson'),
+                          Text('IsBorrowToPay: $isBorrowToPay'),
+                          Text('costIncured: ${costIncurredEditTextController.text}'),
+                          Text('idCostIncuredCategory: $idCostIncuredCategory'),
+                          Text('isIncludeInReport: $isIncludeInReport'),
                         ],
                       ),
                       actions: <Widget>[
@@ -146,15 +182,6 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                             textStyle: Theme.of(context).textTheme.labelLarge,
                           ),
                           child: const Text('Disable'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            textStyle: Theme.of(context).textTheme.labelLarge,
-                          ),
-                          child: const Text('Enable'),
                           onPressed: () {
                             Navigator.of(context).pop();
                           },
@@ -180,7 +207,10 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
               children: [
                 spaceColumn,
                 //Phần điền số tiền
-                InputMoneyTextField(controller: moneyEditTextController, title: 'Số tiền',),
+                InputMoneyTextField(
+                  controller: moneyEditTextController,
+                  title: 'Số tiền',
+                ),
                 spaceColumn,
                 // Phần điền thông tin cần thiết
                 Container(
@@ -188,12 +218,21 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                   child: Column(
                     children: [
                       // Phần chọn lý do dùng tiền
-                      _categorySection(
+                      ChooseCashFlowCategory(
                         cashFlowType:  moneyType,
                         onSelectCashFlowCate: onSelectCashFlowCate,
                       ),
                       dividerI76,
-                      _borrowerOrLenderSection(),
+                      //Person loan
+                      Visibility(
+                        visible: moneyType.toLowerCase().contains('vay'),
+                        child: PickContactListTile(
+                          moneyType: moneyType,
+                          nameCashFlowCate: nameCashFlowCate,
+                          onSelectContact: onSelectContact,
+                          onResetChosenContact: onResetChosenContact,
+                        )
+                      ),
                       dividerI76,
                       //_decribeSection
                       ListTitleTextField(
@@ -220,56 +259,46 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                           ),
                           title: Transform.translate(
                             offset: const Offset(-8, 0),
-                            child: Text(
-                                _selectedDate,
-                                style: const TextStyle(
-                                    fontSize: textSize,
-                                    color: textColor
-                                )
-                            ),
+                            child: Text(_selectedDate, style: defaultTextStyle),
                           ),
-                          trailing: const Icon(
-                            Icons.keyboard_arrow_right,
-                            color: iconColor,
-                            size: 33,
-                          ),
+                          trailing: keyBoardArrowRightIcon,
                           contentPadding: const EdgeInsets.only(left: 2, top: 8, bottom: 8, right: 0),
                           onTap: (){
-                                _selectDate(context);
+                              _selectDate(context);
                           },
                         ),
                       ),
                       dividerI76,
 
                       Container(
-                        padding: paddingR8L24,
+                        padding: const EdgeInsets.only(right: 9, left: 18),
                         child: ListTile(
                           leading: Container(
                             margin: const EdgeInsets.only(right: 13),
-                            child: SvgPicture.asset(
-                              'assets/svg/calendar.svg',
-                              width: 26,
-                              height: 26,
-                              colorFilter: ColorFilter.mode(Colors.grey[400]!, BlendMode.srcIn),
+                            child: Image.asset(
+                              chosenAccountWallet['icon']??
+                              'assets/another_icon/wallet-2.png',
+                              width: 40, height: 40,
                             ),
                           ),
-                          title: Transform.translate(
-                            offset: const Offset(-8, 0),
-                            child: Text(
-                                'Ví',
-                                style: TextStyle(
-                                    fontSize: textSize,
-                                    color: textColor
-                                )
-                            ),
-                          ),
-                          trailing: const Icon(
-                            Icons.keyboard_arrow_right,
-                            color: iconColor,
-                            size: 33,
-                          ),
-                          contentPadding: const EdgeInsets.only(left: 2, top: 8, bottom: 8, right: 0),
-                          onTap: (){},
+                          horizontalTitleGap: 11,
+                          title: Text(chosenAccountWallet['name']??'Ví', style: defaultTextStyle),
+                          trailing: keyBoardArrowRightIcon,
+                          contentPadding: const EdgeInsets.only(left: 0, top: 8, bottom: 8, right: 0),
+                          onTap: ()async{
+
+                            Map<String, dynamic> result =await CustomNavigationHelper.router.push(
+                             '${CustomNavigationHelper.addingWorkspacePath}/${CustomNavigationHelper.chooseAccountWalletPath}'
+                            ) as Map<String, dynamic>;
+                            if(!context.mounted){return ;}
+                            if(result.isNotEmpty){
+                              setState(() {
+                                chosenAccountWallet = result;
+                                idChosenAccountWallet = result['id'];
+                              });
+                            }
+
+                          },
                         ),
                       ),
                     ],
@@ -278,7 +307,17 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                 // Phần thông tin chi tiết(optional)
                 spaceColumn,
                 //Expanded detailed option
-                CustomDropdownMenu(),
+                CustomDropdownMenu(
+                  moneyType: moneyType,
+                  nameCashFlowCate: nameCashFlowCate,
+                  onSelectContact: onSelectContact,
+                  onResetChosenContact: onResetChosenContact,
+                  eventEditTextController: eventEditTextController,
+                  onSetIsBorrowToPay: onSetIsBorrowToPay,
+                  costIncuredEditTextController: costIncurredEditTextController,
+                  onSelectCostIncuredCategory:onSelectCostIncuredCategory,
+                  onSetIsIncludeInReport:onSetIsIncludeInReport
+                ),
               ],
             ),
           ),
@@ -289,96 +328,21 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
   }
 }
 
-class _borrowerOrLenderSection extends StatefulWidget {
-  const _borrowerOrLenderSection();
 
-  @override
-  State<_borrowerOrLenderSection> createState() => _borrowerOrLenderSectionState();
-}
-
-class _borrowerOrLenderSectionState extends State<_borrowerOrLenderSection> {
-  final FlutterContactPicker _contactPicker = FlutterContactPicker();
-  String? _contact = '';
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: paddingR8L21,
-      child: ListTile(
-        leading: Container(
-          margin: const EdgeInsets.only(right: 13),
-          child: SvgPicture.asset(
-            'assets/svg/person.svg',
-            width: 32,
-            height: 32,
-            colorFilter: ColorFilter.mode(Colors.grey[400]!, BlendMode.srcIn),
-          ),
-        ),
-        title: Transform.translate(
-          offset:  Offset(_contact == '' ? -8: -61, 0),
-          child: Builder(builder: (context){
-            if(_contact != ''){
-              return Chip(
-                deleteIcon:  CircleAvatar(
-                    radius: 10,
-                    backgroundColor: Colors.grey.shade400,
-                    child: const Icon(Icons.close, size: 15, color: secondaryColor,)
-                ),
-                materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                elevation: 0,
-                padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 5),
-                backgroundColor: backgroundColor,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide.none),
-                side: BorderSide.none,
-                label: Text(_contact!, style: const TextStyle(color: textColor, fontSize: textSize),),
-                onDeleted: () {
-                  setState(() {
-                    _contact = '';
-                  });
-                },
-              );
-            }
-            return const Text(
-                'Chọn người vay',
-                style: TextStyle( fontSize: textSize, color: textColor)
-            );
-
-          })
-        ),
-        trailing: const Icon(
-          Icons.keyboard_arrow_right,
-          color: iconColor,
-          size: 33,
-        ),
-        contentPadding: const EdgeInsets.only(left: 0, top: 8, bottom: 8, right: 0),
-        onTap: ()async{
-          Contact? contact = await _contactPicker.selectContact();
-          setState(() {
-            if(contact == null){
-              if(_contact != null){
-                return;
-              }else {
-                _contact = '';
-              }
-            }else {_contact = contact.fullName;}
-          });
-        },
-      ),
-    );
-  }
-}
-
-
-class _categorySection extends StatefulWidget {
-   _categorySection({required this.cashFlowType, required this.onSelectCashFlowCate});
+class ChooseCashFlowCategory extends StatefulWidget {
+  ChooseCashFlowCategory({
+     required this.cashFlowType,
+     required this.onSelectCashFlowCate
+   });
 
   final String cashFlowType;
-  final Function onSelectCashFlowCate;
+  final Function? onSelectCashFlowCate;
   @override
-  State<_categorySection> createState() => _categorySectionState();
+  State<ChooseCashFlowCategory> createState() => ChooseCashFlowCategoryState();
 }
 
-class _categorySectionState extends State<_categorySection> {
-  late Map<String, dynamic> currentOption = {'icon' :'', 'name':'', 'id': '', 'cash_flow_id': ''};
+class ChooseCashFlowCategoryState extends State<ChooseCashFlowCategory> {
+  late Map<String, dynamic> currentOption = {'icon' :'', 'name':'', 'id': ''};
   final TextStyle textStyle = const TextStyle(
       fontSize: 22,
       fontWeight: FontWeight.w500,
@@ -392,11 +356,7 @@ class _categorySectionState extends State<_categorySection> {
         currentOption['icon'] != '' ? currentOption['icon'] : 'assets/another_icon/question-mark.png', width: 40, height: 40,
       ),
       title: currentOption['name'] != '' ?  Text(currentOption['name'], style: textStyle):Text('Chọn hạng mục', style: textStyle,),
-      trailing: const Icon(
-        Icons.keyboard_arrow_right,
-        color: iconColor,
-        size: 33,
-      ),
+      trailing: keyBoardArrowRightIcon,
       contentPadding: const EdgeInsets.only(left: 16, top: 8, bottom: 8, right: 8),
       onTap: ()async{
         final result = await CustomNavigationHelper.router.pushNamed(
@@ -405,9 +365,8 @@ class _categorySectionState extends State<_categorySection> {
         if(!context.mounted) return;
         setState(() {
           currentOption = result as  Map<String , dynamic>;
-
         });
-        widget.onSelectCashFlowCate(currentOption['_id']);
+        widget.onSelectCashFlowCate!(currentOption['_id'], currentOption['name']);
       },
     );
   }

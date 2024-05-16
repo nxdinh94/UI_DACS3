@@ -23,40 +23,44 @@ class _AccountPageState extends State<AccountPage> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        backgroundColor: primaryColor,
-        title: const Text('Tài khoản', style: TextStyle(
-              color: secondaryColor,fontSize: textBig, fontWeight: FontWeight.w500
+    return Container(
+      padding: const EdgeInsets.only(top: 10),
+      color: primaryColor,
+      child: Scaffold(
+        appBar: AppBar(
+          backgroundColor: primaryColor,
+          title: const Text('Tài khoản', style: TextStyle(
+                color: secondaryColor,fontSize: textBig, fontWeight: FontWeight.w500
+            ),
+          ),
+          centerTitle: true,
+          leading: Builder(
+              builder: (BuildContext context){
+                return IconButton(
+                  icon: SvgPicture.asset(
+                    'assets/svg/magnifying-glass.svg',
+                    height: 22, width: 22,
+                  ),
+                  onPressed: (){},
+                );
+              }
           ),
         ),
-        centerTitle: true,
-        leading: Builder(
-            builder: (BuildContext context){
-              return IconButton(
-                icon: SvgPicture.asset(
-                  'assets/svg/magnifying-glass.svg',
-                  height: 22, width: 22,
-                ),
-                onPressed: (){},
-              );
-            }
-        ),
+        body:  Consumer<UserProvider>(
+          builder: (context, value, child){
+            return value.accountWalletList.isNotEmpty? HaveAccountCase(accountWalletData: value.accountWalletList): NoAccountCase();
+          }
       ),
-      body:  Consumer<UserProvider>(
-        builder: (context, value, child){
-          return value.accountWalletList.isNotEmpty? HaveAccountCase(accountWalletData: value.accountWalletList): NoAccountCase();
-        }
-    ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: (){
-          CustomNavigationHelper.router.push(
-              '${CustomNavigationHelper.accountWalletPath}/${CustomNavigationHelper.addAccountWalletPath}'
-          );
-        },
-        backgroundColor: primaryColor,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
-        child: SvgPicture.asset('assets/svg/plus.svg', height: 45, width: 45, ),
+        floatingActionButton: FloatingActionButton(
+          onPressed: (){
+            CustomNavigationHelper.router.push(
+                '${CustomNavigationHelper.accountWalletPath}/${CustomNavigationHelper.addAccountWalletPath}'
+            );
+          },
+          backgroundColor: primaryColor,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(40)),
+          child: SvgPicture.asset('assets/svg/plus.svg', height: 45, width: 45, ),
+        ),
       ),
     );
   }
@@ -133,7 +137,8 @@ class _HaveAccountCaseState extends State<HaveAccountCase> {
                   return Column(
                     children: [
                       ListTile(
-                        leading: Image.asset('assets/another_icon/question-mark.png', width: 40, height: 40,),
+                        leading: Image.asset(widget.accountWalletData[index]['money_type_information']['icon']
+                          , width: 40, height: 40,),
                         title: Padding(
                           padding: const EdgeInsets.only(bottom: 7.0),
                           child: Text(widget.accountWalletData[index]['name']),

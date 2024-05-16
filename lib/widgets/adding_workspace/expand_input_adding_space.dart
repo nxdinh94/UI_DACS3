@@ -1,16 +1,42 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/constant/font.dart';
 import 'package:practise_ui/constant/side.dart';
-class CustomDropdownMenu extends StatefulWidget {
-  const CustomDropdownMenu({Key? key}) : super(key: key);
+import 'package:practise_ui/widgets/adding_workspace/pick_contact_listtitle.dart';
+import 'package:practise_ui/widgets/input_money_textfield.dart';
+import 'package:practise_ui/widgets/listtitle_textfield.dart';
 
+import '../../pages/adding_workspace/adding_workspace.dart';
+class CustomDropdownMenu extends StatefulWidget {
+  const CustomDropdownMenu({
+    Key? key,
+    required this.moneyType,
+    required this.eventEditTextController,
+    this.onSelectContact,
+    this.onResetChosenContact,
+    this.onSetIsBorrowToPay,
+    this.onSelectCostIncuredCategory,
+    this.onSetIsIncludeInReport,
+    required this.costIncuredEditTextController,
+    required this.nameCashFlowCate
+  }) : super(key: key);
+  final String moneyType;
+  final String nameCashFlowCate;
+  final TextEditingController eventEditTextController;
+  final TextEditingController costIncuredEditTextController;
+  final Function? onSelectContact;
+  final Function? onResetChosenContact;
+  final Function? onSetIsBorrowToPay;
+  final Function? onSelectCostIncuredCategory;
+  final Function? onSetIsIncludeInReport;
   @override
   State<CustomDropdownMenu> createState() => _CustomDropdownMenuState();
 }
 
 class _CustomDropdownMenuState extends State<CustomDropdownMenu>  {
+
   late bool isShow;
   bool isBorrowToPay = false;
   bool isFee = false;
@@ -20,7 +46,11 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu>  {
     isShow = false;
     super.initState();
   }
-
+  @override
+  void dispose() {
+    widget.eventEditTextController.dispose();
+    super.dispose();
+  }
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -38,76 +68,39 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu>  {
                   color: secondaryColor,
                   child: Column(
                     children: [
-                      ListTile(
-                        leading: SvgPicture.asset(
-                          'assets/svg/travel-bus.svg',
-                          colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn),
-                          width: 29,
-                        ),
-
-                        title: const Text(
-                          'Chuyến đi/Sự kiện',
-                          style: TextStyle(
-                              fontSize: textSize,
-                              color: labelColor
-                          ),
-                        ),
-                        trailing: const Icon(
-                          Icons.keyboard_arrow_right,
-                          color: iconColor,
-                          size: 33,
-                        ),
-                        contentPadding: const EdgeInsets.only(left: 16, top: 0, bottom: 0, right: 8),
-                        onTap: (){},
-                      ),
-                      const Divider(height: 1, color: underLineColor,indent: 64),
-                      ListTile(
-                        leading: SvgPicture.asset(
-                          'assets/svg/person.svg',
-                          colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn),
-                          width: 33,
-                        ),
-
-                        title: Transform.translate(
-                          offset: const Offset(-4, 0),
-                          child: const Text(
-                            'Chi cho ai',
-                            style: TextStyle(
-                                fontSize: textSize,
-                                color: labelColor
+                      Visibility(
+                        visible: widget.moneyType.toLowerCase().contains('tiền'),
+                        child: Column(
+                          children: [
+                            ListTitleTextField(
+                              controller: widget.eventEditTextController,
+                              leading: SvgPicture.asset(
+                                'assets/svg/travel-bus.svg',
+                                colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn),
+                                width: 29,
+                              ),
+                              hintText: 'Chuyến đi/Sự kiện',
+                              paddingLeftLeading: 18,
+                              horizontalTitleGap: 14,
                             ),
-                          ),
+                            const Divider(height: 1, color: underLineColor,indent: 62),
+                          ],
                         ),
-                        trailing: const Icon(
-                          Icons.keyboard_arrow_right,
-                          color: iconColor,
-                          size: 33,
-                        ),
-                        contentPadding: const EdgeInsets.only(left: 16, top: 0, bottom: 0, right: 8),
-                        onTap: (){},
                       ),
-                      const Divider(height: 1, color: underLineColor,indent: 64),
-                      ListTile(
-                        leading: SvgPicture.asset(
-                          'assets/svg/location.svg',
-                          colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn),
-                          width: 30,
-                        ),
+                      Visibility(
+                        visible: widget.moneyType.toLowerCase().contains('tiền'),
+                        child: Column(
+                          children: [
+                            PickContactListTile(
+                              nameCashFlowCate: widget.nameCashFlowCate,
+                              moneyType: widget.moneyType,
+                              onSelectContact: widget.onSelectContact,
+                              onResetChosenContact: widget.onResetChosenContact
+                            ),
+                            const Divider(height: 1, color: underLineColor,indent: 64),
 
-                        title: const Text(
-                          'Địa điểm',
-                          style: TextStyle(
-                              fontSize: textSize,
-                              color: labelColor
-                          ),
+                          ],
                         ),
-                        trailing: const Icon(
-                          Icons.keyboard_arrow_right,
-                          color: iconColor,
-                          size: 33,
-                        ),
-                        contentPadding: const EdgeInsets.only(left: 16, top: 0, bottom: 0, right: 8),
-                        onTap: (){},
                       ),
                     ],
                   ),
@@ -118,25 +111,22 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu>  {
                   child: ListTile(
                     title: const Text(
                       'Đi vay để trả khoảng này',
-                      style: TextStyle(
-                        color: textColor,
-                        fontSize: textSize
-                      ),
+                      style: defaultTextStyle,
                     ),
                     trailing: Switch(
                       value: isBorrowToPay,
                       activeColor: switchColorButton,
                       trackOutlineColor: const MaterialStatePropertyAll(Colors.transparent),
-
                       thumbColor: const MaterialStatePropertyAll<Color>(secondaryColor),
                       onChanged: (bool value) {
-                        setState(() {
+                      widget.onSetIsBorrowToPay!(value == true ? 1: 0);
+
+                      setState(() {
                           isBorrowToPay = value;
                         });
                       },
                     ),
                     contentPadding: const EdgeInsets.only(left: 16, top: 0, bottom: 0, right: 12),
-
                   ),
                 ),
                 spaceColumn,
@@ -146,116 +136,52 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu>  {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children:<Widget> [
-                      ListTile(
-                        title: const Text(
-                          'Phí',
-                          style: TextStyle(
-                              color: textColor,
-                              fontSize: textSize
-                          ),
-                        ),
-                        trailing: Switch(
-                          value: isFee,
-                          activeColor: switchColorButton,
-                          trackOutlineColor: const MaterialStatePropertyAll(Colors.transparent),
+                      Visibility(
+                        visible: widget.moneyType.toLowerCase().contains('chi tiền')
+                        || widget.nameCashFlowCate.toLowerCase().contains('cho vay'),
 
-                          thumbColor: const MaterialStatePropertyAll<Color>(secondaryColor),
-                          onChanged: (bool value) {
-                            setState(() {
-                              isFee = value;
-                            });
-                          },
+                        child: ListTile(
+                          title: const Text('Phí', style: defaultTextStyle),
+                          trailing: Switch(
+                            value: isFee,
+                            activeColor: switchColorButton,
+                            trackOutlineColor: const MaterialStatePropertyAll(Colors.transparent),
+                            thumbColor: const MaterialStatePropertyAll<Color>(secondaryColor),
+                            onChanged: (bool value) {
+                              setState(() {
+                                isFee = value;
+                              });
+                            },
+                          ),
+                          contentPadding: const EdgeInsets.only(left: 16, top: 0, bottom: 0, right: 12),
                         ),
-                        contentPadding: const EdgeInsets.only(left: 16, top: 0, bottom: 0, right: 12),
+
                       ),
                       Visibility(
-                        visible: isFee,
+                        visible:
+                            (isFee && widget.moneyType.toLowerCase().contains('chi tiền')) ||
+                            (isFee && widget.nameCashFlowCate.toLowerCase().contains('cho vay')),
                         maintainInteractivity: false,
-                        maintainState: false,
+                        maintainState: true,
                         maintainSize: false,
                         child: Column(
                           children: [
-                            const Divider(
-                              height: 1, color: underLineColor, indent: 65,
+                            const Divider(height: 1, color: underLineColor, indent: 65),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 6.0),
+                              child: InputMoneyTextField(
+                                title: 'Số tiền',
+                                controller: widget.costIncuredEditTextController,
+                                textColor: spendingMoneyColor,
+                              ),
                             ),
-                            spaceColumn,
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                const Padding(
-                                  padding: EdgeInsets.only(right: 8),
-                                  child: Text('Số tiền', style: TextStyle(
-                                    fontSize: textSize,
-                                    color: revenueMoneyColor,
-                                    height: 0.9,
-                                  )),
-                                ),
-                                TextField(
-                                  decoration: InputDecoration(
-                                    isDense: true,
-                                    contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 10),
-                                    border: InputBorder.none,
-                                    hintText: '0',
-                                    hintStyle: const TextStyle(
-                                      color: labelColor,
-                                    ),
-
-                                    suffixIcon: SizedBox(
-                                      height: 10,
-                                      width: 10,
-                                      child: SvgPicture.asset(
-                                        'assets/svg/dong.svg',
-                                        height: 10,
-                                        width: 10,
-                                        colorFilter: const ColorFilter.mode(textColor, BlendMode.srcIn),
-                                      ),
-                                    ),
-                                    suffixIconConstraints: const BoxConstraints(
-                                      minWidth: 30,
-                                      minHeight: 30,
-                                    ),
-                                    suffixIconColor: textColor,
-
-                                  ),
-                                  textAlign: TextAlign.end,
-                                  cursorColor: primaryColor,
-                                  keyboardType: TextInputType.number,
-                                  style: const TextStyle(
-                                      fontSize: 38,
-                                      fontWeight: FontWeight.w700,
-                                      color: revenueMoneyColor
-                                  ),
-                                ),
-                                const Divider(height: 1, color: underLineColor, indent: 65,)
-                              ],
-                            ),
-                            ListTile(
-                              leading: SvgPicture.asset(
-                                'assets/svg/location.svg',
-                                colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn),
-                                width: 30,
-                              ),
-
-                              title: const Text(
-                                'Địa điểm',
-                                style: TextStyle(
-                                    fontSize: textSize,
-                                    color: labelColor
-                                ),
-                              ),
-                              trailing: const Icon(
-                                Icons.keyboard_arrow_right,
-                                color: iconColor,
-                                size: 33,
-                              ),
-                              contentPadding: const EdgeInsets.only(left: 16, top: 0, bottom: 0, right: 8),
-                              onTap: (){},
+                            ChooseCashFlowCategory(
+                              cashFlowType: 'chi tiền ',
+                              onSelectCashFlowCate: widget.onSelectCostIncuredCategory,
                             ),
                           ],
                         ),
-
                       )
-
                     ],
                   ),
                 ),
@@ -266,23 +192,21 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu>  {
                   child: ListTile(
                     title: const  Text(
                       'Không tính vào báo cáo',
-                      style: TextStyle(
-                          color: textColor,
-                          fontSize: textSize
-                      ),
+                      style: defaultTextStyle,
                     ),
                     subtitle: const Text(
                       'Ghi chép này sẽ không được thống kê vào TẤT CẢ các '
                           'báo cáo(trừ báo cáo Tài chính hiện tại)'
                     ),
-                    subtitleTextStyle: const TextStyle(color: labelColor)
-                    ,trailing: Switch(
+                    subtitleTextStyle: const TextStyle(color: labelColor),
+                    trailing: Switch(
                       value: isNotReport,
                       activeColor: switchColorButton,
                       trackOutlineColor: const MaterialStatePropertyAll(Colors.transparent),
 
                       thumbColor: const MaterialStatePropertyAll<Color>(secondaryColor),
                       onChanged: (bool value) {
+                        widget.onSetIsIncludeInReport!(value == true? 1: 0);
                         setState(() {
                           isNotReport = value;
                         });
@@ -301,27 +225,27 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu>  {
                   child: Row(
                     children: [
                       Expanded(
+                        flex: 1,
                         child: IconButton(
-                          icon: Icon(Icons.image, size: 45,),
+                          icon: const Icon(Icons.image, size: 45,),
                           color: iconColor,
                           onPressed: () {  },
                         ),
-                        flex: 1,
                       ),
 
                       Container(
                         height: double.infinity,
                         width: 1,
-                        margin: EdgeInsets.symmetric(vertical: 5),
+                        margin: const  EdgeInsets.symmetric(vertical: 5),
                         color: underLineColor,
                       ),
                       Expanded(
+                        flex: 1,
                         child: IconButton(
-                          icon: Icon(Icons.camera_alt, size: 45,),
+                          icon: const Icon(Icons.camera_alt, size: 45,),
                           color: iconColor,
                           onPressed: () {  },
                         ),
-                        flex: 1,
                       ),
 
                     ],

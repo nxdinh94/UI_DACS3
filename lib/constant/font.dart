@@ -10,7 +10,7 @@ const textStyleForTitleSection = TextStyle(
     color: textColor,
     fontWeight: FontWeight.bold
 );
-const textStyleForSpendingLimitItem = TextStyle(
+const defaultTextStyle = TextStyle(
     fontSize: textSize,
     color: textColor,
 );

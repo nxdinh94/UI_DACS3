@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:http/http.dart';
 import 'package:practise_ui/pages/account_wallet/account_page.dart';
 import 'package:practise_ui/pages/account_setting_page.dart';
 import 'package:practise_ui/pages/account_wallet/add_account_wallet_page.dart';
 import 'package:practise_ui/pages/account_wallet/select_account_wallet_type_page.dart';
 import 'package:practise_ui/pages/account_wallet/select_bank_page.dart';
+import 'package:practise_ui/pages/adding_workspace/choose_account_wallet_page.dart';
 import 'package:practise_ui/pages/spending_limit/add_and_edit_spending_limit_page.dart';
 import 'package:practise_ui/pages/adding_workspace/adding_workspace.dart';
 import 'package:practise_ui/pages/another_page.dart';
@@ -75,6 +77,7 @@ class CustomNavigationHelper {
   static const String selectAccountWalletTypePath = 'selectAccountWalletType';
   static const String selectBankPath = 'selectBankPath';
   static const String addAccountWalletPath = 'addAccountWallet';
+  static const String chooseAccountWalletPath = 'chooseAccountWallet';
 
   factory CustomNavigationHelper() {
     return _instance;
@@ -139,7 +142,8 @@ class CustomNavigationHelper {
                               state: state
                             );
                           }
-                        )
+                        ),
+
                       ]
                     )
                   ]
@@ -170,6 +174,15 @@ class CustomNavigationHelper {
                           state: state,
                         );
                       },
+                    ),
+                    GoRoute(
+                        path: chooseAccountWalletPath,
+                        pageBuilder: (context, state){
+                          return getPage(
+                              child: ChooseAccountWalletPage(),
+                              state: state
+                          );
+                        }
                     )
                   ]
                 ),
