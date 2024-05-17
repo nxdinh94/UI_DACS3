@@ -20,100 +20,96 @@ class DetailAccountWalletPage extends StatefulWidget {
 class _DetailAccountWalletPageState extends State<DetailAccountWalletPage> {
   @override
   Widget build(BuildContext context) {
-    return  Container(
-      padding: const EdgeInsets.only(top: 10),
-      color: primaryColor,
-      child: Scaffold(
-        backgroundColor: backgroundColor,
-        appBar: AppBar(
-          backgroundColor: primaryColor,
-          toolbarHeight: 52,
-          leading: const Padding(
-            padding:  EdgeInsets.only(bottom: 8.0),
-            child: BackToolbarButton(),
-          ),
-          title: Text(widget.accountWalletData['name'], style: const TextStyle(
-              color: secondaryColor,fontSize: textBig, fontWeight: FontWeight.w500
-          ),),
-          centerTitle: true,
+    return  Scaffold(
+      backgroundColor: backgroundColor,
+      appBar: AppBar(
+        backgroundColor: primaryColor,
+        toolbarHeight: 52,
+        leading: const Padding(
+          padding:  EdgeInsets.only(bottom: 8.0),
+          child: BackToolbarButton(),
         ),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                height: 55,
-                padding: paddingAll12,
-                color: secondaryColor,
-                child: Center(
-                  child: RichText(
-                  text: TextSpan(
-                    text: '30 ngày gần nhất',
-                    style: const TextStyle(
-                        color: primaryColor, fontSize: textSize, fontWeight: FontWeight.w500
-                    ),
-                    children: [
-                      const WidgetSpan(
-                        alignment: PlaceholderAlignment.middle,
-                        child: Icon(Icons.keyboard_arrow_right, size: 30, color: primaryColor,)
-                      )
-                    ]
-                  )),
-                ),
-              ),
-              spaceColumn,
-              Container(
-                color: secondaryColor,
-                padding: paddingAll12,
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TotalRevenueOrSpendingItem(
-                        title: 'Tổng thu', amountOfMoney: formatCurrencyVND(0), foreground: revenueMoneyColor,
-                      ),
-                    ),
-                    Container(
-                      width: 2,
-                      color: underLineColor,
-                      child: const VerticalDivider(
-                        width: 20,
-                        thickness: 1,
-                        color: Colors.grey,
-                      ),
-                    ),
-                    Expanded(
-                      child: TotalRevenueOrSpendingItem(
-                        title: 'Tổng chi', amountOfMoney: formatCurrencyVND(0), foreground: spendingMoneyColor,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              spaceColumn,
-              Container(
-                color: secondaryColor,
-                padding: paddingAll12,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    const Text('Số dư hiện tại',style: TextStyle(color: labelColor, fontSize: textSize)),
-                    RichText(
-                      text: TextSpan(
-                        text:  formatCurrencyVND(double.parse(widget.accountWalletData['account_balance'][r'$numberDecimal'])),
-                        style: const TextStyle(fontSize: textBig, fontWeight: FontWeight.w700, color: textColor),
-                        children: [
-                          WidgetSpan(
-                            child: SvgPicture.asset('assets/svg/dong-svg-repo.svg', width: 15,
-                            colorFilter:const ColorFilter.mode(textColor, BlendMode.srcIn),),
-                            alignment: PlaceholderAlignment.middle
-                          )
-                        ]
-                      )
+        title: Text(widget.accountWalletData['name'], style: const TextStyle(
+            color: secondaryColor,fontSize: textBig, fontWeight: FontWeight.w500
+        ),),
+        centerTitle: true,
+      ),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              height: 55,
+              padding: paddingAll12,
+              color: secondaryColor,
+              child: Center(
+                child: RichText(
+                text: TextSpan(
+                  text: '30 ngày gần nhất',
+                  style: const TextStyle(
+                      color: primaryColor, fontSize: textSize, fontWeight: FontWeight.w500
+                  ),
+                  children: const [
+                    WidgetSpan(
+                      alignment: PlaceholderAlignment.middle,
+                      child: Icon(Icons.keyboard_arrow_right, size: 30, color: primaryColor,)
                     )
                   ]
-                ),
-              )
-            ],
-          ),
+                )),
+              ),
+            ),
+            spaceColumn,
+            Container(
+              color: secondaryColor,
+              padding: paddingAll12,
+              child: Row(
+                children: [
+                  Expanded(
+                    child: TotalRevenueOrSpendingItem(
+                      title: 'Tổng thu', amountOfMoney: formatCurrencyVND(0), foreground: revenueMoneyColor,
+                    ),
+                  ),
+                  Container(
+                    width: 2,
+                    color: underLineColor,
+                    child: const VerticalDivider(
+                      width: 20,
+                      thickness: 1,
+                      color: Colors.grey,
+                    ),
+                  ),
+                  Expanded(
+                    child: TotalRevenueOrSpendingItem(
+                      title: 'Tổng chi', amountOfMoney: formatCurrencyVND(0), foreground: spendingMoneyColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            spaceColumn,
+            Container(
+              color: secondaryColor,
+              padding: paddingAll12,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text('Số dư hiện tại',style: TextStyle(color: labelColor, fontSize: textSize)),
+                  RichText(
+                    text: TextSpan(
+                      text:  formatCurrencyVND(double.parse(widget.accountWalletData['account_balance'][r'$numberDecimal'])),
+                      style: const TextStyle(fontSize: textBig, fontWeight: FontWeight.w700, color: textColor),
+                      children: [
+                        WidgetSpan(
+                          child: SvgPicture.asset('assets/svg/dong-svg-repo.svg', width: 15,
+                          colorFilter:const ColorFilter.mode(textColor, BlendMode.srcIn),),
+                          alignment: PlaceholderAlignment.middle
+                        )
+                      ]
+                    )
+                  )
+                ]
+              ),
+            )
+          ],
         ),
       ),
     );

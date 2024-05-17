@@ -49,7 +49,7 @@ class _AccountPageState extends State<AccountPage> {
         ),
         body:  Consumer<UserProvider>(
           builder: (context, value, child){
-            return value.accountWalletList.isNotEmpty? HaveAccountCase(accountWalletData: value.accountWalletList): NoAccountCase();
+            return value.accountWalletList.isNotEmpty? HaveAccountCase(accountWalletData: value.accountWalletList): const NoAccountCase();
           }
         ),
         floatingActionButton: FloatingActionButton(

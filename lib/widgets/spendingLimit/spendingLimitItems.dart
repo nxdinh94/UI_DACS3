@@ -4,8 +4,10 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/constant/side.dart';
+import 'package:practise_ui/utils/currency_format.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';
 import 'package:practise_ui/utils/progress_bar.dart';
+import 'package:practise_ui/widgets/vnd_icon.dart';
 import '../../constant/font.dart';
 import '../custom_stack_three_images.dart';
 class SpendingLimitItems extends StatefulWidget {
@@ -83,9 +85,18 @@ class _SpendingLimitItemsState extends State<SpendingLimitItems> {
                             color: labelColor,
                             fontSize: textSmall
                           )),
-                        Text('7.000.000đ', style: const TextStyle(
-                          color: textColor, fontSize: textBig
-                        ),),
+                        RichText(
+                          text: TextSpan(
+                            text: formatCurrencyVND(7000000),
+                            style: const TextStyle(color: textColor, fontSize: textBig),
+                            children: const [
+                              WidgetSpan(
+                                child: VndIcon(color: textColor, size: 16),
+                                alignment: PlaceholderAlignment.middle
+                              )
+                            ]
+                          ), 
+                        ),
                       ],
                     ),
                   ],
@@ -104,9 +115,18 @@ class _SpendingLimitItemsState extends State<SpendingLimitItems> {
                 fontSize: textSmall,
                 color: labelColor
               ),),
-              Text('6.000.000đ', style: TextStyle(
-                fontSize: textSize
-              ),),
+              RichText(
+                text: TextSpan(
+                    text: formatCurrencyVND(7000000),
+                    style: const TextStyle(color: textColor, fontSize: textBig),
+                    children: const [
+                      WidgetSpan(
+                          child: VndIcon(color: textColor, size: 16),
+                          alignment: PlaceholderAlignment.middle
+                      )
+                    ]
+                ),
+              ),
             ],
           ),
         ],

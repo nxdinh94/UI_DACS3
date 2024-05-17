@@ -17,12 +17,12 @@ const chartCollumn2 = Colors.deepOrangeAccent;
 const spendingMoneyColor = Color(0xFFFF6666);
 const revenueMoneyColor = Color(0xFF43AF3F);
 
-const iconColor = Color(0xFFC2BEBE);
+const iconColor = Color(0xFFB2AEAE);
 const switchColorButton = Color(0x4228C206);
 const textColor = Color(0xFF494646);
 const unselectedRadioButton = Colors.grey;
 const labelColor = Color(0x86343434);
-const underLineColor = Color(0x86C5C5C5);
+const underLineColor = Color(0x86D2CCCC);
 
 const defaultPadding = 20.0;
 final gradientList = <List<Color>>[

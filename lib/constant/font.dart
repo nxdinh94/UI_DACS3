@@ -6,11 +6,15 @@ const double textSize = 18;
 const double textSmall = 16;
 const double textBig = 20;
 const textStyleForTitleSection = TextStyle(
-    fontSize: 20,
+    fontSize: textBig,
     color: textColor,
     fontWeight: FontWeight.bold
 );
 const defaultTextStyle = TextStyle(
     fontSize: textSize,
     color: textColor,
+);
+const labelTextStyle = TextStyle(
+    fontSize: textSize,
+    color: labelColor
 );
