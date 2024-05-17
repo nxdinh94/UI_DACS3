@@ -32,6 +32,18 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin{
     notifyListeners();
     return result;
   }
+  Future<Map<String, dynamic>> updateMoneyAccount(Map<String, String> data)async{
+    // Get instance SharedPreferences
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    // Get token['refresh_token','refresh_token']
+    String tokenString = pref.getString(userDataKey) as String;
+    Map<String, dynamic> tokenDecoded  = jsonDecode(tokenString);
+    String accessToken = tokenDecoded['access_token'];
+    notifyListeners();
+    Map<String, dynamic> result = await userServices.updateAccountMoneyService(accessToken, data);
+    notifyListeners();
+    return result;
+  }
   Future<void> getAllAccountWallet()async{
     // Get instance SharedPreferences
     final SharedPreferences pref = await SharedPreferences.getInstance();

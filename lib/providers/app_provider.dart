@@ -19,7 +19,7 @@ class AppProvider extends ChangeNotifier {
   Map<String, dynamic> _cashFlowCateData = {};
   Map<String, dynamic> get cashFlowCateData => _cashFlowCateData;
 
-  //accountWalletType variable;
+  //accountWalletType variable;[tien mat, vi dien tu, the ngan hang...]
   List<dynamic> _accountWalletType = [];
   List<dynamic> get accountWalletType => _accountWalletType;
 

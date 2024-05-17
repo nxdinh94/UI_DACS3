@@ -357,7 +357,7 @@ class ChooseCashFlowCategoryState extends State<ChooseCashFlowCategory> {
       ),
       title: currentOption['name'] != '' ?  Text(currentOption['name'], style: textStyle):Text('Chọn hạng mục', style: textStyle,),
       trailing: keyBoardArrowRightIcon,
-      contentPadding: const EdgeInsets.only(left: 16, top: 8, bottom: 8, right: 8),
+      contentPadding: const EdgeInsets.only(left:  16, top: 8, bottom: 8, right: 8),
       onTap: ()async{
         final result = await CustomNavigationHelper.router.pushNamed(
           'selectCategory', extra: widget.cashFlowType

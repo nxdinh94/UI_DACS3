@@ -40,10 +40,49 @@ class UserServices{
     }catch(e){
       print('Error handling addAccountMoney $e');
       return result = {'result': 'Tài khoản đã tồn tại'};
-
     }
+    return result;
+  }
+  Future<Map<String, dynamic>> updateAccountMoneyService(String accessToken, Map<String, String> dataToPass)async{
+    Map<String, dynamic> result = {};
 
+    try{
+      final res = await http.patch(
+        Uri.parse(updateAccountMoney),
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken',
+        },
+        body: jsonEncode(
+            dataToPass
+        ),
+      );
+      print(res.body);
 
+      if(res.statusCode == 200){
+        result =  {
+          'status' : 200,
+          'result' : jsonDecode(res.body)['result'],
+        };
+        return result;
+      }else if(res.statusCode == 422){
+        print(res.body);
+        result =  {
+          'status' : 422,
+          'result' : "Tài khoản đã tồn tại"
+        };
+      }else if(res.statusCode == 401){
+        result =  {
+          'status' : 401,
+          'result' : "Kết thúc phiên làm việc "
+        };
+      }else {
+        throw Exception(res.body);
+      }
+    }catch(e){
+      print('Error handling addAccountMoney $e');
+      return result = {'result': 'Tài khoản đã tồn tại'};
+    }
     return result;
   }
   Future<Map<String, dynamic>> getAllAccountMoneyService(String accessToken)async{

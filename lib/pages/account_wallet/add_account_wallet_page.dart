@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart';
 import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/providers/user_provider.dart';
 import 'package:practise_ui/widgets/listtitle_textfield.dart';
@@ -9,7 +8,6 @@ import 'package:provider/provider.dart';
 
 import '../../constant/color.dart';
 import '../../constant/font.dart';
-import '../../providers/app_provider.dart';
 import '../../utils/custom_navigation_helper.dart';
 import '../../utils/custom_toast.dart';
 import '../../widgets/back_toolbar_button.dart';
@@ -34,12 +32,10 @@ class _AddAccountWalletPageState extends State<AddAccountWalletPage> {
   //another variable
   Map<String, dynamic> resultChosenMoneyAccountType = {};
   Map<String, dynamic> resultChosenBank = {};
-  List<dynamic> accountWalletTypeData = [];
   String nameChosenAccountWalletType = '';
   bool alertNullNameWallet = false;
   @override
   void initState() {
-    accountWalletTypeData = context.read<AppProvider>().accountWalletType;
     super.initState();
   }
 
@@ -112,7 +108,6 @@ class _AddAccountWalletPageState extends State<AddAccountWalletPage> {
                           '${CustomNavigationHelper.accountWalletPath}/'
                           '${CustomNavigationHelper.addAccountWalletPath}/'
                           '${CustomNavigationHelper.selectAccountWalletTypePath}',
-                        extra: accountWalletTypeData
                       ) as  Map<String, dynamic>;
                       if(!context.mounted){ return ; }
                       if(result.isNotEmpty){
@@ -224,7 +219,6 @@ class _AddAccountWalletPageState extends State<AddAccountWalletPage> {
                     "money_account_type_id":"",
                     "description":"",
                     "report":'0',
-                    "select_bank":'0',
                     "credit_limit_number" : '0',
                   };
                   dynamic result ;
@@ -242,9 +236,9 @@ class _AddAccountWalletPageState extends State<AddAccountWalletPage> {
                         nameChosenAccountWalletType.toLowerCase().contains('tài khoản ngân hàng') ||
                         nameChosenAccountWalletType.toLowerCase().contains('thẻ tín dụng')
                     ){
-                      dataToPass.update('select_bank', (value)=>idChosenBank.toString());
+                      dataToPass['select_bank'] = idChosenBank.toString();
                     }else {
-                      dataToPass.update('select_bank', (value)=>0.toString());
+                      dataToPass.remove('select_bank');
                     }
 
                     if(nameChosenAccountWalletType.toLowerCase().contains('thẻ tín dụng')){
@@ -263,7 +257,7 @@ class _AddAccountWalletPageState extends State<AddAccountWalletPage> {
                     result = await Provider.of<UserProvider>(context, listen: false).addMoneyAccount(dataToPass);
 
                     if(result['status']== 422){
-
+                      print(dataToPass);
                       showCustomErrorToast(context, result['result'], 2);
 
                     }else if(result['status'] == 200){

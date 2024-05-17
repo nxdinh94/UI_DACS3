@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practise_ui/constant/side.dart';
+import 'package:practise_ui/widgets/custom_popup_menu.dart';
 import 'package:provider/provider.dart';
 
 import '../../constant/color.dart';
@@ -50,7 +51,7 @@ class _AccountPageState extends State<AccountPage> {
           builder: (context, value, child){
             return value.accountWalletList.isNotEmpty? HaveAccountCase(accountWalletData: value.accountWalletList): NoAccountCase();
           }
-      ),
+        ),
         floatingActionButton: FloatingActionButton(
           onPressed: (){
             CustomNavigationHelper.router.push(
@@ -137,14 +138,20 @@ class _HaveAccountCaseState extends State<HaveAccountCase> {
                   return Column(
                     children: [
                       ListTile(
-                        leading: Image.asset(widget.accountWalletData[index]['money_type_information']['icon']
+                        onTap:(){
+                          CustomNavigationHelper.router.push(
+                              '${CustomNavigationHelper.accountWalletPath}/${CustomNavigationHelper.updateAccountWalletPath}',
+                              extra: widget.accountWalletData[index] as Map<String, dynamic>
+                          );
+                        },
+                        leading: Image.asset(
+                          widget.accountWalletData[index]['money_type_information']['icon']
                           , width: 40, height: 40,),
                         title: Padding(
                           padding: const EdgeInsets.only(bottom: 7.0),
                           child: Text(widget.accountWalletData[index]['name']),
                         ),
                         titleTextStyle: const TextStyle(color: textColor, fontSize: textSize, fontWeight: FontWeight.w500),
-                        trailing: SvgPicture.asset('assets/svg/three-dots-vertical.svg', width: 18,),
                         subtitle: RichText(
                           text: TextSpan(
                             text: formatCurrencyVND(double.parse(widget.accountWalletData[index]['account_balance'][r'$numberDecimal'])),
@@ -161,8 +168,11 @@ class _HaveAccountCaseState extends State<HaveAccountCase> {
                         subtitleTextStyle: const TextStyle(color: labelColor,fontSize: textSize),
                         horizontalTitleGap: 10,
                         contentPadding: const EdgeInsets.symmetric(horizontal: 12),
-                        onTap: (){
-                        }
+                        trailing: CustomPopupMenu(
+                          representationIcon: SvgPicture.asset('assets/svg/three-dots-vertical.svg', width: 18),
+                          selectedItemData: widget.accountWalletData[index] as Map<String, dynamic>,
+                        ),
+
                       ),
                       const Divider(color: underLineColor, height: 0,)
                     ],

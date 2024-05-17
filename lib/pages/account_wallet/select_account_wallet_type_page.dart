@@ -9,8 +9,7 @@ import '../../utils/custom_navigation_helper.dart';
 import '../../widgets/rounded_checkbox_icon.dart';
 
 class SelectAccountWalletTypePage extends StatefulWidget {
-  const SelectAccountWalletTypePage({super.key, required this.accountWalletTypeData});
-  final List<dynamic> accountWalletTypeData;
+  const SelectAccountWalletTypePage({super.key});
 
   @override
   State<SelectAccountWalletTypePage> createState() => _SelectAccountWalletTypePageState();
@@ -38,36 +37,40 @@ class _SelectAccountWalletTypePageState extends State<SelectAccountWalletTypePag
         centerTitle: true,
         leading: const BackToolbarButton()
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 12),
-        child: ListView(
-          children: widget.accountWalletTypeData.map((e){
-            return Column(
-              children: [
-                ListTile(
-                  onTap: (){
-                    Map<String, dynamic> chosenCategory ={
-                      'icon': e['icon'],
-                      'name': e['name'],
-                      '_id': e['_id'],
-                    };
-                    Navigator.pop(context, chosenCategory);
-                  },
-                  leading: Image.asset(e['icon'].toString(), width: 50, height: 50,),
-                  title: Text(e['name'].toString(), style: const TextStyle(
-                      color: textColor, fontSize: textSize
-                  ),),
-                  trailing: Visibility(
-                      visible: e['isChosen'] == 0? false: true,
-                      child:  const RoundedCheckboxIcon()
-                  ),
-                  contentPadding: const EdgeInsets.only(right: 18, left: 46 ),
-                ),
-                const Divider(color: underLineColor, height: 15,)
-              ],
-            );
-          }).toList(),
-        ),
+      body: Consumer<AppProvider>(
+        builder: (context, value, child) {
+          return Padding(
+            padding: const EdgeInsets.symmetric(vertical: 12),
+            child: ListView(
+              children: value.accountWalletType.map((e){
+                return Column(
+                  children: [
+                    ListTile(
+                      onTap: (){
+                        Map<String, dynamic> chosenCategory ={
+                          'icon': e['icon'],
+                          'name': e['name'],
+                          '_id': e['_id'],
+                        };
+                        Navigator.pop(context, chosenCategory);
+                      },
+                      leading: Image.asset(e['icon'].toString(), width: 50, height: 50,),
+                      title: Text(e['name'].toString(), style: const TextStyle(
+                          color: textColor, fontSize: textSize
+                      ),),
+                      trailing: Visibility(
+                          visible: e['isChosen'] == 0? false: true,
+                          child:  const RoundedCheckboxIcon()
+                      ),
+                      contentPadding: const EdgeInsets.only(right: 18, left: 46 ),
+                    ),
+                    const Divider(color: underLineColor, height: 15,)
+                  ],
+                );
+              }).toList(),
+            ),
+          );
+        },
       ),
     );
   }

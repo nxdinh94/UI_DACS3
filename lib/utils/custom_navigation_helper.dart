@@ -4,8 +4,10 @@ import 'package:http/http.dart';
 import 'package:practise_ui/pages/account_wallet/account_page.dart';
 import 'package:practise_ui/pages/account_setting_page.dart';
 import 'package:practise_ui/pages/account_wallet/add_account_wallet_page.dart';
+import 'package:practise_ui/pages/account_wallet/detail_account_wallet_page.dart';
 import 'package:practise_ui/pages/account_wallet/select_account_wallet_type_page.dart';
 import 'package:practise_ui/pages/account_wallet/select_bank_page.dart';
+import 'package:practise_ui/pages/account_wallet/update_account_wallet_page.dart';
 import 'package:practise_ui/pages/adding_workspace/choose_account_wallet_page.dart';
 import 'package:practise_ui/pages/spending_limit/add_and_edit_spending_limit_page.dart';
 import 'package:practise_ui/pages/adding_workspace/adding_workspace.dart';
@@ -77,7 +79,9 @@ class CustomNavigationHelper {
   static const String selectAccountWalletTypePath = 'selectAccountWalletType';
   static const String selectBankPath = 'selectBankPath';
   static const String addAccountWalletPath = 'addAccountWallet';
+  static const String updateAccountWalletPath = 'updateAccountWallet';
   static const String chooseAccountWalletPath = 'chooseAccountWallet';
+  static const String detailAccountWalletPath = 'detailAccountWallet';
 
   factory CustomNavigationHelper() {
     return _instance;
@@ -126,10 +130,8 @@ class CustomNavigationHelper {
                         GoRoute(
                           path: selectAccountWalletTypePath,
                           pageBuilder: (context, state){
-                          List<dynamic> dataFromExtra = state.extra as List<dynamic>;
                           return getPage(
-                              child: SelectAccountWalletTypePage(
-                                accountWalletTypeData: dataFromExtra),
+                              child: SelectAccountWalletTypePage(),
                               state: state
                             );
                           }
@@ -143,8 +145,32 @@ class CustomNavigationHelper {
                             );
                           }
                         ),
-
                       ]
+                    ),
+                    GoRoute(
+                      path: updateAccountWalletPath,
+                      pageBuilder: (context, state){
+                      Map<String, dynamic> dataFromExtra = state.extra as Map<String, dynamic>;
+
+                      return getPage(
+                          child: UpdateAccountWalletPage(
+                            dataToUpdate: dataFromExtra,
+                          ),
+                          state: state
+                        );
+                      }
+                    ),
+                    GoRoute(
+                      path: detailAccountWalletPath,
+                      pageBuilder: (context, state){
+                        Map<String,dynamic> dataFromExtra = state.extra as Map<String,dynamic>;
+                        return getPage(
+                          child: DetailAccountWalletPage(
+                            accountWalletData: dataFromExtra
+                          ),
+                          state: state
+                        );
+                      }
                     )
                   ]
                 ),
