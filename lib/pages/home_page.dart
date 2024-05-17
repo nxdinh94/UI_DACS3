@@ -1,3 +1,4 @@
+import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:practise_ui/Section/home_travel_section_item.dart';
 import 'package:practise_ui/constant/color.dart';
@@ -70,10 +71,16 @@ class _HomePageState extends State<HomePage> {
         child: Column(
           children: [
             Expanded(
-              child: RefreshIndicator(
-                triggerMode: RefreshIndicatorTriggerMode.anywhere,
-                onRefresh: ()async{
-                  await  Provider.of<UserProvider>(context, listen: false).getAllAccountWallet();
+              child: CustomMaterialIndicator(
+                onRefresh: () async {
+                 await Future<void>.delayed(const Duration(seconds: 2));
+                },
+                indicatorBuilder: (BuildContext context, IndicatorController controller) {
+                  return const  Icon(
+                    Icons.ac_unit,
+                    color: Colors.blue,
+                    size: 35,
+                  );
                 },
                 child: ListView(
                   children: [
