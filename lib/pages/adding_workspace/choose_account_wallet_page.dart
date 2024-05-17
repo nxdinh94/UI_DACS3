@@ -30,6 +30,7 @@ class ChooseAccountWalletPage extends StatelessWidget {
         ),
         body: Consumer<UserProvider>(
           builder: (BuildContext context, UserProvider value, Widget? child) {
+            print(value.accountWalletList);
             List<dynamic> accountWalletList = value.accountWalletList;
             return ListView.builder(
                 physics: const AlwaysScrollableScrollPhysics(),
@@ -67,7 +68,7 @@ class ChooseAccountWalletPage extends StatelessWidget {
                           onTap: (){
                             Map<String, dynamic> resultToReturn = {
                               'id' : accountWalletList[index]['_id'],
-                              'icon' : 'assets/another_icon/question-mark.png',
+                              'icon' : accountWalletList[index]['money_type_information']['icon'],
                               'name' : accountWalletList[index]['name'],
                             };
                             Navigator.pop(context, resultToReturn);

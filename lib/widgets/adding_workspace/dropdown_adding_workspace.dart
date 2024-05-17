@@ -6,7 +6,12 @@ import 'package:practise_ui/constant/font.dart';
 import 'package:practise_ui/models/cashs_flow_model.dart';
 // import 'package:practise_ui/data/dropdown_adding_data.dart';
 class DropDownAddingWorkspace extends StatefulWidget {
-  const DropDownAddingWorkspace({super.key, required this.addingDropdownDataApi, required this.selectedItem, required this.currentOption});
+  const DropDownAddingWorkspace({
+    super.key,
+    required this.addingDropdownDataApi,
+    required this.selectedItem,
+    required this.currentOption
+  });
   final List<CashFlowModel> addingDropdownDataApi;
   final Function? selectedItem;
   final CashFlowModel currentOption;

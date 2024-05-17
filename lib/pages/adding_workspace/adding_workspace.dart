@@ -26,8 +26,11 @@ class AddingWorkspace extends StatefulWidget {
 
 class _AddingWorkspaceState extends State<AddingWorkspace> {
 
-  late CashFlowModel currentCashFlowOption;
-  late String moneyType;// 3 options of dropdown
+  //initial currentCashFlowOption value
+  late CashFlowModel currentCashFlowOption = CashFlowModel(
+      id: '', iconPath: '', name: '', isChosen: 0
+  );
+  late String moneyType = '';// 3 options of dropdown
   List<CashFlowModel> cashFlowData = [];
   Map<String, dynamic> chosenAccountWallet = {};
   late String nameCashFlowCate = '';
@@ -107,14 +110,16 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
   @override
   void initState() {
     cashFlowData = context.read<AppProvider>().cashFlowData;
-    currentCashFlowOption = cashFlowData[0];
-    for(var item in cashFlowData){
-      if(item.isChosen == 1 ){
-        currentCashFlowOption = item;
-        break;
+    if(cashFlowData.isNotEmpty){
+      currentCashFlowOption = cashFlowData[0];
+      moneyType = currentCashFlowOption.name;
+      for(var item in cashFlowData){
+        if(item.isChosen == 1 ){
+          currentCashFlowOption = item;
+          break;
+        }
       }
     }
-    moneyType = currentCashFlowOption.name;
     _selectedDate = DateFormat('dd/MM/yyyy').format(currentDate);
 
     super.initState();
@@ -135,24 +140,22 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
           backgroundColor: primaryColor,
           toolbarHeight: 52,
           leading: Padding(
-            padding: const EdgeInsets.all(14),
+            padding: paddingAll12,
             child: SvgPicture.asset(
-              'assets/svg/history.svg',
-              fit: BoxFit.fitWidth,
-              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+              'assets/svg/history.svg', fit: BoxFit.fitWidth,
+              colorFilter: const ColorFilter.mode(secondaryColor, BlendMode.srcIn),
             ),
           ),
           title: Padding(
             padding: paddingNone,
             child: cashFlowData.isEmpty
-                ? const Text('None')
+                ? const Text('None', style: TextStyle(color: Colors.red, fontWeight: FontWeight.w700),)
                 : DropDownAddingWorkspace(
                     addingDropdownDataApi: cashFlowData,
                     currentOption: currentCashFlowOption,
                     selectedItem: onSelectedDropdownItem,
                   ),
           ),
-
           centerTitle: true,
           actions: [
             Padding(
@@ -248,30 +251,22 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                       Container(
                         padding: paddingR8L24,
                         child: ListTile(
-                          leading: Container(
-                            margin: const EdgeInsets.only(right: 13),
-                            child: SvgPicture.asset(
-                              'assets/svg/calendar.svg',
-                              width: 26,
-                              height: 26,
-                              colorFilter: ColorFilter.mode(Colors.grey[400]!, BlendMode.srcIn),
-                            ),
+                          leading: SvgPicture.asset(
+                            'assets/svg/calendar.svg', width: 26, height: 26,
+                            colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn),
                           ),
-                          title: Transform.translate(
-                            offset: const Offset(-8, 0),
-                            child: Text(_selectedDate, style: defaultTextStyle),
-                          ),
+                          title: Text(_selectedDate, style: defaultTextStyle),
                           trailing: keyBoardArrowRightIcon,
-                          contentPadding: const EdgeInsets.only(left: 2, top: 8, bottom: 8, right: 0),
+                          horizontalTitleGap: 23,
+                          contentPadding: const EdgeInsets.symmetric(vertical: 8),
                           onTap: (){
                               _selectDate(context);
                           },
                         ),
                       ),
                       dividerI76,
-
                       Container(
-                        padding: const EdgeInsets.only(right: 9, left: 18),
+                        padding: const EdgeInsets.only(right: 8, left: 18),
                         child: ListTile(
                           leading: Container(
                             margin: const EdgeInsets.only(right: 13),
@@ -281,7 +276,7 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                               width: 40, height: 40,
                             ),
                           ),
-                          horizontalTitleGap: 11,
+                          horizontalTitleGap: 5,
                           title: Text(chosenAccountWallet['name']??'Ví', style: defaultTextStyle),
                           trailing: keyBoardArrowRightIcon,
                           contentPadding: const EdgeInsets.only(left: 0, top: 8, bottom: 8, right: 0),

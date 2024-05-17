@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practise_ui/constant/color.dart';
@@ -116,8 +115,8 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu>  {
                     trailing: Switch(
                       value: isBorrowToPay,
                       activeColor: switchColorButton,
-                      trackOutlineColor: const MaterialStatePropertyAll(Colors.transparent),
-                      thumbColor: const MaterialStatePropertyAll<Color>(secondaryColor),
+                      trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
+                      thumbColor: const WidgetStatePropertyAll<Color>(secondaryColor),
                       onChanged: (bool value) {
                       widget.onSetIsBorrowToPay!(value == true ? 1: 0);
 
@@ -145,8 +144,8 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu>  {
                           trailing: Switch(
                             value: isFee,
                             activeColor: switchColorButton,
-                            trackOutlineColor: const MaterialStatePropertyAll(Colors.transparent),
-                            thumbColor: const MaterialStatePropertyAll<Color>(secondaryColor),
+                            trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
+                            thumbColor: const WidgetStatePropertyAll<Color>(secondaryColor),
                             onChanged: (bool value) {
                               setState(() {
                                 isFee = value;
@@ -202,9 +201,9 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu>  {
                     trailing: Switch(
                       value: isNotReport,
                       activeColor: switchColorButton,
-                      trackOutlineColor: const MaterialStatePropertyAll(Colors.transparent),
+                      trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
 
-                      thumbColor: const MaterialStatePropertyAll<Color>(secondaryColor),
+                      thumbColor: const WidgetStatePropertyAll<Color>(secondaryColor),
                       onChanged: (bool value) {
                         widget.onSetIsIncludeInReport!(value == true? 1: 0);
                         setState(() {

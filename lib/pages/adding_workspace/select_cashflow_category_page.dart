@@ -17,11 +17,9 @@ class SelectCategoryPage extends StatefulWidget {
 
 class _SelectCategoryPageState extends State<SelectCategoryPage> {
   String spendingMoneyIconPath = 'assets/icon_category/spending_money_icon/';
-  Map<String, dynamic> cashFlowCateData = {};
 
   @override
   void initState() {
-    cashFlowCateData = context.read<AppProvider>().cashFlowCateData;
     // print('seage');
     // print(cashFlowCateData);
     super.initState();
@@ -41,17 +39,22 @@ class _SelectCategoryPageState extends State<SelectCategoryPage> {
             centerTitle: true,
             leading: const BackToolbarButton(),
           ),
-          body:  Builder(builder: (BuildContext context){
-            List<Map<String, dynamic>> dataToRender = [];
-            if(widget.cashFlowType.toLowerCase().contains('chi')){
-              return MyExpansionPanelList(data: cashFlowCateData['spending_money']);
-            }else if(widget.cashFlowType.toLowerCase().contains('thu')){
-              return ChooseListView(data: cashFlowCateData['revenue_money'],);
-            }else{
-              return ChooseListView(data: cashFlowCateData['loan_money'],);
-            }
-
-          })
+          body:  Consumer<AppProvider>(
+            builder: (context, value, child) {
+              Map<String, dynamic> cashFlowCateData = value.cashFlowCateData;
+              if(cashFlowCateData.isNotEmpty){
+                if(widget.cashFlowType.toLowerCase().contains('chi')){
+                  return MyExpansionPanelList(data: cashFlowCateData['spending_money']);
+                }else if(widget.cashFlowType.toLowerCase().contains('thu')){
+                  return ChooseListView(data: cashFlowCateData['revenue_money'],);
+                }else{
+                  return ChooseListView(data: cashFlowCateData['loan_money'],);
+                }
+              }else{
+                return Container();
+              }
+            },
+          )
       );
   }
 }
@@ -66,7 +69,6 @@ class _MyExpansionPanelListState extends State<MyExpansionPanelList> {
 
   @override
   void initState() {
-    print(widget.data.runtimeType);
     super.initState();
   }
 
