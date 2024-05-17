@@ -257,7 +257,7 @@ class _AddAccountWalletPageState extends State<AddAccountWalletPage> {
                     result = await Provider.of<UserProvider>(context, listen: false).addMoneyAccount(dataToPass);
 
                     if(result['status']== 422){
-                      print(dataToPass);
+                      // print(dataToPass);
                       showCustomErrorToast(context, result['result'], 2);
 
                     }else if(result['status'] == 200){

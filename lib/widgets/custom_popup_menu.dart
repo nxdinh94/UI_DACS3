@@ -2,7 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/constant/font.dart';
+import 'package:practise_ui/providers/user_provider.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';
+import 'package:practise_ui/utils/custom_toast.dart';
+import 'package:provider/provider.dart';
 class CustomPopupMenu extends StatefulWidget {
   const CustomPopupMenu({
     super.key,
@@ -21,14 +24,20 @@ class _CustomPopupMenuState extends State<CustomPopupMenu> {
     return PopupMenuButton(
       color: secondaryColor,
       child: widget.representationIcon,
-      onSelected: (value) {
+      onSelected: (value)async {
         if (value == "edit") {
           CustomNavigationHelper.router.push(
             '${CustomNavigationHelper.accountWalletPath}/${CustomNavigationHelper.updateAccountWalletPath}',
             extra: widget.selectedItemData
           );
         }else if(value == "delete"){
-          // add desired output
+          Map<String, dynamic> result = await Provider.of<UserProvider>(context, listen: false).deleteAccountWall(widget.selectedItemData['_id']);
+          if(result['result']['deletedCount'] == 1){
+            showCustomSuccessToast(context, result['result']['msg'], duration: 2);
+            await Provider.of<UserProvider>(context, listen: false).getAllAccountWallet();
+          }else {
+            showCustomErrorToast(context, result['result']['msg'], 1);
+          }
         }else if(value == "stop"){
           // add desired output
         }

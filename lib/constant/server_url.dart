@@ -12,3 +12,6 @@ const String postAddingAccountMoney = '$PORT/app/add-money-account';
 
 const String updateAccountMoney = '$PORT/app/update-money-account';
 
+
+const String deleteAccountMoneyApi =  '$PORT/app/delete-money-account';
+

@@ -57,8 +57,6 @@ class UserServices{
             dataToPass
         ),
       );
-      print(res.body);
-
       if(res.statusCode == 200){
         result =  {
           'status' : 200,
@@ -66,7 +64,6 @@ class UserServices{
         };
         return result;
       }else if(res.statusCode == 422){
-        print(res.body);
         result =  {
           'status' : 422,
           'result' : "Tài khoản đã tồn tại"
@@ -112,4 +109,29 @@ class UserServices{
     }
     return result;
   }
+  Future<Map<String, dynamic>> deleteAccountMoneyService(String idAccountWallet, String accessToken)async{
+    Map<String, dynamic> result = {};
+    try{
+      final uri = Uri.parse(deleteAccountMoneyApi);
+      final res = await http.delete(
+          uri,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $accessToken'
+          },
+        body: jsonEncode(
+          {'money_account_id': idAccountWallet}
+        )
+      );
+      if(res.statusCode == 200){
+        result = jsonDecode(res.body);
+      }else if(res.statusCode == 401){
+        result = jsonDecode(res.body);
+      }
+    }catch(e){
+      result ={'result':e};
+    }
+    return result;
+  }
+
 }

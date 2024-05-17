@@ -39,7 +39,7 @@ void showCustomErrorToast(BuildContext context, String message, int duration) {
   );
 }
 
-void showCustomSuccessToast(BuildContext context, String message) {
+void showCustomSuccessToast(BuildContext context, String message, {int duration = 3}) {
   FToast fToast = FToast();
   fToast.init(context);
   Widget toast = Container(
@@ -62,7 +62,7 @@ void showCustomSuccessToast(BuildContext context, String message) {
   );
   fToast.showToast(
       child: toast,
-      toastDuration: const Duration(seconds: 3),
+      toastDuration: Duration(seconds: duration),
       fadeDuration: const Duration(seconds: 1),
       gravity: ToastGravity.TOP
   );

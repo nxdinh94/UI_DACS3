@@ -140,7 +140,7 @@ class _HaveAccountCaseState extends State<HaveAccountCase> {
                       ListTile(
                         onTap:(){
                           CustomNavigationHelper.router.push(
-                              '${CustomNavigationHelper.accountWalletPath}/${CustomNavigationHelper.updateAccountWalletPath}',
+                              '${CustomNavigationHelper.accountWalletPath}/${CustomNavigationHelper.detailAccountWalletPath}',
                               extra: widget.accountWalletData[index] as Map<String, dynamic>
                           );
                         },

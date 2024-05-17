@@ -13,6 +13,14 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin{
   List<dynamic> _accountWalletList = [];
   List<dynamic> get accountWalletList => _accountWalletList;
 
+  Future<String> getAccessToken()async{
+    final SharedPreferences pref = await SharedPreferences.getInstance();
+    // Get token['refresh_token','refresh_token']
+    String tokenString = pref.getString(userDataKey) as String;
+    Map<String, dynamic> tokenDecoded  = jsonDecode(tokenString);
+    return tokenDecoded['access_token'];
+  }
+
   Future<Map<String, dynamic>> addMoneyAccount(Map<String, String> data)async{
     // Get instance SharedPreferences
     final SharedPreferences pref = await SharedPreferences.getInstance();
@@ -33,25 +41,15 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin{
     return result;
   }
   Future<Map<String, dynamic>> updateMoneyAccount(Map<String, String> data)async{
-    // Get instance SharedPreferences
-    final SharedPreferences pref = await SharedPreferences.getInstance();
-    // Get token['refresh_token','refresh_token']
-    String tokenString = pref.getString(userDataKey) as String;
-    Map<String, dynamic> tokenDecoded  = jsonDecode(tokenString);
-    String accessToken = tokenDecoded['access_token'];
+    String accessToken = await getAccessToken();
     notifyListeners();
     Map<String, dynamic> result = await userServices.updateAccountMoneyService(accessToken, data);
     notifyListeners();
     return result;
   }
   Future<void> getAllAccountWallet()async{
-    // Get instance SharedPreferences
-    final SharedPreferences pref = await SharedPreferences.getInstance();
-    // Get token['refresh_token','refresh_token']
-    String tokenString = pref.getString(userDataKey) as String;
-    Map<String, dynamic> tokenDecoded  = jsonDecode(tokenString);
-    String accessToken = tokenDecoded['access_token'];
-    notifyListeners();
+
+    String accessToken = await getAccessToken();
     Map<String, dynamic> resultData = await userServices.getAllAccountMoneyService(accessToken);
     if(resultData['data']!= null){
       _accountWalletList =  resultData['data'];
@@ -59,6 +57,11 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin{
       _accountWalletList = [];
     }
     notifyListeners();
+  }
+
+  Future<Map<String, dynamic>> deleteAccountWall(String idAccountWallet)async{
+    String accessToken = await getAccessToken();
+    return await userServices.deleteAccountMoneyService(idAccountWallet, accessToken);
   }
 
   /// Makes `Counter` readable inside the devtools by listing all of its properties
