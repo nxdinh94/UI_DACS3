@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:practise_ui/constant/server_url.dart';
 class UserServices{
 
-  Future<Map<String, dynamic>> addAccountMoneyService(String refreshToken, String accessToken, Map<String, String> dataToPass)async{
+  Future<Map<String, dynamic>> addAccountMoneyService(String accessToken, Map<String, String> dataToPass)async{
     Map<String, dynamic> result = {};
 
     try{
@@ -130,6 +130,40 @@ class UserServices{
       }
     }catch(e){
       result ={'result':e};
+    }
+    return result;
+  }
+
+
+
+  Future<Map<String,dynamic>> addExpenseRecordService(String accessToken, Map<String,String>data)async{
+    Map<String, dynamic> result = {};
+    try{
+      final uri = Uri.parse(postExpenseRecord);
+      final res = await http.post(
+          uri,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $accessToken',
+          },
+          body: jsonEncode(data)
+      );
+      if(res.statusCode == 200){
+        result = {
+          'result': jsonDecode(res.body)['result'],
+          'status': '200'
+        };
+        print(result);
+      }else {
+        print(res.body);
+        return result = {
+          'result': 'Thêm bản ghi không thành công',
+          'status': '403'
+        };
+      }
+
+    }catch(e){
+      return result = {'error': e};
     }
     return result;
   }

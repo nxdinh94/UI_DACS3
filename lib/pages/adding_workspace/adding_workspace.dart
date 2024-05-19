@@ -9,7 +9,9 @@ import 'package:practise_ui/constant/icon_key_board_arrow_right.dart';
 import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/models/cashs_flow_model.dart';
 import 'package:practise_ui/providers/app_provider.dart';
+import 'package:practise_ui/providers/user_provider.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';
+import 'package:practise_ui/utils/custom_toast.dart';
 import 'package:practise_ui/widgets/adding_workspace/dropdown_adding_workspace.dart';
 import 'package:practise_ui/widgets/adding_workspace/pick_contact_listtitle.dart';
 import 'package:provider/provider.dart';
@@ -34,6 +36,8 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
   List<CashFlowModel> cashFlowData = [];
   Map<String, dynamic> chosenAccountWallet = {};
   late String nameCashFlowCate = '';
+  late bool alertOnNullMoneyTextField = false;
+  late bool isFee = false;
 
   // all value;
   late String idCashFlowCate = '';
@@ -47,14 +51,20 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
   late int isBorrowToPay = 0;
   final TextEditingController costIncurredEditTextController = TextEditingController();
   late String idCostIncuredCategory = '';
-  late int isIncludeInReport  = 0;
+  late int isNotIncludeInReport  = 0;
 
-  void onSetIsIncludeInReport(int value){
+
+  void onSetIsFee(bool value){
     setState(() {
-      isIncludeInReport = value;
+      isFee = value;
     });
   }
-  void onSelectCostIncuredCategory(String value, String fakeValue){
+  void onSetIsIncludeInReport(int value){
+    setState(() {
+      isNotIncludeInReport = value;
+    });
+  }
+  void onSelectCostIncuredCategory(String value, String fakeParames){
     setState(() {
       idCostIncuredCategory = value;
     });
@@ -76,16 +86,16 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
     });
   }
   void onSelectCashFlowCate(String id, String name){
-    setState(() {
+
       idCashFlowCate = id;
       nameCashFlowCate = name;
-    });
   }
 
   void onSelectedDropdownItem(CashFlowModel selectedItem){
     setState(() {
       currentCashFlowOption  = selectedItem;
       moneyType = selectedItem.name;
+
     });
     // print(moneyType);
   }
@@ -102,7 +112,7 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
     if (picked != null && picked != currentDate) {
       setState(() {
         currentDate = picked;
-        String formattedDate = DateFormat('dd/MM/yyyy').format(picked);
+        String formattedDate = DateFormat('yyyy-MM-dd').format(picked);
         _selectedDate = formattedDate;
       });
     }
@@ -116,11 +126,12 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
       for(var item in cashFlowData){
         if(item.isChosen == 1 ){
           currentCashFlowOption = item;
+          moneyType = item.name;
           break;
         }
       }
     }
-    _selectedDate = DateFormat('dd/MM/yyyy').format(currentDate);
+    _selectedDate = DateFormat('yyyy-MM-dd').format(currentDate);
 
     super.initState();
   }
@@ -161,37 +172,109 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
             Padding(
               padding: const EdgeInsets.only(right: 15),
               child: GestureDetector(
-                onTap: () {
-                  showDialog(context: context, builder: (BuildContext context){
-                    return AlertDialog(
-                      title: const Text('Basic dialog title'),
-                      content: Column(
-                        children: [
-                          Text('idCashFlowCate: $idCashFlowCate'),
-                          Text('soTien: ${moneyEditTextController.text}'),
-                          Text('description: ${descriptEditTextController.text}'),
-                          Text('idAccountWallet: $idChosenAccountWallet'),
-                          Text('selectedDate: $_selectedDate'),
-                          Text('nameLoanPerson: $contactPerson'),
-                          Text('IsBorrowToPay: $isBorrowToPay'),
-                          Text('costIncured: ${costIncurredEditTextController.text}'),
-                          Text('idCostIncuredCategory: $idCostIncuredCategory'),
-                          Text('isIncludeInReport: $isIncludeInReport'),
-                        ],
-                      ),
-                      actions: <Widget>[
-                        TextButton(
-                          style: TextButton.styleFrom(
-                            textStyle: Theme.of(context).textTheme.labelLarge,
-                          ),
-                          child: const Text('Disable'),
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                          },
-                        ),
-                      ],
-                    );
-                  });
+                onTap: () async {
+                  Map<String, String> dataToSubmit = {
+                    // required field
+                    'cash_flow_category_id': idCashFlowCate,
+                    'amount_of_money': moneyEditTextController.text.toString(),
+                    'money_account_id': idChosenAccountWallet,
+
+                    'occur_date': _selectedDate,
+                    'trip_or_event': eventEditTextController.text,
+                    'description': descriptEditTextController.text,
+                    'report' : isNotIncludeInReport.toString(),
+                  };
+                  if( idCashFlowCate.isNotEmpty &&
+                      moneyEditTextController.text.isNotEmpty&&
+                      idChosenAccountWallet.isNotEmpty
+                  ){
+                    //if have borrow_to_pay
+                    if(moneyType.toLowerCase().contains('chi tiền') ||
+                        nameCashFlowCate.toLowerCase().contains('cho vay')||
+                        nameCashFlowCate.toLowerCase().contains('trả nợ')
+                    ){
+                      if(isBorrowToPay == 1){
+                        dataToSubmit['borrow_to_pay'] = isBorrowToPay.toString();
+                      }else {
+                        dataToSubmit.remove('borrow_to_pay');
+                      }
+                    }else {
+                      dataToSubmit.remove('borrow_to_pay');
+                    }
+                    //if have fee
+                    if(moneyType.toLowerCase().contains('chi tiền')
+                        || nameCashFlowCate.toLowerCase().contains('cho vay')
+                        || nameCashFlowCate.toLowerCase().contains('cho vay')
+                    ){
+                      if(isFee){
+                        String id = idCostIncuredCategory;
+                        dataToSubmit['cost_incurred'] = costIncurredEditTextController.text;
+                        dataToSubmit['cost_incurred_category_id'] = id;
+                      }else {
+                        dataToSubmit.remove('cost_incurred');
+                        dataToSubmit.remove('cost_incurred_category_id');
+                      }
+                    }else {
+                      dataToSubmit.remove('cost_incurred');
+                      dataToSubmit.remove('cost_incurred_category_id');
+                    }
+
+                    if(!moneyType.toLowerCase().contains('tiền')){
+                      dataToSubmit.remove('trip_or_event');
+                    }
+                    if(
+                      moneyType.toLowerCase().contains('chi tiền')||
+                      nameCashFlowCate.toLowerCase().contains('cho vay')
+                    ){
+                      dataToSubmit['pay_for_who'] = contactPerson;
+                    }
+                    if(
+                      moneyType.toLowerCase().contains('thu tiền')||
+                      nameCashFlowCate.toLowerCase().contains('đi vay')
+                    ){
+                      dataToSubmit['collect_from_who'] = contactPerson;
+                    }
+                    
+                   
+
+                  }else {
+                    if(idCashFlowCate.isEmpty){
+                      showCustomErrorToast(context, 'Hạng mục không được trống', 1);
+                    }
+                    if(moneyEditTextController.text.isEmpty){
+                      setState(() {alertOnNullMoneyTextField = true;});
+                    }
+                    if(idChosenAccountWallet.isEmpty){
+                      showCustomErrorToast(context, 'Ví không được trống', 1);
+                    }
+                    return;
+                  }
+                  print(dataToSubmit);
+                  Map<String, dynamic> result = await Provider.of<UserProvider>(context, listen: false).addExpenseRecordProvider(dataToSubmit);
+                  if(result['status'] == '200'){
+                    showCustomSuccessToast(context, result['result'], duration: 1);
+                    //reset all value
+                    setState(() {
+                      moneyEditTextController.text = '';
+                      descriptEditTextController.text = '';
+                      contactPerson = '';
+                      eventEditTextController.text = '';
+                      revenueOrSpendingPerson= '';
+                      isBorrowToPay = 0;
+                      costIncurredEditTextController.text = '';
+                      isNotIncludeInReport  = 0;
+
+                      onSetIsFee(false);
+                      onSelectCostIncuredCategory('', '');
+                      onSelectContact('');
+                      currentCashFlowOption = CashFlowModel(
+                          id: '', iconPath: '', name: '', isChosen: 0
+                      );
+
+                    });
+                  }else {
+                    showCustomErrorToast(context, result['result'], 1);
+                  }
                 },
                 child: SvgPicture.asset(
                   'assets/svg/tick.svg',
@@ -213,6 +296,7 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                 InputMoneyTextField(
                   controller: moneyEditTextController,
                   title: 'Số tiền',
+                  alertOnNull: alertOnNullMoneyTextField,
                 ),
                 spaceColumn,
                 // Phần điền thông tin cần thiết
@@ -234,6 +318,7 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                           nameCashFlowCate: nameCashFlowCate,
                           onSelectContact: onSelectContact,
                           onResetChosenContact: onResetChosenContact,
+                          horizontalTitleGap: 21,
                         )
                       ),
                       dividerI76,
@@ -244,7 +329,7 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                           colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn),
                         ),
                         hintText: 'Diễn giải',
-                        controller: descriptEditTextController
+                        controller: descriptEditTextController,
                       ),
                       dividerI76,
 
@@ -311,7 +396,10 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                   onSetIsBorrowToPay: onSetIsBorrowToPay,
                   costIncuredEditTextController: costIncurredEditTextController,
                   onSelectCostIncuredCategory:onSelectCostIncuredCategory,
-                  onSetIsIncludeInReport:onSetIsIncludeInReport
+                  onSetIsIncludeInReport:onSetIsIncludeInReport,
+                  isFee: isFee,
+                  onSetIsFee: onSetIsFee,
+
                 ),
               ],
             ),
@@ -343,6 +431,14 @@ class ChooseCashFlowCategoryState extends State<ChooseCashFlowCategory> {
       fontWeight: FontWeight.w500,
       color: textColor
   );
+  @override
+  void didUpdateWidget(covariant ChooseCashFlowCategory oldWidget) {
+    if(oldWidget.cashFlowType != widget.cashFlowType){
+      widget.onSelectCashFlowCate!('','');
+      currentOption = {'icon' :'', 'name':''};
+    }
+    super.didUpdateWidget(oldWidget);
+  }
   @override
   Widget build(BuildContext context) {
 

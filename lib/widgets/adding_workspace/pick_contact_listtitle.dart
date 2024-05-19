@@ -12,12 +12,14 @@ class PickContactListTile extends StatefulWidget {
     required this.nameCashFlowCate,
     this.onSelectContact,
     this.onResetChosenContact,
-    required this.moneyType
+    required this.moneyType,
+    this.horizontalTitleGap = 9
   });
   final String nameCashFlowCate;
   final String moneyType;
   final Function? onSelectContact;
   final Function? onResetChosenContact;
+  final double horizontalTitleGap;
   @override
   State<PickContactListTile> createState() => PickContactListTileState();
 }
@@ -87,7 +89,7 @@ class PickContactListTileState extends State<PickContactListTile> {
             })
         ),
         trailing: keyBoardArrowRightIcon,
-        horizontalTitleGap: 9,
+        horizontalTitleGap: widget.horizontalTitleGap,
         contentPadding: const EdgeInsets.only(left: 0, top: 8, bottom: 8, right: 0),
         onTap: ()async{
           Contact? contact = await _contactPicker.selectContact();

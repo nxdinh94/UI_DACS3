@@ -30,7 +30,6 @@ class ChooseAccountWalletPage extends StatelessWidget {
         ),
         body: Consumer<UserProvider>(
           builder: (BuildContext context, UserProvider value, Widget? child) {
-            print(value.accountWalletList);
             List<dynamic> accountWalletList = value.accountWalletList;
             return ListView.builder(
                 physics: const AlwaysScrollableScrollPhysics(),

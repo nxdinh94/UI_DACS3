@@ -7,7 +7,7 @@ const String getAccountWalletTypeApi = '$PORT/app/get-money-account-type';
 const String getAllAccountWalletApi = '$PORT/app/get-money-account';
 
 const String postAddingAccountMoney = '$PORT/app/add-money-account';
-
+const String postExpenseRecord      = '$PORT/app/add-expense-record';
 
 
 const String updateAccountMoney = '$PORT/app/update-money-account';

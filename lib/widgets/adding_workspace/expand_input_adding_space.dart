@@ -18,10 +18,13 @@ class CustomDropdownMenu extends StatefulWidget {
     this.onSetIsBorrowToPay,
     this.onSelectCostIncuredCategory,
     this.onSetIsIncludeInReport,
+    this.onSetIsFee,
     required this.costIncuredEditTextController,
-    required this.nameCashFlowCate
+    required this.nameCashFlowCate,
+    required this.isFee
   }) : super(key: key);
   final String moneyType;
+  final bool isFee;
   final String nameCashFlowCate;
   final TextEditingController eventEditTextController;
   final TextEditingController costIncuredEditTextController;
@@ -30,6 +33,7 @@ class CustomDropdownMenu extends StatefulWidget {
   final Function? onSetIsBorrowToPay;
   final Function? onSelectCostIncuredCategory;
   final Function? onSetIsIncludeInReport;
+  final Function? onSetIsFee;
   @override
   State<CustomDropdownMenu> createState() => _CustomDropdownMenuState();
 }
@@ -38,11 +42,11 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu>  {
 
   late bool isShow;
   bool isBorrowToPay = false;
-  bool isFee = false;
   bool isNotReport = false;
   @override
   void initState() {
     isShow = false;
+    print(widget.moneyType);
     super.initState();
   }
   @override
@@ -105,64 +109,78 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu>  {
                   ),
                 ),
                 spaceColumn,
-                Container(
-                  color: secondaryColor,
-                  child: ListTile(
-                    title: const Text(
-                      'Đi vay để trả khoảng này',
-                      style: defaultTextStyle,
-                    ),
-                    trailing: Switch(
-                      value: isBorrowToPay,
-                      activeColor: switchColorButton,
-                      trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
-                      thumbColor: const WidgetStatePropertyAll<Color>(secondaryColor),
-                      onChanged: (bool value) {
-                      widget.onSetIsBorrowToPay!(value == true ? 1: 0);
-
-                      setState(() {
-                          isBorrowToPay = value;
-                        });
-                      },
-                    ),
-                    contentPadding: const EdgeInsets.only(left: 16, top: 0, bottom: 0, right: 12),
-                  ),
-                ),
-                spaceColumn,
-                spaceColumn,
-                Container(
-                  color: secondaryColor,
+                Visibility(
+                  visible: widget.moneyType.toLowerCase().contains('chi tiền') ||
+                          widget.nameCashFlowCate.toLowerCase().contains('cho vay')||
+                          widget.nameCashFlowCate.toLowerCase().contains('trả nợ'),
                   child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children:<Widget> [
-                      Visibility(
-                        visible: widget.moneyType.toLowerCase().contains('chi tiền')
-                        || widget.nameCashFlowCate.toLowerCase().contains('cho vay'),
-
+                    children: [
+                      Container(
+                        color: secondaryColor,
                         child: ListTile(
-                          title: const Text('Phí', style: defaultTextStyle),
+                          title: const Text(
+                            'Đi vay để trả khoảng này',
+                            style: defaultTextStyle,
+                          ),
                           trailing: Switch(
-                            value: isFee,
+                            value: isBorrowToPay,
                             activeColor: switchColorButton,
                             trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
                             thumbColor: const WidgetStatePropertyAll<Color>(secondaryColor),
                             onChanged: (bool value) {
-                              setState(() {
-                                isFee = value;
+                            widget.onSetIsBorrowToPay!(value == true ? 1: 0);
+
+                            setState(() {
+                                isBorrowToPay = value;
                               });
                             },
                           ),
                           contentPadding: const EdgeInsets.only(left: 16, top: 0, bottom: 0, right: 12),
                         ),
-
                       ),
-                      Visibility(
-                        visible:
-                            (isFee && widget.moneyType.toLowerCase().contains('chi tiền')) ||
-                            (isFee && widget.nameCashFlowCate.toLowerCase().contains('cho vay')),
-                        maintainInteractivity: false,
-                        maintainState: true,
-                        maintainSize: false,
+                      spaceColumn,
+                      spaceColumn,
+                    ],
+                  ),
+                ),
+
+                Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children:<Widget> [
+                    Visibility(
+                      visible: widget.moneyType.toLowerCase().contains('chi tiền')
+                      || widget.nameCashFlowCate.toLowerCase().contains('cho vay')
+                      || widget.nameCashFlowCate.toLowerCase().contains('trả nợ'),
+
+                      child: Container(
+                        color: secondaryColor,
+                        child: ListTile(
+                          title: const Text('Phí', style: defaultTextStyle),
+                          trailing: Switch(
+                            value: widget.isFee,
+                            activeColor: switchColorButton,
+                            trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
+                            thumbColor: const WidgetStatePropertyAll<Color>(secondaryColor),
+                            onChanged: (bool value) {
+                              widget.onSetIsFee!(value);
+                            },
+                          ),
+                          contentPadding: const EdgeInsets.only(left: 16, top: 0, bottom: 0, right: 12),
+                        ),
+                      ),
+
+                    ),
+                    Visibility(
+                      visible:
+                          (widget.isFee && widget.moneyType.toLowerCase().contains('chi tiền')) ||
+                          (widget.isFee && widget.nameCashFlowCate.toLowerCase().contains('cho vay'))||
+                          (widget.isFee && widget.nameCashFlowCate.toLowerCase().contains('trả nợ')),
+
+                      maintainInteractivity: false,
+                      maintainState: true,
+                      maintainSize: false,
+                      child: Container(
+                        color: secondaryColor,
                         child: Column(
                           children: [
                             const Divider(height: 1, color: underLineColor, indent: 65),
@@ -175,17 +193,18 @@ class _CustomDropdownMenuState extends State<CustomDropdownMenu>  {
                               ),
                             ),
                             ChooseCashFlowCategory(
-                              cashFlowType: 'chi tiền ',
+                              cashFlowType: 'chi tiền',
                               onSelectCashFlowCate: widget.onSelectCostIncuredCategory,
                             ),
                           ],
                         ),
-                      )
-                    ],
-                  ),
+                      ),
+                    ),
+                    spaceColumn,
+                    spaceColumn,
+                  ],
                 ),
-                spaceColumn,
-                spaceColumn,
+
                 Container(
                   color: secondaryColor,
                   child: ListTile(

@@ -22,21 +22,15 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin{
   }
 
   Future<Map<String, dynamic>> addMoneyAccount(Map<String, String> data)async{
-    // Get instance SharedPreferences
-    final SharedPreferences pref = await SharedPreferences.getInstance();
-    // Get token['refresh_token','refresh_token']
-    String tokenString = pref.getString(userDataKey) as String;
-    Map<String, dynamic> tokenDecoded  = jsonDecode(tokenString);
-    String accessToken = tokenDecoded['access_token'];
-    String refreshToken = tokenDecoded['refresh_token'];
+    String accessToken = await getAccessToken();
     final decodedAuthorization = await verifyToken(
         token: accessToken,
-        secretOrPublicKey: JWT_SECRET_ACCESS_TOKEN
+        secretOrPublicKey: JWT_SECRET_ACCESS_TOKEN// key to decode
     );
     String userId = decodedAuthorization['user_id'];
     data['user_id'] = userId;
     notifyListeners();
-    Map<String, dynamic> result = await userServices.addAccountMoneyService(refreshToken, accessToken, data);
+    Map<String, dynamic> result = await userServices.addAccountMoneyService(accessToken, data);
     notifyListeners();
     return result;
   }
@@ -58,11 +52,20 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin{
     }
     notifyListeners();
   }
-
   Future<Map<String, dynamic>> deleteAccountWall(String idAccountWallet)async{
     String accessToken = await getAccessToken();
     return await userServices.deleteAccountMoneyService(idAccountWallet, accessToken);
   }
+
+  Future<Map<String, dynamic>> addExpenseRecordProvider(Map<String, String> dataToPass)async{
+    Map<String, dynamic> result = {};
+    String accessToken = await getAccessToken();
+    result = await userServices.addExpenseRecordService(accessToken, dataToPass);
+    return result;
+  }
+
+
+
 
   /// Makes `Counter` readable inside the devtools by listing all of its properties
   @override
