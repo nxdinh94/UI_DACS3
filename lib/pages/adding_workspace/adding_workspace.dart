@@ -249,7 +249,6 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                     }
                     return;
                   }
-                  print(dataToSubmit);
                   Map<String, dynamic> result = await Provider.of<UserProvider>(context, listen: false).addExpenseRecordProvider(dataToSubmit);
                   if(result['status'] == '200'){
                     showCustomSuccessToast(context, result['result'], duration: 1);

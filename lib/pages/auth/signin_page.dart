@@ -1,20 +1,13 @@
-import 'package:animate_do/animate_do.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:flutter/widgets.dart';
-import 'package:lottie/lottie.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:practise_ui/constant/color.dart';
-import 'package:practise_ui/pages/home_page.dart';
+import 'package:practise_ui/constant/font.dart';
+import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/pages/auth/signup_page.dart';
-import 'package:practise_ui/pages/user_profile.dart';
 import 'package:practise_ui/providers/auth_provider.dart';
-import 'package:practise_ui/utils/custom_navigation_helper.dart';
 import 'package:practise_ui/utils/custom_toast.dart';
 import 'package:practise_ui/utils/loading_dialog.dart';
 import 'package:provider/provider.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 class SignInPage extends StatefulWidget {
   SignInPage({super.key});
@@ -24,8 +17,8 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
-  TextEditingController _emailController = TextEditingController();
-  TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
   String _email = '';
   String _password = '';
   final _formKey = GlobalKey<FormState>();
@@ -51,7 +44,7 @@ class _SignInPageState extends State<SignInPage> {
 
     void _handleSubmit() async {
       await Provider.of<AuthProvider>(context, listen: false).login(_email, _password);
-      final isError = await Provider.of<AuthProvider>(context, listen: false).isError;
+      final isError = Provider.of<AuthProvider>(context, listen: false).isError;
       if (isError) {
         showCustomErrorToast(context, "Email hoặc mật khẩu không đúng", 3);
       }
@@ -75,16 +68,14 @@ class _SignInPageState extends State<SignInPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Image.asset('assets/login_img.jpg', width: 200, height: 200,),
-                    Text('Đăng nhập tài khoản của bạn',
+                    const Text('Đăng nhập tài khoản của bạn',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                          fontSize: textSize,
                           color: textColor
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    spaceColumn,
                     Form(
                       key: _formKey,
                       autovalidateMode: AutovalidateMode.always,
@@ -95,25 +86,18 @@ class _SignInPageState extends State<SignInPage> {
                               cursorColor: Colors.black,
                               decoration: InputDecoration(
                                 labelText: 'Email',
-                                labelStyle: TextStyle(
-                                  color: labelColor,
-                                  fontSize: 14,
-                                  fontWeight: FontWeight.w400
-                                ),
-                                prefixIcon: Icon(Icons.email_outlined, color: primaryColor, size: 24,),
+                                labelStyle: const TextStyle(color: labelColor, fontSize: textSmall),
+                                prefixIcon: const Icon(Icons.email_outlined, color: primaryColor, size: 24,),
                                 enabledBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: inputColor, width: 2),
+                                  borderSide: const BorderSide(color: inputColor, width: 2),
                                   borderRadius: BorderRadius.circular(10)
                                 ),
-                                floatingLabelStyle: TextStyle(
-                                  color: labelColor,
-                                  fontSize: 18,
-                                ),
+                                floatingLabelStyle: const TextStyle(color: labelColor, fontSize: textSize),
                                 focusedBorder: OutlineInputBorder(
-                                  borderSide: BorderSide(color: Colors.black, width: 1.5),
+                                  borderSide: const BorderSide(color: Colors.black, width: 1.5),
                                   borderRadius: BorderRadius.circular(10)
                                 ),
-                                contentPadding: EdgeInsets.only(left: 50, top: 35),
+                                contentPadding: const EdgeInsets.only(left: 50, top: 35),
                               ),
                               onSaved: (value) {
                                 _email = value!;
@@ -128,16 +112,12 @@ class _SignInPageState extends State<SignInPage> {
                               cursorColor: Colors.black,
                               decoration: InputDecoration(
                                 labelText: 'Mật khẩu',
-                                labelStyle: TextStyle(
-                                    color: labelColor,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w400
-                                ),
-                                prefixIcon: Icon(Icons.key_outlined, color: primaryColor, size: 24,),
+                                labelStyle: const TextStyle(color: labelColor, fontSize: textSmall),
+                                prefixIcon: const Icon(Icons.key_outlined, color: primaryColor, size: 24,),
                                 suffixIcon: IconButton(
                                   icon: Icon(
                                     _obscureText ? Icons.visibility : Icons.visibility_off,
-                                    color: labelColor,
+                                    color: iconColor,
                                   ),
                                   onPressed: () {
                                     setState(() {
@@ -146,18 +126,15 @@ class _SignInPageState extends State<SignInPage> {
                                   },
                                 ),
                                 enabledBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: inputColor, width: 2),
+                                    borderSide: const BorderSide(color: inputColor, width: 2),
                                     borderRadius: BorderRadius.circular(10)
                                 ),
-                                floatingLabelStyle: TextStyle(
-                                  color: labelColor,
-                                  fontSize: 18,
-                                ),
+                                floatingLabelStyle: const TextStyle(color: labelColor, fontSize: textSize),
                                 focusedBorder: OutlineInputBorder(
-                                    borderSide: BorderSide(color: Colors.black, width: 1.5),
+                                    borderSide: const BorderSide(color: Colors.black, width: 1.5),
                                     borderRadius: BorderRadius.circular(10)
                                 ),
-                                contentPadding: EdgeInsets.only(left: 50, top: 35),
+                                contentPadding: const EdgeInsets.only(left: 50, top: 35),
                               ),
                               onSaved: (value) {
                                 _password = value!;
@@ -167,11 +144,11 @@ class _SignInPageState extends State<SignInPage> {
                               alignment: Alignment.centerRight,
                               child: TextButton(
                                 onPressed: () {},
-                                child: Text(
+                                child: const Text(
                                   'Quên mật khẩu?',
                                   style: TextStyle(
                                       color: primaryColor,
-                                      fontSize: 14,
+                                      fontSize: textSmall,
                                       fontStyle: FontStyle.italic
                                   ),
                                 ),
@@ -185,100 +162,83 @@ class _SignInPageState extends State<SignInPage> {
                                   if (_basicValidate()) {
                                     showCustomLoadingDialog(context);
                                     // Hiệu ứng loading
-                                    Future.delayed(Duration(seconds: 3), () => {
+                                    Future.delayed(const Duration(seconds: 3), () => {
                                       _handleSubmit(),
                                       // Tắt hiệu ứng loading
                                       hideCustomLoadingDialog(context),
                                     });
                                   }
                                 },
-                                child: const Text('Đăng nhập',
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      color: whiteColor
-                                  ),
-                                ),
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: primaryColor,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(10), // Góc bo tròn
                                   ),
                                 ),
+                                child: const Text('Đăng nhập',
+                                  style: TextStyle(fontSize: textSize, color: secondaryColor),
+                                ),
                               ),
                             ),
                           ]
                       ),
                     ),
-                    SizedBox(
-                        height: 15
-                    ),
+                    spaceColumn,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Text(
+                        const Text(
                           'Bạn chưa có tài khoản?',
-                          style: TextStyle(fontSize: 15, ),
+                          style: TextStyle(fontSize: textSmall, color: textColor),
                         ),
-                        SizedBox(
-                          width: 5,
-                        ),
+                        const SizedBox(width: 5),
                         GestureDetector(
                           onTap: () {
                             Navigator.push(
                               context,
                               PageTransition(
                                 type: PageTransitionType.leftToRight,
-                                duration: Duration(milliseconds: 300),
-                                child: SignUpPage(),
+                                duration: const Duration(milliseconds: 300),
+                                child: const SignUpPage(),
                               ),
                             );
                             _setEmptyValue();
                           },
-                          child: Text(
+                          child: const Text(
                             'Đăng ký',
                             style: TextStyle(
-                              fontSize: 16,
-                              color: primaryColor,
-                              fontWeight: FontWeight.bold,
+                              fontSize: textSmall, color: primaryColor, fontWeight: FontWeight.bold,
                             ),
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(
-                        height: 15
-                    ),
-                    Padding(
+                    spaceColumn,
+                    const Padding(
                       padding: EdgeInsets.symmetric(horizontal: 30.0),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Expanded(
-                            child: Divider(color: Colors.grey,),
-                          ),
+                          Expanded(child: Divider(color: underLineColor)),
                           Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 8),
+                            padding: EdgeInsets.symmetric(horizontal: 8),
                             child: Text(
                               'Hoặc đăng nhập bằng',
-                              style: TextStyle(color: Colors.grey,),
+                              style: TextStyle(color : labelColor, fontSize: textSmall),
                             ),
                           ),
-                          Expanded(
-                            child: Divider(color: Colors.grey),
-                          ),
+                          Expanded(child: Divider(color: underLineColor)),
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: 15,
-                    ),
+                    spaceColumn,
                     InkWell(
                       onTap: () {},
                       customBorder: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15), // Custom cho hiệu ứng tap vào vừa với icon
                       ),
                       child: Container(
-                        padding: EdgeInsets.all(15),
+                        padding: const EdgeInsets.all(15),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(15),
                             border: Border.all(

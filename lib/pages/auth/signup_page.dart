@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:lottie/lottie.dart';
 import 'package:practise_ui/constant/color.dart';
+import 'package:practise_ui/constant/font.dart';
+import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/models/register_body.dart';
 import 'package:practise_ui/providers/auth_provider.dart';
 import 'package:practise_ui/utils/custom_toast.dart';
@@ -85,7 +86,7 @@ class _SignUpPageState extends State<SignUpPage> {
               SliverAppBar(
                 backgroundColor: Colors.transparent,
                 leading: IconButton(
-                  icon: Icon(Icons.arrow_back, size: 30,),
+                  icon: const Icon(Icons.arrow_back, size: 30,),
                   onPressed: () {
                     // Quay lại màn hình trước đó
                     Navigator.pop(context);
@@ -104,16 +105,16 @@ class _SignUpPageState extends State<SignUpPage> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           LottieBuilder.asset('assets/lotties/Animation - 1714317330939.json', width: 120,),
-                          Text("Bắt đầu nào!", style: TextStyle(
+                          const Text("Bắt đầu nào!", style: TextStyle(
                               fontSize: 35,
                               fontWeight: FontWeight.w900
                           ),),
-                          Text("Tạo tài khoản để sử dụng tất cả chức năng", style: TextStyle(
-                              fontSize: 16,
+                          const Text("Tạo tài khoản để sử dụng tất cả chức năng", style: TextStyle(
+                              fontSize: textSmall,
                               fontWeight: FontWeight.w500,
                               color: labelColor
                           ),),
-                          SizedBox(height: 20,),
+                          spaceColumn,
                           Form(
                             key: _formKey,
                             child: Column(
@@ -121,9 +122,9 @@ class _SignUpPageState extends State<SignUpPage> {
                                 children: [
                                   TextFormField(
                                     controller: _nameController,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.normal,
-                                        fontSize: 15
+                                        fontSize: textSmall
                                     ),
                                     decoration: InputDecoration(
                                         hintText: 'Họ và tên',
@@ -136,8 +137,8 @@ class _SignUpPageState extends State<SignUpPage> {
                                             borderSide: BorderSide(color: _errors.containsKey('name') ? errorsRegisterColor : inputColor, width: 2),
                                             borderRadius: BorderRadius.circular(10)
                                         ),
-                                        contentPadding: EdgeInsets.only(top: 35),
-                                        errorStyle: TextStyle(
+                                        contentPadding: const EdgeInsets.only(top: 35),
+                                        errorStyle: const TextStyle(
                                             fontSize: 12,
                                             color: errorsRegisterColor,
                                             fontWeight: FontWeight.w500
@@ -159,12 +160,12 @@ class _SignUpPageState extends State<SignUpPage> {
                                   if (_hasError)
                                     if (_errors.containsKey('name')) // Kiểm tra xem _errors có chứa key 'name' không
                                       Padding(
-                                        padding: EdgeInsets.only(top: 6),
+                                        padding: const EdgeInsets.only(top: 6),
                                         child: Align(
                                           alignment: Alignment.centerLeft,
                                           child: Text(
                                             _errors['name']!, // Hiển thị thông báo lỗi từ _errors
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w500,
                                               color: errorsRegisterColor, // Màu đỏ cho thông báo lỗi
@@ -173,19 +174,19 @@ class _SignUpPageState extends State<SignUpPage> {
                                         ),
                                       )
                                     else
-                                      SizedBox(height: 5),
-                                  SizedBox(
+                                      const SizedBox(height: 5),
+                                  const SizedBox(
                                     height: 25,
                                   ),
                                   TextFormField(
                                     controller: _emailController,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.normal,
-                                        fontSize: 15
+                                        fontSize: textSmall
                                     ),
                                     decoration: InputDecoration(
                                         hintText: 'Email',
-                                        prefixIcon: Icon(Icons.email_outlined, color: primaryColor, size: 24,),
+                                        prefixIcon: const Icon(Icons.email_outlined, color: primaryColor, size: 24,),
                                         border: OutlineInputBorder(
                                           borderRadius: BorderRadius.circular(10),
                                           borderSide: BorderSide(color: _errors.containsKey('email') ? errorsRegisterColor : inputColor, width: 2),
@@ -194,8 +195,8 @@ class _SignUpPageState extends State<SignUpPage> {
                                             borderSide: BorderSide(color: _errors.containsKey('email') ? errorsRegisterColor : inputColor, width: 2),
                                             borderRadius: BorderRadius.circular(10)
                                         ),
-                                        contentPadding: EdgeInsets.only(top: 35),
-                                        errorStyle: TextStyle(
+                                        contentPadding: const EdgeInsets.only(top: 35),
+                                        errorStyle: const TextStyle(
                                             fontSize: 12,
                                             color: errorsRegisterColor,
                                             fontWeight: FontWeight.w500
@@ -216,12 +217,12 @@ class _SignUpPageState extends State<SignUpPage> {
                                   if (_hasError)
                                     if (_errors.containsKey('email')) // Kiểm tra xem _errors có chứa key 'email' không
                                       Padding(
-                                        padding: EdgeInsets.only(top: 6),
+                                        padding: const EdgeInsets.only(top: 6),
                                         child: Align(
                                           alignment: Alignment.centerLeft,
                                           child: Text(
                                             _errors['email']!, // Hiển thị thông báo lỗi từ _errors
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w500,
                                               color: errorsRegisterColor, // Màu đỏ cho thông báo lỗi
@@ -230,20 +231,20 @@ class _SignUpPageState extends State<SignUpPage> {
                                         ),
                                       )
                                     else
-                                      SizedBox(height: 5),
-                                  SizedBox(
+                                      const SizedBox(height: 5),
+                                  const SizedBox(
                                     height: 25,
                                   ),
                                   TextFormField(
                                     controller: _passwordController,
                                     obscureText: _obscureText,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontWeight: FontWeight.normal,
-                                        fontSize: 15
+                                        fontSize: textSmall
                                     ),
                                     decoration: InputDecoration(
                                       hintText: 'Mật khẩu',
-                                      prefixIcon: Icon(Icons.key_outlined, color: primaryColor, size: 24,),
+                                      prefixIcon: const Icon(Icons.key_outlined, color: primaryColor, size: 24,),
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
                                         borderSide: BorderSide(color: _errors.containsKey('password') ? errorsRegisterColor : inputColor, width: 2),
@@ -252,7 +253,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                           borderSide: BorderSide(color: _errors.containsKey('password') ? errorsRegisterColor : inputColor, width: 2),
                                           borderRadius: BorderRadius.circular(10)
                                       ),
-                                      contentPadding: EdgeInsets.only(top: 35),
+                                      contentPadding: const EdgeInsets.only(top: 35),
                                       suffixIcon: IconButton(
                                         icon: Icon(
                                           _obscureText ? Icons.visibility : Icons.visibility_off,
@@ -263,7 +264,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                           });
                                         },
                                       ),
-                                      errorStyle: TextStyle(
+                                      errorStyle: const TextStyle(
                                           fontSize: 12,
                                           color: errorsRegisterColor,
                                           fontWeight: FontWeight.w500
@@ -289,7 +290,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                           alignment: Alignment.centerLeft,
                                           child: Text(
                                             _errors['password']!, // Hiển thị thông báo lỗi từ _errors
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w500,
                                               color: errorsRegisterColor, // Màu đỏ cho thông báo lỗi
@@ -298,20 +299,19 @@ class _SignUpPageState extends State<SignUpPage> {
                                         ),
                                       )
                                     else
-                                      SizedBox(height: 5),
-                                  SizedBox(
+                                      const SizedBox(height: 5),
+                                  const SizedBox(
                                     height: 25,
                                   ),
                                   TextFormField(
                                     controller: _confirmPasswordController,
                                     obscureText: _obscureText,
-                                    style: TextStyle(
-                                        fontWeight: FontWeight.normal,
-                                        fontSize: 15
+                                    style: const TextStyle(
+                                        fontSize: textSmall
                                     ),
                                     decoration: InputDecoration(
                                       hintText: 'Nhập lại mật khẩu',
-                                      prefixIcon: Icon(Icons.key_outlined, color: primaryColor, size: 24,),
+                                      prefixIcon: const Icon(Icons.key_outlined, color: primaryColor, size: 24,),
                                       border: OutlineInputBorder(
                                         borderRadius: BorderRadius.circular(10),
                                         borderSide: BorderSide(color: _errors.containsKey('confirm_password') ? errorsRegisterColor : inputColor, width: 2),
@@ -320,7 +320,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                           borderSide: BorderSide(color: _errors.containsKey('confirm_password') ? errorsRegisterColor : inputColor, width: 2),
                                           borderRadius: BorderRadius.circular(10)
                                       ),
-                                      contentPadding: EdgeInsets.only(top: 35),
+                                      contentPadding: const EdgeInsets.only(top: 35),
                                       suffixIcon: IconButton(
                                         icon: Icon(
                                           _obscureText ? Icons.visibility : Icons.visibility_off,
@@ -331,7 +331,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                           });
                                         },
                                       ),
-                                      errorStyle: TextStyle(
+                                      errorStyle: const TextStyle(
                                           fontSize: 12,
                                           color: errorsRegisterColor,
                                           fontWeight: FontWeight.w500
@@ -352,12 +352,12 @@ class _SignUpPageState extends State<SignUpPage> {
                                   if (_hasError)
                                     if (_errors.containsKey('confirm_password')) // Kiểm tra xem _errors có chứa key 'confirm_password' không
                                       Padding(
-                                        padding: EdgeInsets.only(top: 6),
+                                        padding: const EdgeInsets.only(top: 6),
                                         child: Align(
                                           alignment: Alignment.centerLeft,
                                           child: Text(
                                             _errors['confirm_password']!, // Hiển thị thông báo lỗi từ _errors
-                                            style: TextStyle(
+                                            style: const TextStyle(
                                               fontSize: 12,
                                               fontWeight: FontWeight.w500,
                                               color: errorsRegisterColor, // Màu đỏ cho thông báo lỗi
@@ -366,8 +366,8 @@ class _SignUpPageState extends State<SignUpPage> {
                                         ),
                                       )
                                     else
-                                      SizedBox(height: 5),
-                                  SizedBox(
+                                      const SizedBox(height: 5),
+                                  const SizedBox(
                                     height: 25,
                                   ),
                                   SizedBox(
@@ -382,23 +382,23 @@ class _SignUpPageState extends State<SignUpPage> {
                                         if (_basicValidate()) {
                                           showCustomLoadingDialog(context);
                                           // Hiệu ứng loading
-                                          Future.delayed(Duration(seconds: 3), () => {
+                                          Future.delayed(const Duration(seconds: 3), () => {
                                             _handleRegister(),
                                             // Tắt hiệu ứng loading
                                             hideCustomLoadingDialog(context),
                                           });
                                         }
                                       },
-                                      child: const Text('Đăng ký',
-                                        style: TextStyle(
-                                            fontSize: 15,
-                                            color: whiteColor
-                                        ),
-                                      ),
                                       style: ElevatedButton.styleFrom(
                                         backgroundColor: primaryColor,
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(10), // Góc bo tròn
+                                        ),
+                                      ),
+                                      child: const Text('Đăng ký',
+                                        style: TextStyle(
+                                            fontSize: textSize,
+                                            color: secondaryColor
                                         ),
                                       ),
                                     ),
