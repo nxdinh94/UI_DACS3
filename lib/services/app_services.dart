@@ -66,14 +66,13 @@ class AppServices{
   Future<List<dynamic>> getBankService() async {
     List<dynamic> data = [];
     try {
-      final url ="https://api.vietqr.io/v2/banks";
+      const url ="https://api.vietqr.io/v2/banks";
       var res = await http.get(Uri.parse(url));
       if(res.statusCode == 200) {
         final result = jsonDecode(res.body);
         data = result['data'];
         return data;
       } else {
-        print('Error: Status code ${res.statusCode}'); // Print error with status code
         return data;
       }
     }catch(e){

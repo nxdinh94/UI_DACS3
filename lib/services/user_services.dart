@@ -153,9 +153,7 @@ class UserServices{
           'result': jsonDecode(res.body)['result'],
           'status': '200'
         };
-        print(result);
       }else {
-        print(res.body);
         return result = {
           'result': 'Thêm bản ghi không thành công',
           'status': '403'
@@ -167,5 +165,7 @@ class UserServices{
     }
     return result;
   }
+
+
 
 }

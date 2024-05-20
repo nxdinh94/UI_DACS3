@@ -7,9 +7,7 @@ class MyPieChart extends StatelessWidget {
   MyPieChart({Key? key, required this.dataMap}) : super(key: key);
 
 
-  final colorList = <Color>[
-    Colors.greenAccent,
-  ];
+
 
   @override
   Widget build(BuildContext context) {
@@ -21,38 +19,39 @@ class MyPieChart extends StatelessWidget {
       child: FittedBox(
         child: PieChart(
           dataMap: dataMap,
-          animationDuration: const Duration(milliseconds: 2000),
-        
-          chartLegendSpacing: 90,
+          animationDuration: const Duration(milliseconds: 1500),
+          chartLegendSpacing: 80,
           chartRadius: MediaQuery.of(context).size.width / 3.2,
           initialAngleInDegree: 0,
           chartType: ChartType.ring,
           ringStrokeWidth: 40,
           // centerText: "HYBRID",
-          // colorList: colorList,
+          colorList: pieChartColorList,
           // Pass gradient to PieChart
-          gradientList: gradientList,
           emptyColorGradient: const [
             Color(0xff6c5ce7),
             Colors.blue,
           ],
+
           legendOptions: const LegendOptions(
             showLegendsInRow: false,
             legendPosition: LegendPosition.right,
             showLegends: true,
             legendShape: BoxShape.circle,
             legendTextStyle: TextStyle(
-              color: Colors.grey,
+              color: labelColor,
             ),
         
           ),
-        
+
           chartValuesOptions: const ChartValuesOptions(
             showChartValueBackground: true,
-            showChartValues: false,
+            showChartValues: true,
+            chartValueBackgroundColor: WidgetStateColor.transparent,
             showChartValuesInPercentage: true,
             showChartValuesOutside: false,
             decimalPlaces: 2,
+            chartValueStyle: TextStyle(color: textColor)
           ),
         ),
       ),

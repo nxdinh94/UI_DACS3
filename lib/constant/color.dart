@@ -35,7 +35,37 @@ final gradientList = <List<Color>>[
     const Color.fromRGBO(91, 253, 199, 1),
   ],
   [
+    const Color.fromRGBO(217, 35, 165, 1.0),
+    const Color.fromRGBO(243, 201, 31, 1.0),
+  ],
+  [
     const Color.fromRGBO(175, 63, 62, 1.0),
     const Color.fromRGBO(254, 154, 92, 1),
-  ]
+  ],
+  [
+    const Color.fromRGBO(15, 227, 203, 1.0),
+    const Color.fromRGBO(151, 254, 92, 1.0),
+  ],
+  [
+    const Color.fromRGBO(208, 44, 43, 1.0),
+    const Color.fromRGBO(236, 200, 82, 1.0),
+  ],
+  [
+    const Color.fromRGBO(64, 228, 234, 1.0),
+    const Color.fromRGBO(106, 231, 34, 1.0),
+  ],
+];
+final pieChartColorList = <Color>[
+  const Color(0xffFFB1B1),
+  const Color(0xff9DDE8B),
+  const Color(0xffFF6969),
+  const Color(0xffD875C7),
+  const Color(0xff6DC5D1),
+  const Color(0xffFEB941),
+  const Color(0xffFFF9D0),
+  const Color(0xffF6E9B2),
+  const Color(0xff5DEBD7),
+  const Color(0xffFFE5E5),
+
+
 ];

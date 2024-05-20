@@ -5,6 +5,8 @@ const String getCashFlowApi = '$PORT/app/get-cash-flow';
 const String getCashFlowCateApi = '$PORT/app/get-cash-flow-category';
 const String getAccountWalletTypeApi = '$PORT/app/get-money-account-type';
 const String getAllAccountWalletApi = '$PORT/app/get-money-account';
+const String getExpenseRecordForChartApi = '$PORT/app/expense-record-for-statistics';
+
 
 const String postAddingAccountMoney = '$PORT/app/add-money-account';
 const String postExpenseRecord      = '$PORT/app/add-expense-record';
