@@ -20,8 +20,8 @@ import 'package:practise_ui/widgets/vnd_icon.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../constant/share_prefercence_key.dart';
-import '../models/collum_chart_model.dart';
+import '../../constant/share_prefercence_key.dart';
+import '../../models/collum_chart_model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -55,7 +55,7 @@ class _HomePageState extends State<HomePage> {
     if(data.isEmpty) {
       await Provider.of<AppProvider>(context, listen: false).saveCashFlowApi();
     } else {
-      print(data.length);
+      // print(data.length);
     }
   }
   Future<void> fetchDataCashFlowCate()async{
@@ -77,7 +77,7 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               child: CustomMaterialIndicator(
                 onRefresh: () async {
-                 await Future<void>.delayed(const Duration(seconds: 2));
+                  await Provider.of<ChartProvider>(context, listen: false).getExpenseRecordForChartProvider();
                 },
                 indicatorBuilder: (BuildContext context, IndicatorController controller) {
                   return const  Icon(
@@ -117,8 +117,9 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   IconButton(
                                       onPressed: ()async{
-                                        print(context.read<ChartProvider>().filteredSpendingDataForPieChartHomePage);
-                                      },
+                                        CustomNavigationHelper.router.push(
+                                            '${CustomNavigationHelper.homePath}/${CustomNavigationHelper.detailSpendingRevenueStatisticalPath}'
+                                        );                                      },
                                       icon: const Icon(
                                         Icons.add_alert, color: secondaryColor, size: 26,
                                       )
@@ -231,121 +232,140 @@ class _HomePageState extends State<HomePage> {
                             ],
                           ),
                           //Row chart
-                          Consumer<ChartProvider>(
-                            builder: (context, value, child) {
-                              final List<CollumChartModel> dataColumnChart  = value.filteredColumnChartDataHomePage;
-                              double totalRevenue = 0;
-                              double totalSpending = 0;
-                              double remainMoney = 0;
-                              if(dataColumnChart.isNotEmpty){
-                                totalRevenue= dataColumnChart[1].y;
-                                totalSpending= dataColumnChart[0].y;
-                                remainMoney= dataColumnChart[1].y - dataColumnChart[0].y;
-                              }
-                              return Visibility(
-                                  visible: dataColumnChart.isNotEmpty,
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Expanded(
-                                        flex: 1,
-                                        child:  MyColumnChart(
-                                          data: value.filteredColumnChartDataHomePage,
-                                        ),
-                                      ),
-                                      Expanded(
-                                        flex: 1,
-                                        child: SizedBox(
-                                          height: 250,
-                                          child: Column(
-                                            mainAxisAlignment: MainAxisAlignment.center,
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  const CustomLegendColumnChart(color: chartCollumn1, text: "Thu"),
-                                                  RichText(
-                                                    text: TextSpan(
-                                                        text: formatCurrencyVND(totalRevenue),
-                                                        style: const TextStyle(
-                                                            fontSize: 17,
-                                                            color: chartCollumn1,
-                                                            fontWeight: FontWeight.bold
-                                                        ),
-                                                        children: const [
-                                                          WidgetSpan(
-                                                              child: VndIcon(color: chartCollumn1, size: textSmall),
-                                                              alignment: PlaceholderAlignment.middle
-                                                          )
-                                                        ]
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                              spaceColumn,
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                                children: [
-                                                  const CustomLegendColumnChart(color: chartCollumn2, text: "Chi"),
-                                                  RichText(
-                                                    text: TextSpan(
-                                                        text: formatCurrencyVND(totalSpending),
-                                                        style: const TextStyle(
-                                                            fontSize: 17,
-                                                            color: chartCollumn2,
-                                                            fontWeight: FontWeight.bold
-                                                        ),
-                                                        children: const [
-                                                          WidgetSpan(
-                                                              child: VndIcon(color: chartCollumn2, size: textSmall),
-                                                              alignment: PlaceholderAlignment.middle
-                                                          )
-                                                        ]
-                                                    ),
-                                                  )
-                                                ],
-                                              ),
-                                              spaceColumn,
-                                              const Divider(height: 1, color: underLineColor,),
-                                              spaceColumn,
-                                              Row(
-                                                mainAxisAlignment: MainAxisAlignment.end,
-                                                children: [
-                                                  RichText(
-                                                    text: TextSpan(
-                                                        text: formatCurrencyVND(remainMoney),
-                                                        style: const TextStyle(fontSize: textSize, color: textColor, fontWeight: FontWeight.bold),
-                                                        children: const [
-                                                          WidgetSpan(
-                                                              child: VndIcon(color: textColor, size: textSmall),
-                                                              alignment: PlaceholderAlignment.middle
-                                                          )
-                                                        ]
-                                                    ),
-                                                  )
-                                                ],
-                                              )
-                                            ],
+                          GestureDetector(
+                            behavior: HitTestBehavior.opaque,
+                            onTap: (){
+                              CustomNavigationHelper.router.push(
+                                '${CustomNavigationHelper.homePath}/${CustomNavigationHelper.detailSpendingRevenueStatisticalPath}'
+                              );
+                            },
+                            child: Column(
+                              children: [
+                                Consumer<ChartProvider>(
+                                  builder: (context, value, child) {
+                                    final List<CollumChartModel> dataColumnChart  = value.filteredColumnChartDataHomePage;
+                                    // String totalRevenue = '0';
+                                    // String totalSpending = '0';
+                                    // String remainMoney = '0';
+                                    //
+                                    // if(dataColumnChart.length>1){
+                                    //   totalRevenue = formatCurrencyVND(dataColumnChart[1].y);
+                                    //   totalSpending = formatCurrencyVND(dataColumnChart[0].y);
+                                    //   remainMoney = formatCurrencyVND(dataColumnChart[1].y - dataColumnChart[0].y);
+                                    // }
+                                    return Visibility(
+                                      visible: dataColumnChart.length>1,
+                                      child: Row(
+                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          Expanded(
+                                            flex: 1,
+                                            child:  MyColumnChart(
+                                              data: value.filteredColumnChartDataHomePage,
+                                            ),
                                           ),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                              );
-                            },
-                          ),
-                          Consumer<ChartProvider>(
-                            builder: (context, value, child){
-                              Map<String, double> data = value.filteredSpendingDataForPieChartHomePage;
-                              return Visibility(
-                                visible: data.isNotEmpty,
-                                child: Padding(
-                                  padding: const EdgeInsets.symmetric(vertical: 12.0),
-                                  child: MyPieChart(dataMap: data),
+                                          Consumer<ChartProvider>(
+                                            builder: (context, value, child) {
+                                              return Expanded(
+                                                flex: 1,
+                                                child: SizedBox(
+                                                  height: 250,
+                                                  child: Column(
+                                                    mainAxisAlignment: MainAxisAlignment.center,
+                                                    children: [
+                                                      Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        children: [
+                                                          const CustomLegendColumnChart(color: chartCollumn1, text: "Thu"),
+                                                          RichText(
+                                                            text: TextSpan(
+                                                                text: formatCurrencyVND(value.totalRevenueMoney),
+                                                                style: const TextStyle(
+                                                                    fontSize: 17,
+                                                                    color: chartCollumn1,
+                                                                    fontWeight: FontWeight.bold
+                                                                ),
+                                                                children: const [
+                                                                  WidgetSpan(
+                                                                      child: VndIcon(color: chartCollumn1, size: textSmall),
+                                                                      alignment: PlaceholderAlignment.middle
+                                                                  )
+                                                                ]
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                      spaceColumn,
+                                                      Row(
+                                                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                        children: [
+                                                          const CustomLegendColumnChart(color: chartCollumn2, text: "Chi"),
+                                                          RichText(
+                                                            text: TextSpan(
+                                                                text: formatCurrencyVND(value.totalSpendingMoney),
+                                                                style: const TextStyle(
+                                                                    fontSize: 17,
+                                                                    color: chartCollumn2,
+                                                                    fontWeight: FontWeight.bold
+                                                                ),
+                                                                children: const [
+                                                                  WidgetSpan(
+                                                                      child: VndIcon(color: chartCollumn2, size: textSmall),
+                                                                      alignment: PlaceholderAlignment.middle
+                                                                  )
+                                                                ]
+                                                            ),
+                                                          )
+                                                        ],
+                                                      ),
+                                                      spaceColumn,
+                                                      const Divider(height: 1, color: underLineColor,),
+                                                      spaceColumn,
+                                                      Row(
+                                                        mainAxisAlignment: MainAxisAlignment.end,
+                                                        children: [
+                                                          RichText(
+                                                            text: TextSpan(
+                                                                text: formatCurrencyVND(value.totalRevenueMoney-value.totalSpendingMoney),
+                                                                style: const TextStyle(fontSize: textSize, color: textColor, fontWeight: FontWeight.bold),
+                                                                children: const [
+                                                                  WidgetSpan(
+                                                                      child: VndIcon(color: textColor, size: textSmall),
+                                                                      alignment: PlaceholderAlignment.middle
+                                                                  )
+                                                                ]
+                                                            ),
+                                                          )
+                                                        ],
+                                                      )
+                                                    ],
+                                                  ),
+                                                ),
+                                              );
+                                            },
+                                          )
+                                        ],
+                                      ),
+                                    );
+                                  },
                                 ),
-                              );
-                            },
+                                spaceColumn,
+                                Consumer<ChartProvider>(
+                                  builder: (context, value, child){
+                                    Map<String, double> data = value.filteredSpendingDataForPieChartHomePage;
+                                    return Visibility(
+                                      visible: data.isNotEmpty,
+                                      child: Padding(
+                                        padding: const EdgeInsets.only(left: 22),
+                                        child: MyPieChart(dataMap: data),
+                                      ),
+                                    );
+                                  },
+                                ),
+                              ],
+                            ),
                           ),
+                          spaceColumn,
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [

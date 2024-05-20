@@ -106,7 +106,10 @@ class _SpendingLimitItemsState extends State<SpendingLimitItems> {
 
           ),
           spaceColumn,
-          MyProgressBar(),
+          MyProgressBar(
+            percentage: 0.99,
+            color: Colors.red,
+          ),
           spaceColumn,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

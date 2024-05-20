@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:page_transition/page_transition.dart';
 import 'package:practise_ui/constant/color.dart';
-import 'package:practise_ui/pages/home_page.dart';
+import 'package:practise_ui/pages/home_page/home_page.dart';
 import 'package:practise_ui/pages/auth/signin_page.dart';
 import 'package:practise_ui/pages/auth/signup_page.dart';
 import 'package:practise_ui/providers/auth_provider.dart';

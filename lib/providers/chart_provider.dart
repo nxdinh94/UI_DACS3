@@ -16,8 +16,18 @@ class ChartProvider with ChangeNotifier, DiagnosticableTreeMixin{
   final Map<String, double> _filteredSpendingDataForPieChartHomePage = {};
   Map<String, double> get filteredSpendingDataForPieChartHomePage => _filteredSpendingDataForPieChartHomePage;
 
+  final Map<String, double> _filteredRevenueDataForPieChartHomePage = {};
+  Map<String, double> get filteredRevenueDataForPieChartHomePage => _filteredRevenueDataForPieChartHomePage;
+
   final List<CollumChartModel> _filteredColumnChartDataHomePage = [];
   List<CollumChartModel> get filteredColumnChartDataHomePage => _filteredColumnChartDataHomePage;
+
+  //in homePage
+  double _totalSpendingMoney = 0;
+  double get totalSpendingMoney => _totalSpendingMoney;
+  // in homePage
+  double _totalRevenueMoney = 0;
+  double get totalRevenueMoney => _totalRevenueMoney;
 
 
   Future<String> getAccessToken()async{
@@ -38,24 +48,35 @@ class ChartProvider with ChangeNotifier, DiagnosticableTreeMixin{
     notifyListeners();
   }
   Future<void> filterDataForChartProvider()async{
-    double totalSpendingMoney = 0;
-    double totalRevenueMoney = 0;
+    double revenueMoneyCount = 0;
+    double spendingMoneyCount = 0;
     List<dynamic> dataSpendingMoneyToMap = expenseRecordForChart['result']['spending_money'];
     List<dynamic> dataRevenueMoneyToMap = expenseRecordForChart['result']['revenue_money'];
     if(dataSpendingMoneyToMap.isNotEmpty){
       for (var e in dataSpendingMoneyToMap) {
-        // Ensure result is a map
+      // Ensure result is a map
         _filteredSpendingDataForPieChartHomePage[e['parent_name']] = double.parse(e['total_money'][r'$numberDecimal'] as String);
-        totalSpendingMoney += double.parse(e['total_money'][r'$numberDecimal'] as String);
+        spendingMoneyCount += double.parse(e['total_money'][r'$numberDecimal'] as String);
       }
+      _totalSpendingMoney = spendingMoneyCount;
+      _filteredColumnChartDataHomePage.add(CollumChartModel(2, totalSpendingMoney, chartCollumn2));
+    }else {
+      // value == 0
       _filteredColumnChartDataHomePage.add(CollumChartModel(2, totalSpendingMoney, chartCollumn2));
     }
 
     if(dataRevenueMoneyToMap.isNotEmpty){
       for(var e in dataRevenueMoneyToMap){
-        totalRevenueMoney += double.parse(e['amount_of_money'][r'$numberDecimal']);
+        _filteredRevenueDataForPieChartHomePage[e['name']] = double.parse(e['amount_of_money'][r'$numberDecimal'] as String);
+        revenueMoneyCount += double.parse(e['amount_of_money'][r'$numberDecimal']);
       }
+      _totalRevenueMoney = revenueMoneyCount;
       _filteredColumnChartDataHomePage.add(CollumChartModel(1, totalRevenueMoney, chartCollumn1));
+
+    }else {
+      //value == 0
+      _filteredColumnChartDataHomePage.add(CollumChartModel(1, totalRevenueMoney, chartCollumn1));
+
     }
     notifyListeners();
   }

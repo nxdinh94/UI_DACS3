@@ -13,9 +13,8 @@ class MyColumnChart extends StatefulWidget {
 class _MyColumnChartState extends State<MyColumnChart> {
   @override
   Widget build(BuildContext context) {
-
     return SizedBox(
-      height: 250,
+      height: 220,
       child: SfCartesianChart(
         plotAreaBorderWidth: 0,
         margin:  const EdgeInsets.only( right: 12),

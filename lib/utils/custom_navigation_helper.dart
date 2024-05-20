@@ -9,6 +9,7 @@ import 'package:practise_ui/pages/account_wallet/select_account_wallet_type_page
 import 'package:practise_ui/pages/account_wallet/select_bank_page.dart';
 import 'package:practise_ui/pages/account_wallet/update_account_wallet_page.dart';
 import 'package:practise_ui/pages/adding_workspace/choose_account_wallet_page.dart';
+import 'package:practise_ui/pages/home_page/detail_spending_revenue_statistical_page/detail_spending_revenue_statistical_page.dart';
 import 'package:practise_ui/pages/spending_limit/add_and_edit_spending_limit_page.dart';
 import 'package:practise_ui/pages/adding_workspace/adding_workspace.dart';
 import 'package:practise_ui/pages/another_page.dart';
@@ -20,7 +21,7 @@ import 'package:practise_ui/pages/adding_workspace/select_cashflow_category_page
 import 'package:practise_ui/pages/user_profile.dart';
 import 'package:practise_ui/utils/bottom_navigation_bar.dart';
 
-import '../pages/home_page.dart';
+import '../pages/home_page/home_page.dart';
 import '../pages/auth/signin_page.dart';
 import '../pages/auth/signup_page.dart';
 
@@ -83,6 +84,11 @@ class CustomNavigationHelper {
   static const String chooseAccountWalletPath = 'chooseAccountWallet';
   static const String detailAccountWalletPath = 'detailAccountWallet';
 
+
+  static const String detailSpendingRevenueStatisticalPath = 'detailSpendingRevenueStatistical';
+
+
+
   factory CustomNavigationHelper() {
     return _instance;
   }
@@ -103,6 +109,17 @@ class CustomNavigationHelper {
                       state: state,
                     );
                   },
+                  routes: <RouteBase>[
+                    GoRoute(
+                      path: detailSpendingRevenueStatisticalPath,
+                      pageBuilder: (context, state) {
+                        return getPage(
+                          child: DetailSpendingRevenueStatisticalPage(),
+                          state: state
+                        );
+                      },
+                    ),
+                  ]
                 ),
               ],
             ),
