@@ -6,9 +6,9 @@ import 'package:provider/provider.dart';
 
 import '../../../constant/color.dart';
 import '../../../constant/font.dart';
-import '../../../utils/currency_format.dart';
+import '../../../utils/function/currency_format.dart';
 import '../../../utils/custom_navigation_helper.dart';
-import '../../../utils/percentageFormat.dart';
+import '../../../utils/function/percentage_format.dart';
 import '../../../widgets/charts/pie_chart.dart';
 import '../../../widgets/vnd_icon.dart';
 class RevenueTab extends StatefulWidget {

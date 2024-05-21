@@ -4,7 +4,7 @@ import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/constant/side.dart';
-import 'package:practise_ui/utils/currency_format.dart';
+import 'package:practise_ui/utils/function/currency_format.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';
 import 'package:practise_ui/utils/progress_bar.dart';
 import 'package:practise_ui/widgets/vnd_icon.dart';

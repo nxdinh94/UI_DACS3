@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 
 import '../../constant/color.dart';
 import '../../constant/font.dart';
-import '../../utils/currency_format.dart';
+import '../../utils/function/currency_format.dart';
 import '../../widgets/back_toolbar_button.dart';
 class ChooseAccountWalletPage extends StatelessWidget {
   const ChooseAccountWalletPage({super.key});

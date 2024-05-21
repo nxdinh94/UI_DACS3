@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:practise_ui/constant/side.dart';
-import 'package:practise_ui/utils/currency_format.dart';
+import 'package:practise_ui/utils/function/currency_format.dart';
 import 'package:practise_ui/widgets/back_toolbar_button.dart';
 
 import '../../constant/color.dart';

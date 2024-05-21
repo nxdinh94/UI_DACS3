@@ -8,7 +8,7 @@ import 'package:provider/provider.dart';
 import '../../constant/color.dart';
 import '../../constant/font.dart';
 import '../../providers/user_provider.dart';
-import '../../utils/currency_format.dart';
+import '../../utils/function/currency_format.dart';
 import '../../utils/custom_navigation_helper.dart';
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});

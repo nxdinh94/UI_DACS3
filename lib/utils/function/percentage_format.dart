@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 
 // 11.11% -> 11.11
 double percentageStringToDouble(String value){
