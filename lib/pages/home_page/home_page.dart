@@ -38,14 +38,14 @@ class _HomePageState extends State<HomePage> {
     fetchDataCashFlow().whenComplete((){
       Provider.of<AppProvider>(context, listen: false).getAllCashFlowCache();
     });
-    fetchDataCashFlowCate().whenComplete((){
+    fetchDataCashFlowCate().whenComplete(() async {
       Provider.of<AppProvider>(context, listen: false).getAllCashFlowCateCache();
 
       //start all necessary provider
       Provider.of<AppProvider>(context, listen: false).getAccountWalletType();
       Provider.of<AppProvider>(context, listen:  false).getBank();
       Provider.of<UserProvider>(context, listen:  false).getAllAccountWallet();
-      Provider.of<ChartProvider>(context, listen:  false).getExpenseRecordForChartProvider();
+      await Provider.of<ChartProvider>(context, listen:  false).getExpenseRecordForChartProvider();
 
     });
   }
@@ -65,6 +65,7 @@ class _HomePageState extends State<HomePage> {
       return;
     }else {
       await Provider.of<AppProvider>(context, listen: false).saveCashFlowCateApi();
+
     }
   }
 
@@ -78,6 +79,11 @@ class _HomePageState extends State<HomePage> {
               child: CustomMaterialIndicator(
                 onRefresh: () async {
                   await Provider.of<ChartProvider>(context, listen: false).getExpenseRecordForChartProvider();
+                  await Provider.of<AppProvider>(context, listen: false).getAccountWalletType();
+                  await Provider.of<AppProvider>(context, listen:  false).getBank();
+                  await Provider.of<UserProvider>(context, listen:  false).getAllAccountWallet();
+                  await Provider.of<ChartProvider>(context, listen:  false).getExpenseRecordForChartProvider();
+
                 },
                 indicatorBuilder: (BuildContext context, IndicatorController controller) {
                   return const  Icon(
@@ -244,15 +250,6 @@ class _HomePageState extends State<HomePage> {
                                 Consumer<ChartProvider>(
                                   builder: (context, value, child) {
                                     final List<CollumChartModel> dataColumnChart  = value.filteredColumnChartDataHomePage;
-                                    // String totalRevenue = '0';
-                                    // String totalSpending = '0';
-                                    // String remainMoney = '0';
-                                    //
-                                    // if(dataColumnChart.length>1){
-                                    //   totalRevenue = formatCurrencyVND(dataColumnChart[1].y);
-                                    //   totalSpending = formatCurrencyVND(dataColumnChart[0].y);
-                                    //   remainMoney = formatCurrencyVND(dataColumnChart[1].y - dataColumnChart[0].y);
-                                    // }
                                     return Visibility(
                                       visible: dataColumnChart.length>1,
                                       child: Row(

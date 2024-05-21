@@ -57,7 +57,7 @@ class _DetailSpendingRevenueStatisticalPageState extends State<DetailSpendingRev
               ],
             ),
           ),
-          body:  TabBarView(
+          body:  const TabBarView(
               children: [
                 SpendingTab(),
                 RevenueTab()

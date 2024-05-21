@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:percent_indicator/percent_indicator.dart';
+import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/constant/side.dart';
 
 class MyProgressBar extends StatefulWidget {
@@ -36,7 +36,7 @@ class _MyProgressBarState extends State<MyProgressBar> {
       barRadius: const Radius.circular(10),
       // onAnimationEnd: () => exit(0),
       progressColor: widget.color,
-      backgroundColor: Colors.grey[300],
+      backgroundColor: backgroundColor,
 
     );
   }

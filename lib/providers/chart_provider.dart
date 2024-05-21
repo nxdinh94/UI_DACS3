@@ -67,8 +67,8 @@ class ChartProvider with ChangeNotifier, DiagnosticableTreeMixin{
 
     if(dataRevenueMoneyToMap.isNotEmpty){
       for(var e in dataRevenueMoneyToMap){
-        _filteredRevenueDataForPieChartHomePage[e['name']] = double.parse(e['amount_of_money'][r'$numberDecimal'] as String);
-        revenueMoneyCount += double.parse(e['amount_of_money'][r'$numberDecimal']);
+        _filteredRevenueDataForPieChartHomePage[e['parent_name']] = double.parse(e['total_money'][r'$numberDecimal'] as String);
+        revenueMoneyCount += double.parse(e['total_money'][r'$numberDecimal']);
       }
       _totalRevenueMoney = revenueMoneyCount;
       _filteredColumnChartDataHomePage.add(CollumChartModel(1, totalRevenueMoney, chartCollumn1));

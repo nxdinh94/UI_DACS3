@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../../../constant/color.dart';
 import '../../../constant/font.dart';
 import '../../../utils/currency_format.dart';
+import '../../../utils/custom_navigation_helper.dart';
 import '../../../utils/percentageFormat.dart';
 import '../../../widgets/charts/pie_chart.dart';
 import '../../../widgets/vnd_icon.dart';
@@ -34,7 +35,7 @@ class _RevenueTabState extends State<RevenueTab> {
     if(expenseDataForChart.isNotEmpty){
       revenueMoneyData = expenseDataForChart['result']['revenue_money'];
       for(var e in revenueMoneyData){
-        totalSpendingMoney+= double.parse(e['amount_of_money'][r'$numberDecimal']);
+        totalSpendingMoney+= double.parse(e['total_money'][r'$numberDecimal']);
       }
     }
 
@@ -80,7 +81,7 @@ class _RevenueTabState extends State<RevenueTab> {
                     child: MyPieChart(
                       dataMap: data,
                       isShowLegend: false,
-                      isShowChartValue: true,
+                      isShowChartValue: false,
                       isShowPercentageValue: true,
                       height: 200,
                     )
@@ -93,55 +94,60 @@ class _RevenueTabState extends State<RevenueTab> {
           Container(
               color: secondaryColor,
               child: Column(
-                children: revenueMoneyData.map((e){
-                  countIndex++;
-                  return Column(
+                children: revenueMoneyData.asMap().map((i, e)=> MapEntry(i,
+                  Column(
                     children: [
                       Container(
                         padding: sidePadding,
                         child: Column(
                           children: [
                             ListTile(
+                              onTap: (){
+                                CustomNavigationHelper.router.push(
+                                    '${CustomNavigationHelper.homePath}/${CustomNavigationHelper.detailCashFlowCategoryParentPath}',
+                                    extra: e
+                                );
+                              },
                               dense: true,
-                              leading: Image.asset(e['icon'], width: 28),
-                              title: Text(e['name'], style: defaultTextStyle,),
+
+                              leading: Image.asset(e['parent_icon'], width: 28),
+                              title: Text(e['parent_name'], style: defaultTextStyle,),
                               contentPadding: EdgeInsets.zero,
                               horizontalTitleGap: 4,
                               trailing: RichText(
                                 text: TextSpan(
-                                  text: formatCurrencyVND(double.parse(e['amount_of_money'][r'$numberDecimal'])),
-                                  style: const TextStyle(fontSize: textSmall, color: textColor),
-                                  children: [
-                                    const WidgetSpan(
-                                        child: VndIcon(color: textColor, size: 13),
-                                        alignment: PlaceholderAlignment.middle
-                                    ),
-                                    TextSpan(
-                                      text:'( ${e['percentage']} )',
-                                      style: const TextStyle(color: labelColor, fontSize: textSmall)
-                                    ),
-                                    const WidgetSpan(
-                                      alignment: PlaceholderAlignment.middle,
-                                      child:  Icon(
-                                        Icons.keyboard_arrow_right, color: iconColor, size: 23,
-                                      ))
-                                  ]
+                                  text: formatCurrencyVND(double.parse(e['total_money'][r'$numberDecimal'])),
+                                    style: const TextStyle(fontSize: textSmall, color: textColor),
+                                    children: [
+                                      const WidgetSpan(
+                                          child: VndIcon(color: textColor, size: 13),
+                                          alignment: PlaceholderAlignment.middle
+                                      ),
+                                      TextSpan(
+                                          text:'( ${e['percentage']} )',
+                                          style: const TextStyle(color: labelColor, fontSize: textSmall)
+                                      ),
+                                      const WidgetSpan(
+                                          alignment: PlaceholderAlignment.middle,
+                                          child:  Icon(
+                                            Icons.keyboard_arrow_right, color: iconColor, size: 23,
+                                          ))
+                                    ]
                                 ),
                               ),
                             ),
                             MyProgressBar(
                               percentage: percentageStringToDouble(e['percentage'])/100,
-                              color: pieChartColorList[countIndex],
+                              color: pieChartColorList[i],
                               lineHeight: 7,
                             )
                           ],
                         ),
                       ),
-                      const Divider(color: underLineColor,)
-                    ],
-                  );
-
-                }).toList(),
+                    const Divider(color: underLineColor,)
+                  ],
+                  )
+                )).values.toList(),
             )
           )
         ],

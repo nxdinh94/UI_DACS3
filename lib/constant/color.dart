@@ -62,10 +62,11 @@ final pieChartColorList = <Color>[
   const Color(0xffD875C7),
   const Color(0xff6DC5D1),
   const Color(0xffFEB941),
-  const Color(0xffFFF9D0),
+  const Color(0xff8c67ef),
   const Color(0xffF6E9B2),
   const Color(0xff5DEBD7),
   const Color(0xffFFE5E5),
+  const Color(0xffd73535),
 
 
 ];

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/providers/chart_provider.dart';
+import 'package:practise_ui/utils/custom_navigation_helper.dart';
 import 'package:practise_ui/utils/progress_bar.dart';
 import 'package:provider/provider.dart';
 
@@ -35,9 +36,12 @@ class _SpendingTabState extends State<SpendingTab> {
         totalSpendingMoney+= double.parse(e['total_money'][r'$numberDecimal']);
       }
     }
-
-
     super.initState();
+  }
+  @override
+  void dispose() {
+    countIndex = -1;
+    super.dispose();
   }
   @override
   Widget build(BuildContext context) {
@@ -80,7 +84,7 @@ class _SpendingTabState extends State<SpendingTab> {
                       child: MyPieChart(
                         dataMap: data,
                         isShowLegend: false,
-                        isShowChartValue: true,
+                        isShowChartValue: false,
                         isShowPercentageValue: true,
                         height: 200,
                       )
@@ -93,55 +97,59 @@ class _SpendingTabState extends State<SpendingTab> {
             Container(
                 color: secondaryColor,
                 child: Column(
-                  children: spendingMoneyData.map((e){
-                    countIndex++;
-                    return Column(
-                      children: [
-                        Container(
-                          padding: sidePadding,
-                          child: Column(
-                            children: [
-                              ListTile(
-                                dense: true,
-                                leading: Image.asset(e['parent_icon'], width: 28),
-                                title: Text(e['parent_name'], style: defaultTextStyle,),
-                                contentPadding: EdgeInsets.zero,
-                                horizontalTitleGap: 4,
-                                trailing: RichText(
-                                  text: TextSpan(
-                                    text: formatCurrencyVND(double.parse(e['total_money'][r'$numberDecimal'])),
-                                    style: const TextStyle(fontSize: textSmall, color: textColor),
-                                    children: [
-                                      const WidgetSpan(
-                                          child: VndIcon(color: textColor, size: 13),
-                                          alignment: PlaceholderAlignment.middle
-                                      ),
-                                      TextSpan(
-                                        text:'( ${e['percentage']} )',
-                                        style: const TextStyle(color: labelColor, fontSize: textSmall)
-                                      ),
-                                      const WidgetSpan(
-                                        alignment: PlaceholderAlignment.middle,
-                                        child:  Icon(
-                                          Icons.keyboard_arrow_right, color: iconColor, size: 23,
-                                        ))
-                                    ]
+                  children: spendingMoneyData.asMap().map((i, e)=>MapEntry(i,
+                      Column(
+                        children: [
+                          Container(
+                            padding: sidePadding,
+                            child: Column(
+                              children: [
+                                ListTile(
+                                  onTap: (){
+                                    CustomNavigationHelper.router.push(
+                                        '${CustomNavigationHelper.homePath}/${CustomNavigationHelper.detailCashFlowCategoryParentPath}',
+                                        extra: e
+                                    );
+                                  },
+                                  dense: true,
+                                  leading: Image.asset(e['parent_icon'], width: 28),
+                                  title: Text(e['parent_name'], style: defaultTextStyle,),
+                                  contentPadding: EdgeInsets.zero,
+                                  horizontalTitleGap: 4,
+                                  trailing: RichText(
+                                    text: TextSpan(
+                                        text: formatCurrencyVND(double.parse(e['total_money'][r'$numberDecimal'])),
+                                        style: const TextStyle(fontSize: textSmall, color: textColor),
+                                        children: [
+                                          const WidgetSpan(
+                                              child: VndIcon(color: textColor, size: 13),
+                                              alignment: PlaceholderAlignment.middle
+                                          ),
+                                          TextSpan(
+                                              text:'( ${e['percentage']} )',
+                                              style: const TextStyle(color: labelColor, fontSize: textSmall)
+                                          ),
+                                          const WidgetSpan(
+                                              alignment: PlaceholderAlignment.middle,
+                                              child:  Icon(
+                                                Icons.keyboard_arrow_right, color: iconColor, size: 23,
+                                              ))
+                                        ]
+                                    ),
                                   ),
                                 ),
-                              ),
-                              MyProgressBar(
-                                percentage: percentageStringToDouble(e['percentage'])/100,
-                                color: pieChartColorList[countIndex],
-                                lineHeight: 7,
-                              )
-                            ],
+                                MyProgressBar(
+                                  percentage: percentageStringToDouble(e['percentage'])/100,
+                                  color: pieChartColorList[i],
+                                  lineHeight: 7,
+                                )
+                              ],
+                            ),
                           ),
-                        ),
-                        const Divider(color: underLineColor,)
-                      ],
-                    );
-
-                  }).toList(),
+                          const Divider(color: underLineColor,)
+                        ],
+                      )
+                  )).values.toList()
               )
             )
           ],

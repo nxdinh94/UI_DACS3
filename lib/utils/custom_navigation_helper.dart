@@ -9,6 +9,7 @@ import 'package:practise_ui/pages/account_wallet/select_account_wallet_type_page
 import 'package:practise_ui/pages/account_wallet/select_bank_page.dart';
 import 'package:practise_ui/pages/account_wallet/update_account_wallet_page.dart';
 import 'package:practise_ui/pages/adding_workspace/choose_account_wallet_page.dart';
+import 'package:practise_ui/pages/home_page/detail_spending_revenue_statistical_page/detail_cashflow_category_parent.dart';
 import 'package:practise_ui/pages/home_page/detail_spending_revenue_statistical_page/detail_spending_revenue_statistical_page.dart';
 import 'package:practise_ui/pages/spending_limit/add_and_edit_spending_limit_page.dart';
 import 'package:practise_ui/pages/adding_workspace/adding_workspace.dart';
@@ -86,6 +87,7 @@ class CustomNavigationHelper {
 
 
   static const String detailSpendingRevenueStatisticalPath = 'detailSpendingRevenueStatistical';
+  static const String detailCashFlowCategoryParentPath = 'detailCashFlowCategoryParent';
 
 
 
@@ -119,6 +121,19 @@ class CustomNavigationHelper {
                         );
                       },
                     ),
+                    GoRoute(
+                      path: detailCashFlowCategoryParentPath,
+                      pageBuilder: (context, state) {
+                        Map<String,dynamic> dataFromExtra = state.extra as Map<String, dynamic>;
+                        return getPage(
+                          child: DetailCashflowCategoryParent(
+                            data:  dataFromExtra,
+                          ),
+                          state: state
+                        );
+                      },
+                    ),
+
                   ]
                 ),
               ],
