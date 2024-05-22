@@ -12,6 +12,7 @@ class ChartProvider with ChangeNotifier, DiagnosticableTreeMixin{
   Map<String, dynamic> _expenseRecordForChart = {};
   Map<String, dynamic> get expenseRecordForChart => _expenseRecordForChart;
 
+  bool isLoading = false;
 
   final Map<String, double> _filteredSpendingDataForPieChartHomePage = {};
   Map<String, double> get filteredSpendingDataForPieChartHomePage => _filteredSpendingDataForPieChartHomePage;
@@ -39,12 +40,14 @@ class ChartProvider with ChangeNotifier, DiagnosticableTreeMixin{
   }
 
   Future<void> getExpenseRecordForChartProvider()async{
+    isLoading = true;
     String accessToken = await getAccessToken();
     Map<String, dynamic> result = await chartServices.getExpenseRecordForChartService(accessToken);
     if(result.isNotEmpty){
       _expenseRecordForChart = result;
     }
     await filterDataForChartProvider();
+    isLoading = false;
     notifyListeners();
   }
   Future<void> filterDataForChartProvider()async{

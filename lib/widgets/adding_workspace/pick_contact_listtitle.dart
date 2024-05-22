@@ -13,13 +13,15 @@ class PickContactListTile extends StatefulWidget {
     this.onSelectContact,
     this.onResetChosenContact,
     required this.moneyType,
-    this.horizontalTitleGap = 9
+    this.horizontalTitleGap = 9,
+    this.contactPerson = ''
   });
   final String nameCashFlowCate;
   final String moneyType;
   final Function? onSelectContact;
   final Function? onResetChosenContact;
   final double horizontalTitleGap;
+  final String contactPerson;
   @override
   State<PickContactListTile> createState() => PickContactListTileState();
 }
@@ -59,13 +61,10 @@ class PickContactListTileState extends State<PickContactListTile> {
         title: Transform.translate(
             offset:  Offset(_contact == '' ? -8: -61, 0),
             child: Builder(builder: (context){
-              if(_contact != ''){
+              if(widget.contactPerson != ''){
                 return Chip(
                   onDeleted: () {
                     widget.onResetChosenContact!();
-                    setState(() {
-                      _contact = '';
-                    });
                   },
                   deleteIcon:  CircleAvatar(
                       radius: 10,
@@ -78,7 +77,7 @@ class PickContactListTileState extends State<PickContactListTile> {
                   backgroundColor: backgroundColor,
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12), side: BorderSide.none),
                   side: BorderSide.none,
-                  label: Text(_contact!, style: defaultTextStyle),
+                  label: Text(widget.contactPerson, style: defaultTextStyle),
 
                 );
               }

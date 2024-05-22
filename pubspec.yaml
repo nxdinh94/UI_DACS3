@@ -58,6 +58,7 @@ dependencies:
   custom_refresh_indicator: ^3.1.0
   dotted_line: ^3.2.2
   mobkit_dashed_border: ^0.0.6
+  loading_animation_widget: ^1.2.1
 
 dev_dependencies:
   flutter_test:

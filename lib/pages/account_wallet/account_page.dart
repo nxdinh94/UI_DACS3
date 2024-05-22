@@ -1,6 +1,8 @@
 
+import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/widgets/custom_popup_menu.dart';
 import 'package:provider/provider.dart';
@@ -50,7 +52,8 @@ class _AccountPageState extends State<AccountPage> {
         ),
         body:  Consumer<UserProvider>(
           builder: (context, value, child){
-            return value.accountWalletList.isNotEmpty? HaveAccountCase(accountWalletData: value.accountWalletList): const NoAccountCase();
+            List<dynamic> accountWalletList = value.accountWalletList;
+            return accountWalletList.isNotEmpty? HaveAccountCase(accountWalletData: accountWalletList): const NoAccountCase();
           }
         ),
         floatingActionButton: FloatingActionButton(
@@ -98,9 +101,12 @@ class _HaveAccountCaseState extends State<HaveAccountCase> {
   );
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
+    return CustomMaterialIndicator(
       onRefresh: ()async{
         await Provider.of<UserProvider>(context, listen: false).getAllAccountWallet();
+      },
+      indicatorBuilder: (BuildContext context, IndicatorController controller) {
+        return LoadingAnimationWidget.hexagonDots(color: primaryColor, size: 30);
       },
       child: Container(
         color: backgroundColor,

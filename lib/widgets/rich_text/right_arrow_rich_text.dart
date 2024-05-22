@@ -25,7 +25,7 @@ class RightArrowRichText extends StatelessWidget {
           style: TextStyle(fontSize: fontSize, color: color, fontWeight: fontWeight),
           children: [
             WidgetSpan(
-              child: Icon(Icons.keyboard_arrow_right, size: iconSize, color: color,),
+              child: Icon(Icons.keyboard_arrow_right, size: iconSize, color: color),
               alignment: PlaceholderAlignment.middle,
             )
           ]

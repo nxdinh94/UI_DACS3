@@ -1,3 +1,4 @@
+
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:practise_ui/Section/home_travel_section_item.dart';
@@ -16,11 +17,12 @@ import 'package:practise_ui/widgets/charts/pie_chart.dart';
 import 'package:practise_ui/widgets/charts/collumn_chart.dart';
 import 'package:practise_ui/widgets/charts/custom_legend_column_chart.dart';
 import 'package:practise_ui/widgets/rich_text/right_arrow_rich_text.dart';
+import 'package:practise_ui/widgets/rich_text/vnd_rich_text.dart';
 import 'package:practise_ui/widgets/spendingLimit/spendingLimitItems.dart';
 import 'package:practise_ui/widgets/vnd_icon.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../../constant/share_prefercence_key.dart';
 import '../../models/collum_chart_model.dart';
 
@@ -32,6 +34,8 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
+  GlobalKey<RefreshIndicatorState>();
   @override
   void initState() {
     super.initState();
@@ -66,7 +70,6 @@ class _HomePageState extends State<HomePage> {
       return;
     }else {
       await Provider.of<AppProvider>(context, listen: false).saveCashFlowCateApi();
-
     }
   }
 
@@ -84,11 +87,13 @@ class _HomePageState extends State<HomePage> {
                   await Provider.of<AppProvider>(context, listen:  false).getBank();
                   await Provider.of<UserProvider>(context, listen:  false).getAllAccountWallet();
                   await Provider.of<ChartProvider>(context, listen:  false).getExpenseRecordForChartProvider();
-
+                  await Provider.of<UserProvider>(context, listen: false).getAllExpenseRecordForNoteHistoryProvider(rangeTimeData[0]['value']);
                 },
+                key: _refreshIndicatorKey,
                 indicatorBuilder: (BuildContext context, IndicatorController controller) {
-                  return const  Icon(
-                      Icons.ac_unit,color: Colors.blue, size: 35);
+                  return LoadingAnimationWidget.hexagonDots(
+                    color: primaryColor,
+                    size: 30);
                   },
                 child: ListView(
                   children: [
@@ -116,8 +121,10 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   IconButton(
                                       onPressed: (){
-                                        Provider.of<AuthProvider>(context, listen: false).logout();
+                                        // Provider.of<AuthProvider>(context, listen: false).logout();
+                                        _refreshIndicatorKey.currentState?.show();
                                       },
+
                                       icon: const Icon(
                                         Icons.refresh, color: secondaryColor, size: 29,
                                       )
@@ -148,36 +155,23 @@ class _HomePageState extends State<HomePage> {
                                       Column(
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
-                                           RichText(
-                                              text: const TextSpan(
-                                                  text: 'Total balance', style: labelTextStyle,
-                                                  children:  [
-                                                    WidgetSpan(
-                                                        alignment: PlaceholderAlignment.middle,
-                                                        child: Icon(Icons.keyboard_arrow_right, size: 28, color: iconColor,)
-                                                    )
-                                                  ]
-                                              )
-                                           ),
-                                          RichText(
-                                              text: TextSpan(
-                                                  text: formatCurrencyVND(200000000),
-                                                  style: TextStyle(
-                                                      fontSize: 30,
-                                                      fontWeight: FontWeight.bold,
-                                                      color: Colors.red.shade400
-                                                  ),
-                                                  children: const [
-                                                     WidgetSpan(
-                                                        alignment: PlaceholderAlignment.middle,
-                                                        child: VndIcon(
-                                                          color: spendingMoneyColor,
-                                                          size: 22,
-                                                        )
-                                                     )
-                                                  ]
-                                              )
-                                           ),
+                                          const RightArrowRichText(
+                                            text: 'Total balance', fontSize: textSize, color: labelColor,
+                                          ),
+                                          Consumer<UserProvider>(
+                                              builder: (context, value, child){
+                                                List<dynamic> accountWalletList = value.accountWalletList;
+                                                double totalMoney = 0;
+                                                for(var item in accountWalletList){
+                                                  totalMoney += double.parse(item['account_balance'][r'$numberDecimal']);
+                                                }
+                                                return VndRichText(
+                                                  value: totalMoney,
+                                                  fontWeight: FontWeight.w700,
+                                                  fontSize: 30, color: spendingMoneyColor, iconSize: 24,
+                                                );
+                                              }
+                                          ),
 
                                         ],
                                       ),
@@ -210,9 +204,7 @@ class _HomePageState extends State<HomePage> {
                               ),
                               IconButton(
                                 onPressed: () {},
-                                iconSize: 28,
-                                padding: EdgeInsets.zero,
-                                color: iconColor,
+                                iconSize: 28, padding: EdgeInsets.zero, color: iconColor,
                                 constraints: const BoxConstraints(), // override default min size of 48px
                                 style: const ButtonStyle(
                                   tapTargetSize: MaterialTapTargetSize.shrinkWrap, // the '2023' part
@@ -224,16 +216,16 @@ class _HomePageState extends State<HomePage> {
                           Row(
                             children: [
                               RichText(
-                                  text:  const TextSpan(
-                                      text: 'Năm nay',
-                                      style: labelTextStyle,
-                                      children: [
-                                        WidgetSpan(
-                                            alignment: PlaceholderAlignment.middle,
-                                            child: Icon(Icons.keyboard_arrow_right, size: 30, color: iconColor,)
-                                        )
-                                      ]
-                                  ))
+                                text:  const TextSpan(
+                                  text: 'Năm nay',
+                                  style: labelTextStyle,
+                                  children: [
+                                    WidgetSpan(
+                                        alignment: PlaceholderAlignment.middle,
+                                        child: Icon(Icons.keyboard_arrow_right, size: 30, color: iconColor,)
+                                    )
+                                  ]
+                                ))
                             ],
                           ),
                           //Row chart
@@ -247,8 +239,19 @@ class _HomePageState extends State<HomePage> {
                             child: Column(
                               children: [
                                 Consumer<ChartProvider>(
-                                  builder: (context, value, child) {
+                                  builder: (context, value, child)  {
+
                                     final List<CollumChartModel> dataColumnChart  = value.filteredColumnChartDataHomePage;
+
+                                    if(value.isLoading){
+                                      return SizedBox(
+                                        height: 400,
+                                        child: LoadingAnimationWidget.inkDrop(
+                                          color: primaryColor,
+                                          size: 80,
+                                        ),
+                                      );
+                                    }
                                     return Visibility(
                                       visible: dataColumnChart.length>1,
                                       child: Row(
@@ -273,21 +276,10 @@ class _HomePageState extends State<HomePage> {
                                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                         children: [
                                                           const CustomLegendColumnChart(color: chartCollumn1, text: "Thu"),
-                                                          RichText(
-                                                            text: TextSpan(
-                                                                text: formatCurrencyVND(value.totalRevenueMoney),
-                                                                style: const TextStyle(
-                                                                    fontSize: 17,
-                                                                    color: chartCollumn1,
-                                                                    fontWeight: FontWeight.bold
-                                                                ),
-                                                                children: const [
-                                                                  WidgetSpan(
-                                                                      child: VndIcon(color: chartCollumn1, size: textSmall),
-                                                                      alignment: PlaceholderAlignment.middle
-                                                                  )
-                                                                ]
-                                                            ),
+                                                          VndRichText(
+                                                            value: value.totalRevenueMoney,
+                                                            fontSize: 17, iconSize: textSmall,
+                                                            color: chartCollumn1, fontWeight: FontWeight.bold,
                                                           )
                                                         ],
                                                       ),
@@ -296,21 +288,10 @@ class _HomePageState extends State<HomePage> {
                                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                         children: [
                                                           const CustomLegendColumnChart(color: chartCollumn2, text: "Chi"),
-                                                          RichText(
-                                                            text: TextSpan(
-                                                                text: formatCurrencyVND(value.totalSpendingMoney),
-                                                                style: const TextStyle(
-                                                                    fontSize: 17,
-                                                                    color: chartCollumn2,
-                                                                    fontWeight: FontWeight.bold
-                                                                ),
-                                                                children: const [
-                                                                  WidgetSpan(
-                                                                      child: VndIcon(color: chartCollumn2, size: textSmall),
-                                                                      alignment: PlaceholderAlignment.middle
-                                                                  )
-                                                                ]
-                                                            ),
+                                                          VndRichText(
+                                                            value: value.totalSpendingMoney,
+                                                            fontSize: 17, iconSize: textSmall,
+                                                            color: chartCollumn2, fontWeight: FontWeight.bold,
                                                           )
                                                         ],
                                                       ),
@@ -320,17 +301,10 @@ class _HomePageState extends State<HomePage> {
                                                       Row(
                                                         mainAxisAlignment: MainAxisAlignment.end,
                                                         children: [
-                                                          RichText(
-                                                            text: TextSpan(
-                                                                text: formatCurrencyVND(value.totalRevenueMoney-value.totalSpendingMoney),
-                                                                style: const TextStyle(fontSize: textSize, color: textColor, fontWeight: FontWeight.bold),
-                                                                children: const [
-                                                                  WidgetSpan(
-                                                                    child: VndIcon(color: textColor, size: textSmall),
-                                                                    alignment: PlaceholderAlignment.middle
-                                                                  )
-                                                                ]
-                                                            ),
+                                                          VndRichText(
+                                                            value: value.totalRevenueMoney-value.totalSpendingMoney,
+                                                            fontSize: textBig, iconSize: textSize,
+                                                            color: textColor, fontWeight: FontWeight.bold,
                                                           )
                                                         ],
                                                       )

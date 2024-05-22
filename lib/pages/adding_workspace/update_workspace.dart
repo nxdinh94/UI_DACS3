@@ -12,12 +12,11 @@ import 'package:practise_ui/providers/app_provider.dart';
 import 'package:practise_ui/providers/user_provider.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';
 import 'package:practise_ui/utils/custom_toast.dart';
-import 'package:practise_ui/utils/function/format_iso_date_to_date.dart';
 import 'package:practise_ui/widgets/adding_workspace/dropdown_adding_workspace.dart';
 import 'package:practise_ui/widgets/adding_workspace/pick_contact_listtitle.dart';
 import 'package:practise_ui/widgets/back_toolbar_button.dart';
 import 'package:provider/provider.dart';
-import '../../widgets/adding_workspace/expand_input_adding_space.dart';
+import '../../widgets/adding_workspace/expand_input_update_adding_space.dart';
 import '../../widgets/input_money_textfield.dart';
 import '../../widgets/listtitle_textfield.dart';
 
@@ -34,15 +33,20 @@ class _UpdateWorkspaceState extends State<UpdateWorkspace> {
   late CashFlowModel currentCashFlowOption = CashFlowModel(
       id: '', iconPath: '', name: '', isChosen: 0
   );
-  late String moneyType = '';// 3 options of dropdown
+
+  Map<String, dynamic> currentCashFlowCate = {'icon' :'', 'name':''};
+
+  late String cashFlowType = '';// 3 options of dropdown
   List<CashFlowModel> cashFlowData = [];
   Map<String, dynamic> chosenAccountWallet = {};//{name:'', icon:''}
   late String nameCashFlowCate = '';
   late bool alertOnNullMoneyTextField = false;
   late bool isFee = false;
   List<dynamic> allWalletUserData = [];
-
-
+  Map<String, dynamic> cashFlowCategoryData = {};
+  List<dynamic> cashFlowFiltered = [];
+  String initialMoney = '';
+  
   // all value;
   late String idCashFlowCate = '';
   final TextEditingController moneyEditTextController = TextEditingController();
@@ -98,13 +102,12 @@ class _UpdateWorkspaceState extends State<UpdateWorkspace> {
   void onSelectedDropdownItem(CashFlowModel selectedItem){
     setState(() {
       currentCashFlowOption  = selectedItem;
-      moneyType = selectedItem.name;
+      cashFlowType = selectedItem.name;
 
     });
-    // print(moneyType);
+    // print(cashFlowType);
   }
   DateTime currentDate = DateTime.now();
-
 
   Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
@@ -127,18 +130,53 @@ class _UpdateWorkspaceState extends State<UpdateWorkspace> {
     _selectedDate = DateFormat('yyyy-MM-dd').format(currentDate);
     cashFlowData = context.read<AppProvider>().cashFlowData;
     allWalletUserData = context.read<UserProvider>().accountWalletList;
+    cashFlowCategoryData = context.read<AppProvider>().cashFlowCateData;
+    isFee = widget.dataToUpdate['cost_incurred_category_id']!="";
 
+
+
+    //get required value
+    idCashFlowCate = widget.dataToUpdate['cash_flow_category_id'];
+
+
+    //get cash-flow item
     if(cashFlowData.isNotEmpty){
-      currentCashFlowOption = cashFlowData[0];
-      moneyType = currentCashFlowOption.name;
       for(var item in cashFlowData){
-        if(item.isChosen == 1 ){
+        if(item.id == widget.dataToUpdate['cash_flow_id'] ){
           currentCashFlowOption = item;
-          moneyType = item.name;
+          cashFlowType = item.name;
           break;
         }
       }
     }
+
+    if(cashFlowCategoryData.isNotEmpty) {
+      if (cashFlowType.toLowerCase().contains('chi')) {
+        cashFlowFiltered = cashFlowCategoryData['spending_money'];
+      } else if (cashFlowType.toLowerCase().contains('thu')) {
+        cashFlowFiltered = cashFlowCategoryData['revenue_money'];
+      } else {
+        cashFlowFiltered = cashFlowCategoryData['loan_money'];
+      }
+    }
+    for(var e in cashFlowFiltered){
+      if(e['parent_category']['_id'] == idCashFlowCate){
+        currentCashFlowCate['icon'] = e['parent_category']['icon'];
+        currentCashFlowCate['name']= e['parent_category']['name'];
+      }else{
+        if(e['sub_category']!= null){
+          for(var f in e['sub_category']){
+            if(f['_id'] == idCashFlowCate){
+              currentCashFlowCate['icon'] = f['icon'];
+              currentCashFlowCate['name']= f['name'];
+            }
+          }
+        }
+      }
+    }
+
+    // print(widget.dataToUpdate);
+
     // get accountWallet's name & accountWallet's icon of this dataToUpdate
     for(var e in allWalletUserData){
       if(widget.dataToUpdate['money_account_id'] == e['_id']){
@@ -147,21 +185,27 @@ class _UpdateWorkspaceState extends State<UpdateWorkspace> {
         break;
       }
     }
+    initialMoney = widget.dataToUpdate['amount_of_money'][r'$numberDecimal'];
+
 
     //init all field
-    moneyEditTextController.text = widget.dataToUpdate['amount_of_money'][r'$numberDecimal'];
+    moneyEditTextController.text = initialMoney;
     descriptEditTextController.text = widget.dataToUpdate['description'];
     idChosenAccountWallet = widget.dataToUpdate['money_account_id'];
     idCashFlowCate = widget.dataToUpdate['cash_flow_category_id'];
+    idCostIncuredCategory = widget.dataToUpdate['cost_incurred_category_id'];
+    costIncurredEditTextController.text = widget.dataToUpdate['cost_incurred'][r'$numberDecimal'];
+    eventEditTextController.text = widget.dataToUpdate['trip_or_event'];
+    if(widget.dataToUpdate['pay_for_who']!= ''){
+      contactPerson = widget.dataToUpdate['pay_for_who'];
+    }else if(widget.dataToUpdate['collect_from_who']!= ''){
+      contactPerson = widget.dataToUpdate['collect_from_who'];
+    }
     print(widget.dataToUpdate);
 
     super.initState();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -183,122 +227,124 @@ class _UpdateWorkspaceState extends State<UpdateWorkspace> {
                     selectedItem: onSelectedDropdownItem,
                   ),
           ),
-          centerTitle: true,
-          actions: [
-            Padding(
-              padding: const EdgeInsets.only(right: 15),
-              child: GestureDetector(
-                onTap: () async {
-                  Map<String, String> dataToSubmit = {
-                    // required field
-                    'cash_flow_category_id': idCashFlowCate,
-                    'amount_of_money': moneyEditTextController.text.toString(),
-                    'money_account_id': idChosenAccountWallet,
+    centerTitle: true,
+    actions: [
+      Padding(
+        padding: const EdgeInsets.only(right: 18),
+        child: SvgPicture.asset('assets/svg/trash.svg', width: 22),
+      ),
+      Padding(
+        padding: const EdgeInsets.only(right: 15),
+        child: GestureDetector(
+          onTap: () async {
+            Map<String, String> dataToSubmit = {
+              // required field
+              'cash_flow_category_id': idCashFlowCate,
+              'amount_of_money': (double.parse(initialMoney) - double.parse(moneyEditTextController.text)).toString(),
+              'money_account_id': idChosenAccountWallet,
 
-                    'occur_date': _selectedDate,
-                    'trip_or_event': eventEditTextController.text,
-                    'description': descriptEditTextController.text,
-                    'report' : isNotIncludeInReport.toString(),
-                  };
-                  if( idCashFlowCate.isNotEmpty &&
-                      moneyEditTextController.text.isNotEmpty&&
-                      idChosenAccountWallet.isNotEmpty
-                  ){
-                    //if have borrow_to_pay
-                    if(moneyType.toLowerCase().contains('chi tiền') ||
-                        nameCashFlowCate.toLowerCase().contains('cho vay')||
-                        nameCashFlowCate.toLowerCase().contains('trả nợ')
-                    ){
-                      if(isBorrowToPay == 1){
-                        dataToSubmit['borrow_to_pay'] = isBorrowToPay.toString();
-                      }else {
-                        dataToSubmit.remove('borrow_to_pay');
-                      }
-                    }else {
-                      dataToSubmit.remove('borrow_to_pay');
-                    }
-                    //if have fee
-                    if(moneyType.toLowerCase().contains('chi tiền')
-                        || nameCashFlowCate.toLowerCase().contains('cho vay')
-                        || nameCashFlowCate.toLowerCase().contains('cho vay')
-                    ){
-                      if(isFee){
-                        String id = idCostIncuredCategory;
-                        dataToSubmit['cost_incurred'] = costIncurredEditTextController.text;
-                        dataToSubmit['cost_incurred_category_id'] = id;
-                      }else {
-                        dataToSubmit.remove('cost_incurred');
-                        dataToSubmit.remove('cost_incurred_category_id');
-                      }
-                    }else {
-                      dataToSubmit.remove('cost_incurred');
-                      dataToSubmit.remove('cost_incurred_category_id');
-                    }
+              'occur_date': _selectedDate,
+              'trip_or_event': eventEditTextController.text,
+              'description': descriptEditTextController.text,
+              'report' : isNotIncludeInReport.toString(),
+            };
+            if( idCashFlowCate.isNotEmpty &&
+            moneyEditTextController.text.isNotEmpty&&
+            idChosenAccountWallet.isNotEmpty
+            ){
+            //if have borrow_to_pay
+            if(cashFlowType.toLowerCase().contains('chi tiền') ||
+            nameCashFlowCate.toLowerCase().contains('cho vay')||
+            nameCashFlowCate.toLowerCase().contains('trả nợ')
+            ){
+            if(isBorrowToPay == 1){
+            dataToSubmit['borrow_to_pay'] = isBorrowToPay.toString();
+            }else {
+            dataToSubmit.remove('borrow_to_pay');
+            }
+            }else {
+            dataToSubmit.remove('borrow_to_pay');
+            }
+            //if have fee
+            if(cashFlowType.toLowerCase().contains('chi tiền')
+            || nameCashFlowCate.toLowerCase().contains('cho vay')
+            || nameCashFlowCate.toLowerCase().contains('cho vay')
+            ){
+            if(isFee){
+            String id = idCostIncuredCategory;
+            dataToSubmit['cost_incurred'] = costIncurredEditTextController.text;
+            dataToSubmit['cost_incurred_category_id'] = id;
+            }else {
+            dataToSubmit.remove('cost_incurred');
+            dataToSubmit.remove('cost_incurred_category_id');
+            }
+            }else {
+            dataToSubmit.remove('cost_incurred');
+            dataToSubmit.remove('cost_incurred_category_id');
+            }
 
-                    if(!moneyType.toLowerCase().contains('tiền')){
-                      dataToSubmit.remove('trip_or_event');
-                    }
-                    if(
-                      moneyType.toLowerCase().contains('chi tiền')||
-                      nameCashFlowCate.toLowerCase().contains('cho vay')
-                    ){
-                      dataToSubmit['pay_for_who'] = contactPerson;
-                    }
-                    if(
-                      moneyType.toLowerCase().contains('thu tiền')||
-                      nameCashFlowCate.toLowerCase().contains('đi vay')
-                    ){
-                      dataToSubmit['collect_from_who'] = contactPerson;
-                    }
+            if(!cashFlowType.toLowerCase().contains('tiền')){
+            dataToSubmit.remove('trip_or_event');
+            }
+            if(
+            cashFlowType.toLowerCase().contains('chi tiền')||
+            nameCashFlowCate.toLowerCase().contains('cho vay')
+            ){
+            dataToSubmit['pay_for_who'] = contactPerson;
+            }
+            if(
+            cashFlowType.toLowerCase().contains('thu tiền')||
+            nameCashFlowCate.toLowerCase().contains('đi vay')
+            ){
+            dataToSubmit['collect_from_who'] = contactPerson;
+            }
+            }else {
+            if(idCashFlowCate.isEmpty){
+            showCustomErrorToast(context, 'Hạng mục không được trống', 1);
+            }
+            if(moneyEditTextController.text.isEmpty){
+            setState(() {alertOnNullMoneyTextField = true;});
+            }
+            if(idChosenAccountWallet.isEmpty){
+            showCustomErrorToast(context, 'Ví không được trống', 1);
+            }
+            return;
+            }
+            Map<String, dynamic> result = await Provider.of<UserProvider>(context, listen: false).addExpenseRecordProvider(dataToSubmit);
+            if(result['status'] == '200'){
+            showCustomSuccessToast(context, result['result'], duration: 1);
+            //reset all value
+            setState(() {
+            moneyEditTextController.text = '';
+            descriptEditTextController.text = '';
+            contactPerson = '';
+            eventEditTextController.text = '';
+            revenueOrSpendingPerson= '';
+            isBorrowToPay = 0;
+            costIncurredEditTextController.text = '';
+            isNotIncludeInReport  = 0;
 
+            onSetIsFee(false);
+            onSelectCostIncuredCategory('', '');
+            onSelectContact('');
+            currentCashFlowOption = CashFlowModel(
+            id: '', iconPath: '', name: '', isChosen: 0
+            );
 
+            });
+            }else {
+            showCustomErrorToast(context, result['result'], 1);
+            }
+            },
+            child: SvgPicture.asset(
+            'assets/svg/tick.svg',
+            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+            width: 38, // Adjust the width as needed
+            height: 38, // Adjust the height as needed
+            ),
+            ),
+            ),
 
-                  }else {
-                    if(idCashFlowCate.isEmpty){
-                      showCustomErrorToast(context, 'Hạng mục không được trống', 1);
-                    }
-                    if(moneyEditTextController.text.isEmpty){
-                      setState(() {alertOnNullMoneyTextField = true;});
-                    }
-                    if(idChosenAccountWallet.isEmpty){
-                      showCustomErrorToast(context, 'Ví không được trống', 1);
-                    }
-                    return;
-                  }
-                  Map<String, dynamic> result = await Provider.of<UserProvider>(context, listen: false).addExpenseRecordProvider(dataToSubmit);
-                  if(result['status'] == '200'){
-                    showCustomSuccessToast(context, result['result'], duration: 1);
-                    //reset all value
-                    setState(() {
-                      moneyEditTextController.text = '';
-                      descriptEditTextController.text = '';
-                      contactPerson = '';
-                      eventEditTextController.text = '';
-                      revenueOrSpendingPerson= '';
-                      isBorrowToPay = 0;
-                      costIncurredEditTextController.text = '';
-                      isNotIncludeInReport  = 0;
-
-                      onSetIsFee(false);
-                      onSelectCostIncuredCategory('', '');
-                      onSelectContact('');
-                      currentCashFlowOption = CashFlowModel(
-                          id: '', iconPath: '', name: '', isChosen: 0
-                      );
-
-                    });
-                  }else {
-                    showCustomErrorToast(context, result['result'], 1);
-                  }
-                },
-                child: SvgPicture.asset(
-                  'assets/svg/tick.svg',
-                  colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                  width: 38, // Adjust the width as needed
-                  height: 38, // Adjust the height as needed
-                ),
-              ),
-            )
           ],
         ),
         body: Container(
@@ -312,6 +358,7 @@ class _UpdateWorkspaceState extends State<UpdateWorkspace> {
                   controller: moneyEditTextController,
                   title: 'Số tiền',
                   alertOnNull: alertOnNullMoneyTextField,
+                  textColor: widget.dataToUpdate['cash_flow_type'] == 0? spendingMoneyColor: revenueMoneyColor,
                 ),
                 spaceColumn,
                 // Phần điền thông tin cần thiết
@@ -321,15 +368,16 @@ class _UpdateWorkspaceState extends State<UpdateWorkspace> {
                     children: [
                       // Phần chọn lý do dùng tiền
                       ChooseCashFlowCategory(
-                        cashFlowType:  moneyType,
+                        cashFlowType:  cashFlowType,
                         onSelectCashFlowCate: onSelectCashFlowCate,
+                        currentOption: currentCashFlowCate,
                       ),
                       dividerI76,
                       //Person loan
                       Visibility(
-                        visible: moneyType.toLowerCase().contains('vay'),
+                        visible: cashFlowType.toLowerCase().contains('vay'),
                         child: PickContactListTile(
-                          moneyType: moneyType,
+                          moneyType: cashFlowType,
                           nameCashFlowCate: nameCashFlowCate,
                           onSelectContact: onSelectContact,
                           onResetChosenContact: onResetChosenContact,
@@ -402,8 +450,8 @@ class _UpdateWorkspaceState extends State<UpdateWorkspace> {
                 // Phần thông tin chi tiết(optional)
                 spaceColumn,
                 //Expanded detailed option
-                CustomDropdownMenu(
-                  moneyType: moneyType,
+                ExpandInputUpdateAddingSpace(
+                  moneyType: cashFlowType,
                   nameCashFlowCate: nameCashFlowCate,
                   onSelectContact: onSelectContact,
                   onResetChosenContact: onResetChosenContact,
@@ -414,6 +462,8 @@ class _UpdateWorkspaceState extends State<UpdateWorkspace> {
                   onSetIsIncludeInReport:onSetIsIncludeInReport,
                   isFee: isFee,
                   onSetIsFee: onSetIsFee,
+                  idCostIncuredCategory: idCostIncuredCategory,
+                  contactPerson: contactPerson,
 
                 ),
               ],
@@ -429,12 +479,15 @@ class _UpdateWorkspaceState extends State<UpdateWorkspace> {
 
 class ChooseCashFlowCategory extends StatefulWidget {
   ChooseCashFlowCategory({
-     required this.cashFlowType,
-     required this.onSelectCashFlowCate
+   required this.cashFlowType,
+   required this.onSelectCashFlowCate,
+  required this.currentOption
+
    });
 
   final String cashFlowType;
   final Function? onSelectCashFlowCate;
+  final Map<String, dynamic> currentOption;
   @override
   State<ChooseCashFlowCategory> createState() => ChooseCashFlowCategoryState();
 }
@@ -447,11 +500,13 @@ class ChooseCashFlowCategoryState extends State<ChooseCashFlowCategory> {
       color: textColor
   );
   @override
+  void initState() {
+    currentOption = widget.currentOption;
+    super.initState();
+  }
+  @override
   void didUpdateWidget(covariant ChooseCashFlowCategory oldWidget) {
-    if(oldWidget.cashFlowType != widget.cashFlowType){
-      widget.onSelectCashFlowCate!('','');
-      currentOption = {'icon' :'', 'name':''};
-    }
+
     super.didUpdateWidget(oldWidget);
   }
   @override
@@ -459,9 +514,9 @@ class ChooseCashFlowCategoryState extends State<ChooseCashFlowCategory> {
 
     return ListTile(
       leading: Image.asset(
-        currentOption['icon'] != '' ? currentOption['icon'] : 'assets/another_icon/question-mark.png', width: 40, height: 40,
+        currentOption['icon'] == ''?'assets/another_icon/question-mark.png': currentOption['icon'] , width: 40, height: 40,
       ),
-      title: currentOption['name'] != '' ?  Text(currentOption['name'], style: textStyle):Text('Chọn hạng mục', style: textStyle,),
+      title: Text(currentOption['name'] ==''? 'Chọn hạng mục': currentOption['name'], style: textStyle),
       trailing: keyBoardArrowRightIcon,
       contentPadding: const EdgeInsets.only(left:  16, top: 8, bottom: 8, right: 8),
       onTap: ()async{
