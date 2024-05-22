@@ -4,9 +4,9 @@ import '../constant/server_url.dart';
 import 'package:http/http.dart' as http;
 
 class ChartServices{
-  Future<Map<String, dynamic>> getExpenseRecordForChartService (String accessToken) async{
+  Future<Map<String, dynamic>> getExpenseRecordForChartService (String accessToken, String time) async{
     Map<String, dynamic> result = {};
-    final uri = Uri.parse(getExpenseRecordForChartApi);
+    final uri = Uri.parse('$PORT/app/expense-record-for-statistics/$time');
     try{
       final res = await http.get(uri,
         headers: <String, String>{

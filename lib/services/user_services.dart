@@ -215,4 +215,24 @@ class UserServices{
     return result;
   }
 
+  Future<Map<String, dynamic>>getMeService(String accessToken)async{
+    Map<String, dynamic> result = {'result':''};
+    try{
+      final uri = Uri.parse(getMeApi);
+      final res = await http.get(uri,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+      if(res.statusCode == 200){
+        final jsonData = jsonDecode(res.body);
+        result = {'result': jsonData['result']};
+      }
+    }catch(e){
+      throw Exception('Error while get me $e');
+    }
+    return result;
+  }
+
 }

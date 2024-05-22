@@ -18,3 +18,4 @@ const labelTextStyle = TextStyle(
     fontSize: textSize,
     color: labelColor
 );
+

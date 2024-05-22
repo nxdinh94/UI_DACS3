@@ -16,10 +16,11 @@ class _UserProfileState extends State<UserProfile> {
   @override
   Widget build(BuildContext context) {
     return  Container(
-      padding: EdgeInsets.symmetric(horizontal: 12),
+      padding: const EdgeInsets.symmetric(horizontal: 12),
+      color: secondaryColor,
       child: Column(
         children: [
-          _actionBar(),
+          const _actionBar(),
           Expanded(
             child: ListView(
                 children: [
@@ -343,7 +344,7 @@ class _actionBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       color: Colors.transparent,
-      padding: EdgeInsets.only(top: 12),
+      padding: const EdgeInsets.only(top: 12),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
 

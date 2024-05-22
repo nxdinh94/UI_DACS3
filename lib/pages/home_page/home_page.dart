@@ -1,6 +1,8 @@
 
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practise_ui/Section/home_travel_section_item.dart';
 import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/constant/font.dart';
@@ -16,6 +18,7 @@ import 'package:practise_ui/utils/custom_navigation_helper.dart';
 import 'package:practise_ui/widgets/charts/pie_chart.dart';
 import 'package:practise_ui/widgets/charts/collumn_chart.dart';
 import 'package:practise_ui/widgets/charts/custom_legend_column_chart.dart';
+import 'package:practise_ui/widgets/hidden_money_label.dart';
 import 'package:practise_ui/widgets/rich_text/right_arrow_rich_text.dart';
 import 'package:practise_ui/widgets/rich_text/vnd_rich_text.dart';
 import 'package:practise_ui/widgets/spendingLimit/spendingLimitItems.dart';
@@ -34,8 +37,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final GlobalKey<RefreshIndicatorState> _refreshIndicatorKey =
-  GlobalKey<RefreshIndicatorState>();
+  bool isShowMoney = true;
   @override
   void initState() {
     super.initState();
@@ -50,7 +52,8 @@ class _HomePageState extends State<HomePage> {
       Provider.of<AppProvider>(context, listen: false).getAccountWalletType();
       Provider.of<AppProvider>(context, listen:  false).getBank();
       Provider.of<UserProvider>(context, listen:  false).getAllAccountWallet();
-      await Provider.of<ChartProvider>(context, listen:  false).getExpenseRecordForChartProvider();
+      await Provider.of<ChartProvider>(context, listen:  false).getExpenseRecordForChartProvider(rangeTimeData[0]['value']);
+      await Provider.of<UserProvider>(context, listen: false).getMeProvider();
 
     });
   }
@@ -82,14 +85,13 @@ class _HomePageState extends State<HomePage> {
             Expanded(
               child: CustomMaterialIndicator(
                 onRefresh: () async {
-                  await Provider.of<ChartProvider>(context, listen: false).getExpenseRecordForChartProvider();
                   await Provider.of<AppProvider>(context, listen: false).getAccountWalletType();
                   await Provider.of<AppProvider>(context, listen:  false).getBank();
                   await Provider.of<UserProvider>(context, listen:  false).getAllAccountWallet();
-                  await Provider.of<ChartProvider>(context, listen:  false).getExpenseRecordForChartProvider();
+                  await Provider.of<ChartProvider>(context, listen:  false).getExpenseRecordForChartProvider(rangeTimeData[0]['value']);
                   await Provider.of<UserProvider>(context, listen: false).getAllExpenseRecordForNoteHistoryProvider(rangeTimeData[0]['value']);
+                  await Provider.of<UserProvider>(context, listen: false).getMeProvider();
                 },
-                key: _refreshIndicatorKey,
                 indicatorBuilder: (BuildContext context, IndicatorController controller) {
                   return LoadingAnimationWidget.hexagonDots(
                     color: primaryColor,
@@ -98,7 +100,7 @@ class _HomePageState extends State<HomePage> {
                 child: ListView(
                   children: [
                     Container(
-                      height: 169,
+                      height: 164,
                       padding: paddingAll12,
                       decoration: const BoxDecoration(
                           color: primaryColor
@@ -106,39 +108,41 @@ class _HomePageState extends State<HomePage> {
                       child: Column(
                         children: [
                           Padding(
-                            padding: const EdgeInsets.only(bottom: 10),
-                            child: FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  const Text(
-                                    'Hello nguyenxuandinh336live!',
-                                    style: TextStyle(
+                            padding: const EdgeInsets.only(bottom: 5),
+                            child: ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              dense: true,
+                              title: Consumer<UserProvider>(
+                                  builder: (context, value, child) => Text(
+                                    overflow: TextOverflow.ellipsis,
+                                    'Hello ${value.meData['name']??'Anonymous'}!',
+                                    style: const TextStyle(
                                         color: secondaryColor,
                                         fontSize: textBig
                                     ),
-                                  ),
+                                  )
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
                                   IconButton(
                                       onPressed: (){
-                                        // Provider.of<AuthProvider>(context, listen: false).logout();
-                                        _refreshIndicatorKey.currentState?.show();
+                                        Provider.of<AuthProvider>(context, listen: false).logout();
                                       },
-
                                       icon: const Icon(
                                         Icons.refresh, color: secondaryColor, size: 29,
                                       )
                                   ),
                                   IconButton(
                                       onPressed: ()async{
-                                        },
+                                      },
                                       icon: const Icon(
                                         Icons.add_alert, color: secondaryColor, size: 26,
                                       )
-                                  )
+                                  ),
                                 ],
                               ),
-                            ),
+                            )
                           ),
                           Expanded(
                             child: GestureDetector(
@@ -165,21 +169,29 @@ class _HomePageState extends State<HomePage> {
                                                 for(var item in accountWalletList){
                                                   totalMoney += double.parse(item['account_balance'][r'$numberDecimal']);
                                                 }
-                                                return VndRichText(
-                                                  value: totalMoney,
-                                                  fontWeight: FontWeight.w700,
-                                                  fontSize: 30, color: spendingMoneyColor, iconSize: 24,
-                                                );
+                                                return isShowMoney? Animate(
+                                                  effects: const [FadeEffect()],
+                                                  child: VndRichText(
+                                                    value: totalMoney,
+                                                    fontWeight: FontWeight.bold,
+                                                    fontSize: 30, color: spendingMoneyColor, iconSize: 24,
+                                                  ),
+                                                ) : const HiddenMoneyLabel(
+                                                    fontSize: 30, iconSize: 24, color: spendingMoneyColor);
                                               }
                                           ),
 
                                         ],
                                       ),
                                       IconButton(
-                                          onPressed: (){},
-                                          icon: const Icon(
-                                            Icons.remove_red_eye_sharp, size: 30, color: iconColor,
-                                          )
+                                          onPressed: (){
+                                            setState(() {
+                                              isShowMoney = !isShowMoney;
+                                            });
+                                          },
+                                          icon: isShowMoney?
+                                                SvgPicture.asset('assets/svg/eye.svg', width: 30,):
+                                                SvgPicture.asset('assets/svg/eye-password-hide.svg', width: 30,),
                                       )
                                     ]
                                 ),
@@ -276,11 +288,17 @@ class _HomePageState extends State<HomePage> {
                                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                         children: [
                                                           const CustomLegendColumnChart(color: chartCollumn1, text: "Thu"),
-                                                          VndRichText(
-                                                            value: value.totalRevenueMoney,
-                                                            fontSize: 17, iconSize: textSmall,
-                                                            color: chartCollumn1, fontWeight: FontWeight.bold,
-                                                          )
+                                                          isShowMoney?Animate(
+                                                            effects: const [MoveEffect(begin: Offset(20, 0)), FadeEffect()],
+                                                            child: VndRichText(
+                                                              value: value.totalRevenueMoney,
+                                                              fontSize: 17, iconSize: textSmall,
+                                                              color: chartCollumn1, fontWeight: FontWeight.bold,
+                                                            ),
+                                                          ):const HiddenMoneyLabel(
+                                                              fontSize: 17,
+                                                              iconSize: textSmall,
+                                                              color: chartCollumn1)
                                                         ],
                                                       ),
                                                       spaceColumn,
@@ -288,11 +306,17 @@ class _HomePageState extends State<HomePage> {
                                                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                                         children: [
                                                           const CustomLegendColumnChart(color: chartCollumn2, text: "Chi"),
-                                                          VndRichText(
-                                                            value: value.totalSpendingMoney,
-                                                            fontSize: 17, iconSize: textSmall,
-                                                            color: chartCollumn2, fontWeight: FontWeight.bold,
-                                                          )
+                                                          isShowMoney ? Animate(
+                                                            effects: const [MoveEffect(begin: Offset(20, 0)), FadeEffect()],
+                                                            child: VndRichText(
+                                                              value: value.totalSpendingMoney,
+                                                              fontSize: 17, iconSize: textSmall,
+                                                              color: chartCollumn2, fontWeight: FontWeight.bold,
+                                                            ),
+                                                          ): const HiddenMoneyLabel(
+                                                              fontSize: 17,
+                                                              iconSize: textSmall,
+                                                              color: chartCollumn2)
                                                         ],
                                                       ),
                                                       spaceColumn,
@@ -301,11 +325,18 @@ class _HomePageState extends State<HomePage> {
                                                       Row(
                                                         mainAxisAlignment: MainAxisAlignment.end,
                                                         children: [
-                                                          VndRichText(
-                                                            value: value.totalRevenueMoney-value.totalSpendingMoney,
-                                                            fontSize: textBig, iconSize: textSize,
-                                                            color: textColor, fontWeight: FontWeight.bold,
-                                                          )
+                                                          isShowMoney ? Animate(
+                                                            effects: const [MoveEffect(begin: Offset(20, 0)), FadeEffect()],
+                                                            child: VndRichText(
+                                                              value: value.totalRevenueMoney-value.totalSpendingMoney,
+                                                              fontSize: textBig, iconSize: textSize,
+                                                              color: textColor, fontWeight: FontWeight.bold,
+                                                            ),
+                                                          ): const HiddenMoneyLabel(
+                                                              fontSize: textBig,
+                                                              iconSize: textSize,
+                                                              color: textColor)
+
                                                         ],
                                                       )
                                                     ],

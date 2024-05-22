@@ -19,6 +19,10 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin{
   Map<String, dynamic> _expenseRecordDataForNoteHistory = {};
   Map<String, dynamic> get expenseRecordDataForNoteHistory => _expenseRecordDataForNoteHistory;
 
+  Map<String, dynamic> _meData = {};
+  Map<String, dynamic> get meData => _meData;
+
+
   Future<String> getAccessToken()async{
     final SharedPreferences pref = await SharedPreferences.getInstance();
     // Get token['refresh_token','refresh_token']
@@ -87,6 +91,14 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin{
     notifyListeners();
   }
 
+  Future<void> getMeProvider ()async{
+    String accessToken = await getAccessToken();
+    Map<String, dynamic> result = await userServices.getMeService(accessToken);
+    if(result['result']!=''){
+      _meData = result['result'];
+    }
+    notifyListeners();
+  }
 
   /// Makes `Counter` readable inside the devtools by listing all of its properties
   @override

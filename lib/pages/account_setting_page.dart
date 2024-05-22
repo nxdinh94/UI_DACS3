@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:practise_ui/constant/side.dart';
+import 'package:practise_ui/providers/user_provider.dart';
+import 'package:provider/provider.dart';
 
 import '../constant/color.dart';
 import '../constant/font.dart';
@@ -26,7 +28,6 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
               children: [
                 Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
-
                     children: [
                       GestureDetector(
                           onTap: (){
@@ -55,53 +56,57 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                       ),
                     ]
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      radius: 75,
-                      child: CircleAvatar(
-                        radius: 43,
-                        backgroundColor: Colors.grey.shade400,
-                        child: CircleAvatar(
-                          radius: 40,
-                          backgroundImage: AssetImage('assets/beach and me.jpg'),
+                Consumer<UserProvider>(
+                  builder: (context, value, child) {
+                    Map<String, dynamic> meData = value.meData;
+                    return Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CircleAvatar(
+                          radius: 75,
+                          child: CircleAvatar(
+                            radius: 43,
+                            child: ClipOval(
+                              child: meData['avatar'] ==''? Image.asset('assets/another_icon/avt-fb.jpg')
+                                  :  Image.asset('assets/beach and me.jpg'),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
-                    spaceColumn6,
-                    Text('nguyenxuandinh336live',
-                        style: const TextStyle(color: textColor, fontSize: textBig, fontWeight: FontWeight.w700),
-                    ),
-                    Text('nguyenxuandinh336live',
-                      style: const TextStyle(
-                        color: textColor, fontSize: textSize, height: 0.8
-                      ),
-                    ),
-                    spaceColumn,
-                    ElevatedButton(
-                      onPressed: (){
-                        CustomNavigationHelper.router.push(
-                          '${CustomNavigationHelper.anotherPath}/${CustomNavigationHelper.accountSettingPath}/${CustomNavigationHelper.userProfilePath}'
-                        );
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: secondaryColor,
-                        elevation: 0,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(6),
-                          side: const BorderSide(color: labelColor)
-
+                        spaceColumn6,
+                        Text(meData['name'] ?? 'Anonymous',
+                          style: const TextStyle(color: textColor, fontSize: textBig, fontWeight: FontWeight.w700),
                         ),
+                        Text(meData['email'] ?? 'anonymous@gmail.com',
+                          style: const TextStyle(
+                              color: textColor, fontSize: textSize, height: 0.8
+                          ),
+                        ),
+                        spaceColumn,
+                        ElevatedButton(
+                            onPressed: (){
+                              CustomNavigationHelper.router.push(
+                                  '${CustomNavigationHelper.anotherPath}/${CustomNavigationHelper.accountSettingPath}/${CustomNavigationHelper.userProfilePath}'
+                              );
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: secondaryColor,
+                              elevation: 0,
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(6),
+                                  side: const BorderSide(color: labelColor)
 
-                      ),
+                              ),
 
-                      child: const Text('Sửa', style: TextStyle(
-                        color: textColor, fontSize: textSmall, fontWeight: FontWeight.w400
-                      ),))
+                            ),
 
-                  ],
-                ),
+                            child: const Text('Sửa', style: TextStyle(
+                                color: textColor, fontSize: textSmall, fontWeight: FontWeight.w400
+                            ),))
+
+                      ],
+                    );
+                  },
+                )
               ],
             ),
           ),

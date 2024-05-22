@@ -39,10 +39,10 @@ class ChartProvider with ChangeNotifier, DiagnosticableTreeMixin{
     return tokenDecoded['access_token'];
   }
 
-  Future<void> getExpenseRecordForChartProvider()async{
+  Future<void> getExpenseRecordForChartProvider(String time)async{
     isLoading = true;
     String accessToken = await getAccessToken();
-    Map<String, dynamic> result = await chartServices.getExpenseRecordForChartService(accessToken);
+    Map<String, dynamic> result = await chartServices.getExpenseRecordForChartService(accessToken, time);
     if(result.isNotEmpty){
       _expenseRecordForChart = result;
     }
