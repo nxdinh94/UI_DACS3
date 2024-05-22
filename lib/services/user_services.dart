@@ -190,5 +190,29 @@ class UserServices{
     }
     return result;
   }
+  Future<Map<String, dynamic>> getAllExpenseRecordForNoteHistoryServices(
+      String accessToken, String time //mm-yyyy
+  )async{
+    Map<String, dynamic> result = {};
+    try{
+      String url = '$PORT/app/expense-record/$time';
+      final uri = Uri.parse(url);
+      final res = await http.get(uri,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+      if(res.statusCode == 200){
+        Map<String, dynamic> jsonData = jsonDecode(res.body);
+        result = {'result' : jsonData['result']};
+      }else if(res.statusCode == 422){
+        result = {'errors': 'Thời gian không hợp lệ'};
+      }
+    }catch(e){
+      throw Exception('Error when fetching $e');
+    }
+    return result;
+  }
 
 }

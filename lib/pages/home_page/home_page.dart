@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:practise_ui/Section/home_travel_section_item.dart';
 import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/constant/font.dart';
+import 'package:practise_ui/constant/range_time_value.dart';
 import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/models/cashs_flow_model.dart';
 import 'package:practise_ui/providers/app_provider.dart';
@@ -13,7 +14,6 @@ import 'package:practise_ui/utils/function/currency_format.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';
 import 'package:practise_ui/widgets/charts/pie_chart.dart';
 import 'package:practise_ui/widgets/charts/collumn_chart.dart';
-import 'package:practise_ui/data/piechart_data.dart';
 import 'package:practise_ui/widgets/charts/custom_legend_column_chart.dart';
 import 'package:practise_ui/widgets/rich_text/right_arrow_rich_text.dart';
 import 'package:practise_ui/widgets/spendingLimit/spendingLimitItems.dart';
@@ -366,7 +366,9 @@ class _HomePageState extends State<HomePage> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               GestureDetector(
-                                onTap:(){
+                                onTap:()async{
+                                  await Provider.of<UserProvider>(context, listen: false)
+                                    .getAllExpenseRecordForNoteHistoryProvider(rangeTimeData[0]['value']);
                                   CustomNavigationHelper.router.push(
                                     '${CustomNavigationHelper.homePath}/${CustomNavigationHelper.noteHistoryPath}'
                                   );

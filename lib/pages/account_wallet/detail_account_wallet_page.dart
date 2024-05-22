@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/providers/user_provider.dart';
+import 'package:practise_ui/utils/custom_navigation_helper.dart';
 import 'package:practise_ui/utils/function/currency_format.dart';
 import 'package:practise_ui/widgets/back_toolbar_button.dart';
 import 'package:practise_ui/widgets/rich_text/right_arrow_rich_text.dart';
@@ -60,7 +61,7 @@ class _DetailAccountWalletPageState extends State<DetailAccountWalletPage> {
               color: secondaryColor,
               child: Center(
                 child: RightArrowRichText(
-                    text: rangeTimeData[0]['title'], color: primaryColor, fontWeight: FontWeight.w500,
+                    text: rangeTimeData[0]['title'], color: primaryColor, fontWeight: FontWeight.w500
                 )
               ),
             ),
@@ -196,7 +197,7 @@ class BodyOfPage extends StatelessWidget {
                         Expanded(
                           child: ListTile(
                             contentPadding: EdgeInsets.zero,
-                            title: Text(dayOfTheWeekOfItem, style: TextStyle(color: textColor, fontSize: textSize, fontWeight: FontWeight.w500)),
+                            title: Text(dayOfTheWeekOfItem, style: const TextStyle(color: textColor, fontSize: textSize, fontWeight: FontWeight.w500)),
                             subtitle: Text(
                                 '$transformMonth/$transformYear',
                                 style: const TextStyle(color: labelColor, fontSize: textSmall)
@@ -247,7 +248,14 @@ class BodyOfPage extends StatelessWidget {
                                   ),
                                 ),
                                 Expanded(
+
                                   child: ListTile(
+                                    onTap: (){
+                                      CustomNavigationHelper.router.push(
+                                        '${CustomNavigationHelper.accountWalletPath}/${CustomNavigationHelper.updateWorkSpacePath}',
+                                        extra: e
+                                      );
+                                    },
                                     contentPadding: EdgeInsets.zero,
                                     leading: Image.asset(
                                       e['icon'],

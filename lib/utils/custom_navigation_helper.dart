@@ -227,7 +227,19 @@ class CustomNavigationHelper {
                           state: state
                         );
                       }
-                    )
+                    ),
+                    GoRoute(
+                        path: updateWorkSpacePath,
+                        pageBuilder: (context, state){
+                          Map<String, dynamic> dataFromExtra = state.extra as Map<String, dynamic>;
+                          return getPage(
+                              child: UpdateWorkspace(
+                                dataToUpdate: dataFromExtra,
+                              ),
+                              state: state
+                          );
+                        }
+                    ),
                   ]
                 ),
               ],

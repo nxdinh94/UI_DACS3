@@ -16,6 +16,9 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin{
   Map<String, dynamic> _expenseRecordDataByAccountWallet = {};
   Map<String, dynamic> get expenseRecordDataByAccountWallet => _expenseRecordDataByAccountWallet;
 
+  Map<String, dynamic> _expenseRecordDataForNoteHistory = {};
+  Map<String, dynamic> get expenseRecordDataForNoteHistory => _expenseRecordDataForNoteHistory;
+
   Future<String> getAccessToken()async{
     final SharedPreferences pref = await SharedPreferences.getInstance();
     // Get token['refresh_token','refresh_token']
@@ -72,6 +75,14 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin{
     Map<String, dynamic> result =  await userServices.getAllExpenseRecordByAccountWalletServices(accessToken, idAccountWallet, time);
     if(result['result'] != {}){
       _expenseRecordDataByAccountWallet =  result['result'];
+    }
+    notifyListeners();
+  }
+  Future<void> getAllExpenseRecordForNoteHistoryProvider(String time)async{
+    String accessToken = await getAccessToken();
+    Map<String, dynamic> result =  await userServices.getAllExpenseRecordForNoteHistoryServices(accessToken, time);
+    if(result['result'] != {}){
+      _expenseRecordDataForNoteHistory =  result['result'];
     }
     notifyListeners();
   }

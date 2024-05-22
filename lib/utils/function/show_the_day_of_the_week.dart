@@ -4,15 +4,16 @@ String showTheDayOFTheWeek(String date) {
   String result = 'Invalid date';
   DateTime dateToDateTime = DateTime.parse(date); // convert date to dateime
   String dayOfTheWeekOfItem = DateFormat('EEEE').format(dateToDateTime);
-  final dateSplited = date.split('-'); //[yyyy, mm , dd]
-  final String transformDay = dateSplited[2];
+
+  DateTime targetDate = DateTime(2023, 12, 31);
 
   DateTime currentDateTime = DateTime.now();
-  final currentDay = currentDateTime.day; //int
+  int dayFromNowToTarget = targetDate.difference(currentDateTime).inDays;
+  int dayFromSpcificDayToTarget = targetDate.difference(dateToDateTime).inDays;
 
-  if (currentDay - int.parse(transformDay) == 0) {
+  if (dayFromNowToTarget - dayFromSpcificDayToTarget == 0) {
     return result = 'Hôm nay';
-  } else if (currentDay - int.parse(transformDay) == 1) {
+  } else if (dayFromNowToTarget - dayFromSpcificDayToTarget == -1) {
     return result = 'Hôm qua';
   } else {
     result = dayOfTheWeekOfItem.toLowerCase();
@@ -23,9 +24,9 @@ String showTheDayOFTheWeek(String date) {
       return 'Thứ hai';
     case 'tuesday':
       return 'Thứ ba';
-    case 'wednesday ':
+    case 'wednesday':
       return 'Thứ tư';
-    case 'thursday ':
+    case 'thursday':
       return 'Thứ năm';
     case 'friday':
       return 'Thứ sáu';
