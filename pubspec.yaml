@@ -56,6 +56,9 @@ dependencies:
   just_the_tooltip: ^0.0.12
   flutter_native_contact_picker: ^0.0.6
   custom_refresh_indicator: ^3.1.0
+  dotted_line: ^3.2.2
+  mobkit_dashed_border: ^0.0.6
+
 dev_dependencies:
   flutter_test:
     sdk: flutter

@@ -13,6 +13,9 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin{
   List<dynamic> _accountWalletList = [];
   List<dynamic> get accountWalletList => _accountWalletList;
 
+  Map<String, dynamic> _expenseRecordDataByAccountWallet = {};
+  Map<String, dynamic> get expenseRecordDataByAccountWallet => _expenseRecordDataByAccountWallet;
+
   Future<String> getAccessToken()async{
     final SharedPreferences pref = await SharedPreferences.getInstance();
     // Get token['refresh_token','refresh_token']
@@ -64,7 +67,14 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin{
     return result;
   }
 
-
+  Future<void> getAllExpenseRecordByAccountWalletProvider(String idAccountWallet, String time)async{
+    String accessToken = await getAccessToken();
+    Map<String, dynamic> result =  await userServices.getAllExpenseRecordByAccountWalletServices(accessToken, idAccountWallet, time);
+    if(result['result'] != {}){
+      _expenseRecordDataByAccountWallet =  result['result'];
+    }
+    notifyListeners();
+  }
 
 
   /// Makes `Counter` readable inside the devtools by listing all of its properties

@@ -9,8 +9,10 @@ import 'package:practise_ui/pages/account_wallet/select_account_wallet_type_page
 import 'package:practise_ui/pages/account_wallet/select_bank_page.dart';
 import 'package:practise_ui/pages/account_wallet/update_account_wallet_page.dart';
 import 'package:practise_ui/pages/adding_workspace/choose_account_wallet_page.dart';
+import 'package:practise_ui/pages/adding_workspace/update_workspace.dart';
 import 'package:practise_ui/pages/home_page/detail_spending_revenue_statistical_page/detail_cashflow_category_parent.dart';
 import 'package:practise_ui/pages/home_page/detail_spending_revenue_statistical_page/detail_spending_revenue_statistical_page.dart';
+import 'package:practise_ui/pages/home_page/noteHistory.dart';
 import 'package:practise_ui/pages/spending_limit/add_and_edit_spending_limit_page.dart';
 import 'package:practise_ui/pages/adding_workspace/adding_workspace.dart';
 import 'package:practise_ui/pages/another_page.dart';
@@ -88,6 +90,8 @@ class CustomNavigationHelper {
 
   static const String detailSpendingRevenueStatisticalPath = 'detailSpendingRevenueStatistical';
   static const String detailCashFlowCategoryParentPath = 'detailCashFlowCategoryParent';
+  static const String updateWorkSpacePath = 'updateWorkSpace';
+  static const String noteHistoryPath = 'noteHistory';
 
 
 
@@ -122,6 +126,18 @@ class CustomNavigationHelper {
                       },
                     ),
                     GoRoute(
+                      path: updateWorkSpacePath,
+                      pageBuilder: (context, state){
+                        Map<String, dynamic> dataFromExtra = state.extra as Map<String, dynamic>;
+                        return getPage(
+                          child: UpdateWorkspace(
+                            dataToUpdate: dataFromExtra,
+                          ),
+                          state: state
+                        );
+                      }
+                    ),
+                    GoRoute(
                       path: detailCashFlowCategoryParentPath,
                       pageBuilder: (context, state) {
                         Map<String,dynamic> dataFromExtra = state.extra as Map<String, dynamic>;
@@ -133,7 +149,15 @@ class CustomNavigationHelper {
                         );
                       },
                     ),
-
+                    GoRoute(
+                      path: noteHistoryPath,
+                      pageBuilder: (context, state) {
+                        return getPage(
+                          child: const Notehistory(),
+                          state: state
+                        );
+                      },
+                    )
                   ]
                 ),
               ],

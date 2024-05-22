@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:practise_ui/providers/user_provider.dart';
+import 'package:practise_ui/utils/custom_navigation_helper.dart';
 import 'package:provider/provider.dart';
 
 import '../../../constant/color.dart';
@@ -57,6 +58,7 @@ class _DetailCashflowCategoryParentState extends State<DetailCashflowCategoryPar
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: primaryColor,
         toolbarHeight: 52,
@@ -70,53 +72,57 @@ class _DetailCashflowCategoryParentState extends State<DetailCashflowCategoryPar
         centerTitle: true,
 
       ),
-      body: Column(
-        children: transformData.map((e){
-            // reset value each loop
-            totalMoney = 0;
-            // cal total money of each parent
-            for(var i in e){
-              totalMoney+=double.parse(i['amount_of_money'][r'$numberDecimal']);
-            }
-            // find type of wallet
-            for(var i in allWalletUserData){
-              if(e[0]['money_account_id'] == i['_id']){
-                iconWallet = i['money_type_information']['icon'];
-                nameWallet = i['name'];
+      body: SingleChildScrollView(
+        child: Column(
+          children: transformData.map((e){
+              // reset value each loop
+              totalMoney = 0;
+              // cal total money of each parent
+              for(var i in e){
+                totalMoney+=double.parse(i['amount_of_money'][r'$numberDecimal']);
               }
-            }
-            return ColoredBox(
-              color: secondaryColor,
-              child: Column(
-                children: [
-                  ExpansionTile(
-                    shape: const Border(),
-                    title: Row(
-                      children: [
-                        Image.asset(e[0]['icon'], width: 40),
-                        const SizedBox(width: 12,),
-                        Text(e[0]['name'], style: const TextStyle(
-                            color: textColor, fontSize: textSize, fontWeight: FontWeight.w500),),
-                        ],
-                    ),
-                    trailing: RichText(
-                      text: TextSpan(
-                          text: formatCurrencyVND(totalMoney),
-                          style: const TextStyle(fontSize: textSize, color: spendingMoneyColor),
-                          children: const [
-                            WidgetSpan(
-                                child: VndIcon(color: spendingMoneyColor, size: textSmall),
-                                alignment: PlaceholderAlignment.middle
-                            )
-                          ]
+              // find type of wallet
+              for(var i in allWalletUserData){
+                if(e[0]['money_account_id'] == i['_id']){
+                  iconWallet = i['money_type_information']['icon'];
+                  nameWallet = i['name'];
+                }
+              }
+              return ColoredBox(
+                color: secondaryColor,
+                child: Column(
+                  children: [
+                    ExpansionTile(
+                      shape: const Border(),
+                      title: Row(
+                        children: [
+                          Image.asset(e[0]['icon'], width: 40),
+                          const SizedBox(width: 12,),
+                          Text(e[0]['name'], style: const TextStyle(
+                              color: textColor, fontSize: textSize, fontWeight: FontWeight.w500),),
+                          ],
                       ),
-                    ),
-                    controlAffinity: ListTileControlAffinity.leading,
-                    children: e.map((e1){
-                      setState(() {
-                        totalMoney+=double.parse(e1['amount_of_money'][r'$numberDecimal']);
-                      });
-                      return  ListTile(
+                      trailing: RichText(
+                        text: TextSpan(
+                            text: formatCurrencyVND(totalMoney),
+                            style: const TextStyle(fontSize: textSize, color: spendingMoneyColor),
+                            children: const [
+                              WidgetSpan(
+                                  child: VndIcon(color: spendingMoneyColor, size: textSmall),
+                                  alignment: PlaceholderAlignment.middle
+                              )
+                            ]
+                        ),
+                      ),
+                      controlAffinity: ListTileControlAffinity.leading,
+                      children: e.map((e1){
+                        return  ListTile(
+                          onTap: (){
+                            CustomNavigationHelper.router.push(
+                              '${CustomNavigationHelper.homePath}/${CustomNavigationHelper.updateWorkSpacePath}',
+                              extra: e1
+                            );
+                          },
                           leading: const SizedBox(),
                           subtitle: Text(e1['description'], style: const TextStyle(color: labelColor, fontSize: textSmall),) ,
                           title: Text(formatDate(e1['occur_date']), style: defaultTextStyle,),
@@ -151,14 +157,15 @@ class _DetailCashflowCategoryParentState extends State<DetailCashflowCategoryPar
                               )
                             ],
                           ),
-                      );
-                    }).toList(),
-                  ),
-                  const Divider(height: 0, color: underLineColor,)
-                ],
-              ),
-            );
-        }).toList(),
+                        );
+                      }).toList(),
+                    ),
+                    const Divider(height: 0, color: underLineColor,)
+                  ],
+                ),
+              );
+          }).toList(),
+        ),
       ),
     );
   }

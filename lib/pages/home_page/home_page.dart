@@ -15,6 +15,7 @@ import 'package:practise_ui/widgets/charts/pie_chart.dart';
 import 'package:practise_ui/widgets/charts/collumn_chart.dart';
 import 'package:practise_ui/data/piechart_data.dart';
 import 'package:practise_ui/widgets/charts/custom_legend_column_chart.dart';
+import 'package:practise_ui/widgets/rich_text/right_arrow_rich_text.dart';
 import 'package:practise_ui/widgets/spendingLimit/spendingLimitItems.dart';
 import 'package:practise_ui/widgets/vnd_icon.dart';
 import 'package:provider/provider.dart';
@@ -123,9 +124,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   IconButton(
                                       onPressed: ()async{
-                                        CustomNavigationHelper.router.push(
-                                            '${CustomNavigationHelper.homePath}/${CustomNavigationHelper.detailSpendingRevenueStatisticalPath}'
-                                        );                                      },
+                                        },
                                       icon: const Icon(
                                         Icons.add_alert, color: secondaryColor, size: 26,
                                       )
@@ -327,8 +326,8 @@ class _HomePageState extends State<HomePage> {
                                                                 style: const TextStyle(fontSize: textSize, color: textColor, fontWeight: FontWeight.bold),
                                                                 children: const [
                                                                   WidgetSpan(
-                                                                      child: VndIcon(color: textColor, size: textSmall),
-                                                                      alignment: PlaceholderAlignment.middle
+                                                                    child: VndIcon(color: textColor, size: textSmall),
+                                                                    alignment: PlaceholderAlignment.middle
                                                                   )
                                                                 ]
                                                             ),
@@ -366,16 +365,15 @@ class _HomePageState extends State<HomePage> {
                           Row(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
-                              RichText(
-                                text: const TextSpan(
-                                    text: 'Lịch sử ghi chép',
-                                    style: TextStyle(fontSize: textSize, color: primaryColor),
-                                    children: [
-                                      WidgetSpan(
-                                        child: Icon(Icons.keyboard_arrow_right, size: 30, color: primaryColor,),
-                                        alignment: PlaceholderAlignment.middle,
-                                      )
-                                    ]
+                              GestureDetector(
+                                onTap:(){
+                                  CustomNavigationHelper.router.push(
+                                    '${CustomNavigationHelper.homePath}/${CustomNavigationHelper.noteHistoryPath}'
+                                  );
+                                },
+                                child: const  RightArrowRichText(
+                                  text: 'Lịch sử ghi chép',
+                                  color: primaryColor,
                                 ),
                               )
                             ],
