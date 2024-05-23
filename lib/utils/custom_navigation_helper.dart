@@ -438,9 +438,17 @@ class CustomNavigationHelper {
     required Widget child,
     required GoRouterState state,
   }) {
-    return MaterialPage(
-      key: state.pageKey,
+    return CustomTransitionPage(
       child: child,
+      key: state.pageKey,
+      transitionsBuilder: (context, animation, secondaryAnimation, child) =>
+          SlideTransition(
+            position: Tween<Offset>(
+              begin: const Offset(-1, 0),
+              end: Offset.zero,
+            ).animate(animation),
+            child: child,
+          ),
     );
   }
 }

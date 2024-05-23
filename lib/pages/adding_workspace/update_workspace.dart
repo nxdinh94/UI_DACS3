@@ -326,6 +326,7 @@ class _UpdateWorkspaceState extends State<UpdateWorkspace> {
               Map<String, dynamic> result = await Provider.of<UserProvider>(context, listen: false).updateExpenseRecordProvider(dataToSubmit);
               if(result['status'] == '200'){
                 showCustomSuccessToast(context, result['result'], duration: 1);
+                Navigator.pop(context);
               }else {
                 showCustomErrorToast(context, result['result'], 1);
               }
