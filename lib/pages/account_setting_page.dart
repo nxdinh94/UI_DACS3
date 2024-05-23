@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/providers/user_provider.dart';
 import 'package:provider/provider.dart';
 
 import '../constant/color.dart';
 import '../constant/font.dart';
+import '../providers/auth_provider.dart';
 import '../utils/custom_navigation_helper.dart';
 class AccountSettingPage extends StatefulWidget {
   const AccountSettingPage({super.key});
@@ -27,19 +29,8 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
             child: Column(
               children: [
                 Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      GestureDetector(
-                          onTap: (){
-                            CustomNavigationHelper.router.pop();
-                          },
-                          child:  SvgPicture.asset(
-                            "assets/svg/angle-left-svgrepo-com.svg",
-                            height: 40,
-                            semanticsLabel: 'Back',
-                            colorFilter: const ColorFilter.mode(textColor, BlendMode.srcIn),
-                          )
-                      ),
                       GestureDetector(
                           onTap: (){
                             ScaffoldMessenger.of(context).showSnackBar(
@@ -51,7 +42,6 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                             height: 40,
                             semanticsLabel: 'Qrcode',
                             colorFilter: const ColorFilter.mode(textColor, BlendMode.srcIn),
-
                           )
                       ),
                     ]
@@ -59,6 +49,15 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                 Consumer<UserProvider>(
                   builder: (context, value, child) {
                     Map<String, dynamic> meData = value.meData;
+                    if(meData.isEmpty){
+                      return SizedBox(
+                        height: 250,
+                        child: LoadingAnimationWidget.inkDrop(
+                          color: primaryColor,
+                          size: 80,
+                        ),
+                      );
+                    }
                     return Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -94,11 +93,8 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                               shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(6),
                                   side: const BorderSide(color: labelColor)
-
                               ),
-
                             ),
-
                             child: const Text('Sửa', style: TextStyle(
                                 color: textColor, fontSize: textSmall, fontWeight: FontWeight.w400
                             ),))
@@ -131,8 +127,8 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                 const Divider(height: 0,color: underLineColor,),
                 _ListTitle(
                   title: 'Đăng xuất',
-                  onTap: () {
-
+                  onTap: () async{
+                     await Provider.of<AuthProvider>(context, listen: false).logout();
                   },
                   color: spendingMoneyColor,
                 ),

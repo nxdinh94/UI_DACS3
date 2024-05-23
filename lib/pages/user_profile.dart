@@ -3,7 +3,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practise_ui/constant/color.dart';
 import 'package:intl/intl.dart';
 import 'package:practise_ui/constant/font.dart';
+import 'package:practise_ui/providers/user_provider.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';
+import 'package:practise_ui/utils/custom_toast.dart';
+import 'package:provider/provider.dart';
 
 class UserProfile extends StatefulWidget {
   const UserProfile({super.key});
@@ -22,11 +25,16 @@ class _UserProfileState extends State<UserProfile> {
         children: [
           const _actionBar(),
           Expanded(
-            child: ListView(
-                children: [
-                  _avatar_section(),
-                  MyForm(),
-                ]
+            child: Consumer<UserProvider>(
+              builder: (context, value, child){
+                Map<String, dynamic> userData = value.meData;
+                return ListView(
+                    children: [
+                      _avatar_section(avatar: userData['avatar'],),
+                      MyForm(userData: userData),
+                    ]
+                );
+              }
             ),
           ),
         ],
@@ -37,9 +45,9 @@ class _UserProfileState extends State<UserProfile> {
 
 class _avatar_section extends StatelessWidget {
   const _avatar_section({
-    super.key,
+    required this.avatar,
   });
-
+  final String avatar;
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -52,9 +60,9 @@ class _avatar_section extends StatelessWidget {
               child: CircleAvatar(
                 radius: 43,
                 backgroundColor: Colors.grey.shade400,
-                child: CircleAvatar(
-                  radius: 40,
-                  backgroundImage: AssetImage('assets/beach and me.jpg'),
+                child: ClipOval(
+                  child: avatar == '' ? Image.asset('assets/another_icon/avt-fb.jpg')
+                      :  Image.network(avatar) ,
                 ),
               ),
             ),
@@ -70,7 +78,7 @@ class _avatar_section extends StatelessWidget {
                     child: SvgPicture.asset(
                       'assets/svg/pen.svg',
                       width: 12,
-                      colorFilter: ColorFilter.mode(iconColor, BlendMode.srcIn),
+                      colorFilter: const ColorFilter.mode(iconColor, BlendMode.srcIn),
                     ),
                   ),
             ))
@@ -84,6 +92,8 @@ class _avatar_section extends StatelessWidget {
 // enum for radiobutton
 enum SingingCharacter { nam , nu }
 class MyForm extends StatefulWidget {
+  const MyForm({super.key, required this.userData});
+  final Map<String, dynamic> userData;
   @override
   State<MyForm> createState() => _MyFormState();
 }
@@ -91,32 +101,72 @@ class MyForm extends StatefulWidget {
 class _MyFormState extends State<MyForm> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
-  final TextEditingController _date =  TextEditingController();
+  final TextEditingController dobController =  TextEditingController();
   DateTime selectedDate = DateTime.now();
 
   //default option for radiobutton
   SingingCharacter? _intialValue = SingingCharacter.nam;
 
-
   String _gender = '';
-  String _address = '';
-  String _bussiness = '';
-  String _name = '';
-  String _phone = '';
-  String _dob = '';
+  TextEditingController nameController = TextEditingController();
+  TextEditingController phoneController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController jobController = TextEditingController();
   @override
   void initState() {
     super.initState();
+    if(widget.userData['gender'] == 0){
+      _intialValue = SingingCharacter.nam;
+    }else {
+      _intialValue = SingingCharacter.nu;
+    }
+
+    // print(widget.userData);
     _gender = _intialValue == SingingCharacter.nam ? '0' : '1';
+    nameController.text = widget.userData['name'];
+    phoneController.text = widget.userData['phone'];
+    addressController.text = widget.userData['address'];
+    jobController.text = widget.userData['job'];
+
+    selectedDate = DateTime.parse(widget.userData['dob']) ;
+    dobController.text = DateFormat('yyyy-MM-dd').format(selectedDate);
+
+
+    // _date.text = selectedDate;
+
   }
 
  // Variable to store the entered email
-  void _submitForm() {
+  void _submitForm() async {
     // Check if the form is valid
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save(); // Save the form data
       // You can perform actions with the form data here and extract the details
-      print('gender: $_gender'); // Print the name
+      // print('name: ${nameController.text}');
+      // print('phone: ${phoneController.text}');
+      // print('selectedDate: ${dobController.text}');
+      // print('gender: $_gender');
+      // print('gender: ${addressController.text}');
+      // print('gender: ${jobController.text}');
+
+      Map<String, String> dataToUpdate = {
+        'name':nameController.text,
+        'phone': phoneController.text,
+        'dob': dobController.text,
+        'address': addressController.text,
+        'job': jobController.text,
+        'gender': _gender,
+      };
+      print(dataToUpdate);
+      Map<String, dynamic> result =  await Provider.of<UserProvider>(context, listen: false).updateMeProvider(dataToUpdate);
+      if(result['status'] == '200'){
+        showCustomSuccessToast(context, result['result'],duration: 1 );
+        await Provider.of<UserProvider>(context, listen: false).getMeProvider();
+      }else {
+        showCustomErrorToast(context, result['result'], 1);
+      }
+
+
     }
   }
 
@@ -128,9 +178,8 @@ class _MyFormState extends State<MyForm> {
         lastDate: DateTime(2100));
     if (picked != null && picked != selectedDate) {
       setState(() {
-        selectedDate = picked;
-        String formattedDate = DateFormat('dd/MM/yyyy').format(picked);
-        _date.value = TextEditingValue(text: formattedDate);
+        String formattedDate = DateFormat('yyyy-MM-dd').format(picked);
+        dobController.value = TextEditingValue(text: formattedDate);
       });
     }
   }
@@ -140,13 +189,15 @@ class _MyFormState extends State<MyForm> {
     return Form(
         key: _formKey, // Associate the form key with this Form widget
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Column(
             children: <Widget>[
               TextFormField(
-                decoration: InputDecoration(
+                controller: nameController,
+                style: defaultTextStyle,
+                decoration: const InputDecoration(
                   labelText: 'Tên hiển thị',
-                  labelStyle: const TextStyle(color: labelColor),
+                  labelStyle: TextStyle(color: labelColor),
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: underLineColor, width: 0.7),
 
@@ -155,24 +206,19 @@ class _MyFormState extends State<MyForm> {
                     borderSide: BorderSide(color: underLineColor, width: 0.7),
                   ),
                 ),
-                // validator: (value) {
-                //   // Validation function for the name field
-                //   if (value!.isEmpty) {
-                //     return 'Please enter your name.'; // Return an error message if the name is empty
-                //   }
-                //   return null; // Return null if the name is valid
-                // },
                 onSaved: (value) {
-                  _name = value!; // Save the entered name
+                  nameController.text = value!; // Save the entered name
                 },
               ),
               TextFormField(
                 onSaved: (value){
-                  _phone = value!;
+                  phoneController.text = value!;
                 },
-                decoration: InputDecoration(
+                style: defaultTextStyle,
+                controller: phoneController,
+                decoration: const InputDecoration(
                   labelText: 'Số điện thoại',
-                  labelStyle: const TextStyle(color: labelColor),
+                  labelStyle: TextStyle(color: labelColor),
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: underLineColor, width: 0.7),
 
@@ -186,11 +232,11 @@ class _MyFormState extends State<MyForm> {
                 onTap: () => _selectDate(context),
                 child: AbsorbPointer(
                   child: TextFormField(
-                    controller: _date,
+                    controller: dobController,
                     onSaved: (value){
-                      _dob = value!;
+                      dobController.text = value!;
                     },
-                    decoration: InputDecoration(
+                    decoration: const InputDecoration(
                       labelText: 'Ngày sinh',
                       labelStyle: TextStyle(color: labelColor),
                       enabledBorder: UnderlineInputBorder(
@@ -223,8 +269,8 @@ class _MyFormState extends State<MyForm> {
                               Radio<SingingCharacter>(
                                 value: SingingCharacter.nam,
                                 groupValue: _intialValue,
-                                fillColor: MaterialStateProperty.resolveWith((states){
-                                  if(states.contains(MaterialState.selected)) return primaryColor;
+                                fillColor: WidgetStateProperty.resolveWith((states){
+                                  if(states.contains(WidgetState.selected)) return primaryColor;
                                   return unselectedRadioButton;
                                 }),
                                 onChanged: (SingingCharacter? value) {
@@ -251,8 +297,8 @@ class _MyFormState extends State<MyForm> {
                               Radio<SingingCharacter>(
                                 value: SingingCharacter.nu,
                                 groupValue: _intialValue,
-                                fillColor: MaterialStateProperty.resolveWith((states){
-                                  if(states.contains(MaterialState.selected)) return primaryColor;
+                                fillColor: WidgetStateProperty.resolveWith((states){
+                                  if(states.contains(WidgetState.selected)) return primaryColor;
                                   return unselectedRadioButton;
                                 }),
                                 onChanged: (SingingCharacter? value) {
@@ -262,22 +308,25 @@ class _MyFormState extends State<MyForm> {
                                   });
                                 },
                               ),
-                              Text('Nữ', style: TextStyle(color: labelColor, fontSize: 16),),
+                              const Text('Nữ', style: TextStyle(color: labelColor, fontSize: 16),),
                             ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                  Divider(height: 0.7, color: underLineColor,)
+                  const Divider(height: 0, color: underLineColor,)
                 ],
               ),
 
               TextFormField(
                 onSaved: (value){
-                  _address = value!;
+                  addressController.text = value!;
                 },
-                decoration: InputDecoration(
+                style: defaultTextStyle,
+
+                controller: addressController,
+                decoration: const InputDecoration(
                   labelText: 'Địa chỉ',
                   labelStyle: TextStyle(color: labelColor),
                   enabledBorder: UnderlineInputBorder(
@@ -290,22 +339,24 @@ class _MyFormState extends State<MyForm> {
                 ),
               ),
               TextFormField(
+                controller: jobController,
                 onSaved: (value){
-                  _bussiness = value!;
+                  jobController.text = value!;
                 },
-                decoration: InputDecoration(
+                style: defaultTextStyle,
+                decoration: const InputDecoration(
                   labelText: 'Nghề nghiệp',
+
                   labelStyle: TextStyle(color: labelColor),
                   enabledBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: underLineColor, width: 0.7),
-
                   ),
                   focusedBorder: UnderlineInputBorder(
                     borderSide: BorderSide(color: underLineColor, width: 0.7),
                   ),
                 ),
               ),
-              SizedBox(height: 20.0),
+              const SizedBox(height: 20.0),
               SizedBox(
                 width: double.infinity,
                 height: 50,
@@ -318,7 +369,7 @@ class _MyFormState extends State<MyForm> {
                     textStyle: const TextStyle(fontSize: buttonTextSize)
                   ),
                   onPressed: _submitForm, // Call the _submitForm function when the button is pressed
-                  child: Text("Cập nhật",), // Text on the button
+                  child: const Text("Cập nhật",), // Text on the button
                 ),
               ),
             ],

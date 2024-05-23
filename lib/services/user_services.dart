@@ -190,9 +190,7 @@ class UserServices{
     }
     return result;
   }
-  Future<Map<String, dynamic>> getAllExpenseRecordForNoteHistoryServices(
-      String accessToken, String time //mm-yyyy
-  )async{
+  Future<Map<String, dynamic>> getAllExpenseRecordForNoteHistoryServices(String accessToken, String time)async{
     Map<String, dynamic> result = {};
     try{
       String url = '$PORT/app/expense-record/$time';
@@ -234,5 +232,33 @@ class UserServices{
     }
     return result;
   }
-
+  Future<Map<String, dynamic>> updateMeService(Map<String, dynamic> dataToUpdate, String accessToken)async{
+    Map<String, dynamic> result= {};
+    final uri = Uri.parse(updateMeApi);
+    try{
+      final res = await http.patch(
+        uri,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken',
+        },
+        body: jsonEncode(dataToUpdate)
+      );
+      print(res.body);
+      if(res.statusCode == 200){
+        result = {
+          'status': '200',
+          'result': 'Cập nhật thành công'
+        };
+      }else {
+        result = {
+          'status': '403',
+          'result': 'Cập nhật không thành công'
+        };
+      }
+    }catch(e){
+      throw Exception('fail to update me $e');
+    }
+    return result;
+  }
 }

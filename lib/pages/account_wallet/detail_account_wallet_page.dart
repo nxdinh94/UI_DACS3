@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:intl/intl.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/providers/user_provider.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';
-import 'package:practise_ui/utils/function/currency_format.dart';
 import 'package:practise_ui/widgets/back_toolbar_button.dart';
 import 'package:practise_ui/widgets/rich_text/right_arrow_rich_text.dart';
 import 'package:practise_ui/widgets/rich_text/vnd_rich_text.dart';

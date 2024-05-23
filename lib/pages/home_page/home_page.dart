@@ -92,11 +92,10 @@ class _HomePageState extends State<HomePage> {
               child: CustomMaterialIndicator(
                 onRefresh: () async {
                   await Provider.of<AppProvider>(context, listen: false).getAccountWalletType();
-                  await Provider.of<AppProvider>(context, listen:  false).getBank();
                   await Provider.of<UserProvider>(context, listen:  false).getAllAccountWallet();
+                  await Provider.of<UserProvider>(context, listen:  false).getMeProvider();
                   await Provider.of<ChartProvider>(context, listen:  false).getExpenseRecordForChartProvider(rangeTimeData[0]['value']);
                   await Provider.of<UserProvider>(context, listen: false).getAllExpenseRecordForNoteHistoryProvider(rangeTimeData[0]['value']);
-                  await Provider.of<UserProvider>(context, listen: false).getMeProvider();
                   await Provider.of<UserProvider>(context, listen: false)
                       .getAllExpenseRecordForNoteHistoryProvider(rangeTimeData[0]['value']);
                 },
@@ -134,11 +133,12 @@ class _HomePageState extends State<HomePage> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   IconButton(
-                                      onPressed: (){
-                                        Provider.of<AuthProvider>(context, listen: false).logout();
+                                      onPressed: () async{
+                                        await Provider.of<AuthProvider>(context, listen: false).logout();
                                       },
                                       icon: const Icon(
                                         Icons.refresh, color: secondaryColor, size: 29,
+
                                       )
                                   ),
                                   IconButton(
@@ -250,9 +250,7 @@ class _HomePageState extends State<HomePage> {
                               children: [
                                 Consumer<ChartProvider>(
                                   builder: (context, value, child)  {
-
                                     final List<CollumChartModel> dataColumnChart  = value.filteredColumnChartDataHomePage;
-
                                     if(value.isLoading){
                                       return SizedBox(
                                         height: 400,

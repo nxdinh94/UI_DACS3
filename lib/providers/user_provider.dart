@@ -100,6 +100,13 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin{
     notifyListeners();
   }
 
+  Future<Map<String, dynamic>> updateMeProvider(Map<String, dynamic> dataToUpdate)async{
+    String accessToken = await getAccessToken();
+    Map<String, dynamic> result = await userServices.updateMeService(dataToUpdate, accessToken);
+    return result;
+  }
+
+
   /// Makes `Counter` readable inside the devtools by listing all of its properties
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {

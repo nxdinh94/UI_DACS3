@@ -14,6 +14,7 @@ const String postExpenseRecord      = '$PORT/app/add-expense-record';
 
 
 const String updateAccountMoney = '$PORT/app/update-money-account';
+const String updateMeApi = '$PORT/users/update-me';
 
 
 const String deleteAccountMoneyApi =  '$PORT/app/delete-money-account';
