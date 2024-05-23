@@ -110,7 +110,12 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin{
     Map<String, dynamic> result = await userServices.updateExpenseRecordServices(dataToUpdate, accessToken);
     return result;
   }
-
+  Future<Map<String, dynamic>> deleteExpenseRecordProvider(String idExpenseRecord)async{
+    String accessToken = await getAccessToken();
+    Map<String, dynamic> result = {};
+    result = await userServices.deleteExpenseRecordService(accessToken, idExpenseRecord);
+    return result;
+  }
 
   /// Makes `Counter` readable inside the devtools by listing all of its properties
   @override

@@ -23,14 +23,14 @@ class _UserProfileState extends State<UserProfile> {
       color: secondaryColor,
       child: Column(
         children: [
-          const _actionBar(),
+          const ActionBar(),
           Expanded(
             child: Consumer<UserProvider>(
               builder: (context, value, child){
                 Map<String, dynamic> userData = value.meData;
                 return ListView(
                     children: [
-                      _avatar_section(avatar: userData['avatar'],),
+                      AvatarSection(avatar: userData['avatar'],),
                       MyForm(userData: userData),
                     ]
                 );
@@ -43,8 +43,9 @@ class _UserProfileState extends State<UserProfile> {
   }
 }
 
-class _avatar_section extends StatelessWidget {
-  const _avatar_section({
+class AvatarSection extends StatelessWidget {
+  const AvatarSection({
+    super.key,
     required this.avatar,
   });
   final String avatar;
@@ -141,14 +142,6 @@ class _MyFormState extends State<MyForm> {
     // Check if the form is valid
     if (_formKey.currentState!.validate()) {
       _formKey.currentState!.save(); // Save the form data
-      // You can perform actions with the form data here and extract the details
-      // print('name: ${nameController.text}');
-      // print('phone: ${phoneController.text}');
-      // print('selectedDate: ${dobController.text}');
-      // print('gender: $_gender');
-      // print('gender: ${addressController.text}');
-      // print('gender: ${jobController.text}');
-
       Map<String, String> dataToUpdate = {
         'name':nameController.text,
         'phone': phoneController.text,
@@ -157,7 +150,6 @@ class _MyFormState extends State<MyForm> {
         'job': jobController.text,
         'gender': _gender,
       };
-      print(dataToUpdate);
       Map<String, dynamic> result =  await Provider.of<UserProvider>(context, listen: false).updateMeProvider(dataToUpdate);
       if(result['status'] == '200'){
         showCustomSuccessToast(context, result['result'],duration: 1 );
@@ -170,7 +162,7 @@ class _MyFormState extends State<MyForm> {
     }
   }
 
-  Future<Null> _selectDate(BuildContext context) async {
+  Future<void> _selectDate(BuildContext context) async {
     final DateTime? picked = await showDatePicker(
         context: context,
         initialDate: selectedDate,
@@ -386,10 +378,8 @@ class _MyFormState extends State<MyForm> {
 
 
 
-class _actionBar extends StatelessWidget {
-  const _actionBar({
-    super.key,
-  });
+class ActionBar extends StatelessWidget {
+  const ActionBar({super.key});
 
   @override
   Widget build(BuildContext context) {

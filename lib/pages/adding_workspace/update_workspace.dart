@@ -16,6 +16,8 @@ import 'package:practise_ui/widgets/adding_workspace/dropdown_adding_workspace.d
 import 'package:practise_ui/widgets/adding_workspace/pick_contact_listtitle.dart';
 import 'package:practise_ui/widgets/back_toolbar_button.dart';
 import 'package:provider/provider.dart';
+import '../../constant/range_time_value.dart';
+import '../../providers/chart_provider.dart';
 import '../../widgets/adding_workspace/expand_input_update_adding_space.dart';
 import '../../widgets/input_money_textfield.dart';
 import '../../widgets/listtitle_textfield.dart';
@@ -105,7 +107,6 @@ class _UpdateWorkspaceState extends State<UpdateWorkspace> {
       cashFlowType = selectedItem.name;
 
     });
-    // print(cashFlowType);
   }
   DateTime currentDate = DateTime.now();
 
@@ -132,8 +133,6 @@ class _UpdateWorkspaceState extends State<UpdateWorkspace> {
     allWalletUserData = context.read<UserProvider>().accountWalletList;
     cashFlowCategoryData = context.read<AppProvider>().cashFlowCateData;
     isFee = widget.dataToUpdate['cost_incurred_category_id']!="";
-
-    print(widget.dataToUpdate);
 
     //get required value
     idCashFlowCate = widget.dataToUpdate['cash_flow_category_id'];
@@ -175,8 +174,6 @@ class _UpdateWorkspaceState extends State<UpdateWorkspace> {
       }
     }
 
-    // print(widget.dataToUpdate);
-
     // get accountWallet's name & accountWallet's icon of this dataToUpdate
     for(var e in allWalletUserData){
       if(widget.dataToUpdate['money_account_id'] == e['_id']){
@@ -201,7 +198,6 @@ class _UpdateWorkspaceState extends State<UpdateWorkspace> {
     }else if(widget.dataToUpdate['collect_from_who']!= ''){
       contactPerson = widget.dataToUpdate['collect_from_who'];
     }
-    print(widget.dataToUpdate);
 
     super.initState();
   }
@@ -229,9 +225,25 @@ class _UpdateWorkspaceState extends State<UpdateWorkspace> {
           ),
     centerTitle: true,
     actions: [
-      Padding(
-        padding: const EdgeInsets.only(right: 18),
-        child: SvgPicture.asset('assets/svg/trash.svg', width: 22),
+      GestureDetector(
+        onTap: ()async{
+          Map<String, dynamic> result = await Provider.of<UserProvider>(context, listen: false)
+              .deleteExpenseRecordProvider(widget.dataToUpdate['_id']);
+          if(result['status'] == '200'){
+            showCustomSuccessToast(context, result['result'], duration: 2);
+            await Provider.of<ChartProvider>(context, listen:  false).getExpenseRecordForChartProvider(rangeTimeData[0]['value']);
+            await Provider.of<UserProvider>(context, listen: false)
+                .getAllExpenseRecordByAccountWalletProvider( widget.dataToUpdate['money_account_id'],rangeTimeData[0]['value']);
+            Navigator.pop(context);
+          }else {
+            showCustomErrorToast(context, result['result'], 2);
+
+          }
+        },
+        child: Padding(
+          padding: const EdgeInsets.only(right: 18),
+          child: SvgPicture.asset('assets/svg/trash.svg', width: 22),
+        ),
       ),
       Padding(
         padding: const EdgeInsets.only(right: 15),

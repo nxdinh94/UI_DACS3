@@ -112,16 +112,14 @@ class UserServices{
   Future<Map<String, dynamic>> deleteAccountMoneyService(String idAccountWallet, String accessToken)async{
     Map<String, dynamic> result = {};
     try{
-      final uri = Uri.parse(deleteAccountMoneyApi);
+      String url = '$PORT/app/delete-money-account/$idAccountWallet';
+      final uri = Uri.parse(url);
       final res = await http.delete(
           uri,
           headers: <String, String>{
             'Content-Type': 'application/json; charset=UTF-8',
             'Authorization': 'Bearer $accessToken'
           },
-        body: jsonEncode(
-          {'money_account_id': idAccountWallet}
-        )
       );
       if(res.statusCode == 200){
         result = jsonDecode(res.body);
@@ -289,5 +287,32 @@ class UserServices{
     }
     return result;
   }
-
+  Future<Map<String, dynamic>> deleteExpenseRecordService(String accessToken, String idExpenseRecord)async{
+    Map<String, dynamic> result ={};
+    try{
+      String url = '$PORT/app/delete-expense-record/$idExpenseRecord';
+      final uri = Uri.parse(url);
+      final res = await http.delete(uri,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+      print(res.body);
+      if(res.statusCode == 200){
+        result = {
+          'status': '200',
+          'result': 'Xóa bản ghi thành công'
+        };
+      }else {
+        result = {
+          'status': '403',
+          'result': 'Xóa bản ghi không thành công'
+        };
+      }
+    }catch(e){
+      throw Exception('Error while delete expense record $e');
+    }
+    return result;
+  }
 }

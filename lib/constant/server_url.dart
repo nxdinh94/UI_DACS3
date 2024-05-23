@@ -18,5 +18,4 @@ const String updateMeApi            = '$PORT/users/update-me';
 const String updateExpenseRecordApi = '$PORT/app/update-expense-record';
 
 
-const String deleteAccountMoneyApi  =  '$PORT/app/delete-money-account';
 
