@@ -133,7 +133,7 @@ class _UpdateWorkspaceState extends State<UpdateWorkspace> {
     cashFlowCategoryData = context.read<AppProvider>().cashFlowCateData;
     isFee = widget.dataToUpdate['cost_incurred_category_id']!="";
 
-
+    print(widget.dataToUpdate);
 
     //get required value
     idCashFlowCate = widget.dataToUpdate['cash_flow_category_id'];
@@ -239,8 +239,9 @@ class _UpdateWorkspaceState extends State<UpdateWorkspace> {
           onTap: () async {
             Map<String, String> dataToSubmit = {
               // required field
+              'expense_record_id' : widget.dataToUpdate['_id'],
               'cash_flow_category_id': idCashFlowCate,
-              'amount_of_money': (double.parse(initialMoney) - double.parse(moneyEditTextController.text)).toString(),
+              'amount_of_money': moneyEditTextController.text,
               'money_account_id': idChosenAccountWallet,
 
               'occur_date': _selectedDate,
@@ -249,103 +250,84 @@ class _UpdateWorkspaceState extends State<UpdateWorkspace> {
               'report' : isNotIncludeInReport.toString(),
             };
             if( idCashFlowCate.isNotEmpty &&
-            moneyEditTextController.text.isNotEmpty&&
-            idChosenAccountWallet.isNotEmpty
+              moneyEditTextController.text.isNotEmpty&&
+              idChosenAccountWallet.isNotEmpty
             ){
-            //if have borrow_to_pay
-            if(cashFlowType.toLowerCase().contains('chi tiền') ||
-            nameCashFlowCate.toLowerCase().contains('cho vay')||
-            nameCashFlowCate.toLowerCase().contains('trả nợ')
-            ){
-            if(isBorrowToPay == 1){
-            dataToSubmit['borrow_to_pay'] = isBorrowToPay.toString();
-            }else {
-            dataToSubmit.remove('borrow_to_pay');
-            }
-            }else {
-            dataToSubmit.remove('borrow_to_pay');
-            }
-            //if have fee
-            if(cashFlowType.toLowerCase().contains('chi tiền')
-            || nameCashFlowCate.toLowerCase().contains('cho vay')
-            || nameCashFlowCate.toLowerCase().contains('cho vay')
-            ){
-            if(isFee){
-            String id = idCostIncuredCategory;
-            dataToSubmit['cost_incurred'] = costIncurredEditTextController.text;
-            dataToSubmit['cost_incurred_category_id'] = id;
-            }else {
-            dataToSubmit.remove('cost_incurred');
-            dataToSubmit.remove('cost_incurred_category_id');
-            }
-            }else {
-            dataToSubmit.remove('cost_incurred');
-            dataToSubmit.remove('cost_incurred_category_id');
-            }
+              //if have borrow_to_pay
+              if(cashFlowType.toLowerCase().contains('chi tiền') ||
+                nameCashFlowCate.toLowerCase().contains('cho vay')||
+                nameCashFlowCate.toLowerCase().contains('trả nợ')
+              ){
+              if(isBorrowToPay == 1){
+                dataToSubmit['borrow_to_pay'] = isBorrowToPay.toString();
+              }else {
+                dataToSubmit.remove('borrow_to_pay');
+              }
+              }else {
+                dataToSubmit.remove('borrow_to_pay');
+              }
+              //if have fee
+              if(cashFlowType.toLowerCase().contains('chi tiền')
+                || nameCashFlowCate.toLowerCase().contains('cho vay')
+                || nameCashFlowCate.toLowerCase().contains('cho vay')
+              ){
+                if(isFee){
+                  String id = idCostIncuredCategory;
+                  dataToSubmit['cost_incurred'] = costIncurredEditTextController.text;
+                  dataToSubmit['cost_incurred_category_id'] = id;
+                }else {
+                  dataToSubmit.remove('cost_incurred');
+                  dataToSubmit.remove('cost_incurred_category_id');
+                }
+              }else {
+                dataToSubmit.remove('cost_incurred');
+                dataToSubmit.remove('cost_incurred_category_id');
+              }
 
-            if(!cashFlowType.toLowerCase().contains('tiền')){
-            dataToSubmit.remove('trip_or_event');
-            }
-            if(
-            cashFlowType.toLowerCase().contains('chi tiền')||
-            nameCashFlowCate.toLowerCase().contains('cho vay')
-            ){
-            dataToSubmit['pay_for_who'] = contactPerson;
-            }
-            if(
-            cashFlowType.toLowerCase().contains('thu tiền')||
-            nameCashFlowCate.toLowerCase().contains('đi vay')
-            ){
-            dataToSubmit['collect_from_who'] = contactPerson;
-            }
-            }else {
-            if(idCashFlowCate.isEmpty){
-            showCustomErrorToast(context, 'Hạng mục không được trống', 1);
-            }
-            if(moneyEditTextController.text.isEmpty){
-            setState(() {alertOnNullMoneyTextField = true;});
-            }
-            if(idChosenAccountWallet.isEmpty){
-            showCustomErrorToast(context, 'Ví không được trống', 1);
-            }
-            return;
-            }
-            Map<String, dynamic> result = await Provider.of<UserProvider>(context, listen: false).addExpenseRecordProvider(dataToSubmit);
-            if(result['status'] == '200'){
-            showCustomSuccessToast(context, result['result'], duration: 1);
-            //reset all value
-            setState(() {
-            moneyEditTextController.text = '';
-            descriptEditTextController.text = '';
-            contactPerson = '';
-            eventEditTextController.text = '';
-            revenueOrSpendingPerson= '';
-            isBorrowToPay = 0;
-            costIncurredEditTextController.text = '';
-            isNotIncludeInReport  = 0;
-
-            onSetIsFee(false);
-            onSelectCostIncuredCategory('', '');
-            onSelectContact('');
-            currentCashFlowOption = CashFlowModel(
-            id: '', iconPath: '', name: '', isChosen: 0
-            );
-
-            });
-            }else {
-            showCustomErrorToast(context, result['result'], 1);
-            }
+              if(!cashFlowType.toLowerCase().contains('tiền')){
+                dataToSubmit.remove('trip_or_event');
+              }
+              if(
+                cashFlowType.toLowerCase().contains('chi tiền')||
+                nameCashFlowCate.toLowerCase().contains('cho vay')
+              ){
+                dataToSubmit['pay_for_who'] = contactPerson;
+              }
+              if(
+                cashFlowType.toLowerCase().contains('thu tiền')||
+                nameCashFlowCate.toLowerCase().contains('đi vay')
+              ){
+                dataToSubmit['collect_from_who'] = contactPerson;
+              }
+              }else {
+                if(idCashFlowCate.isEmpty){
+                  showCustomErrorToast(context, 'Hạng mục không được trống', 1);
+              }
+              if(moneyEditTextController.text.isEmpty){
+                setState(() {alertOnNullMoneyTextField = true;});
+              }
+              if(idChosenAccountWallet.isEmpty){
+                showCustomErrorToast(context, 'Ví không được trống', 1);
+              }
+                return;
+              }
+              Map<String, dynamic> result = await Provider.of<UserProvider>(context, listen: false).updateExpenseRecordProvider(dataToSubmit);
+              if(result['status'] == '200'){
+                showCustomSuccessToast(context, result['result'], duration: 1);
+              }else {
+                showCustomErrorToast(context, result['result'], 1);
+              }
             },
             child: SvgPicture.asset(
-            'assets/svg/tick.svg',
-            colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-            width: 38, // Adjust the width as needed
-            height: 38, // Adjust the height as needed
+              'assets/svg/tick.svg',
+              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+              width: 38, // Adjust the width as needed
+              height: 38, // Adjust the height as needed
             ),
-            ),
-            ),
+          ),
+        ),
 
-          ],
+        ],
         ),
         body: Container(
           color: backgroundColor,
