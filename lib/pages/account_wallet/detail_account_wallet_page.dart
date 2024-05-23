@@ -28,9 +28,11 @@ class DetailAccountWalletPage extends StatefulWidget {
 }
 
 class _DetailAccountWalletPageState extends State<DetailAccountWalletPage> {
+  String selectedTimeToShow = '';
   @override
   void initState() {
-    // print(widget.accountWalletData);
+    selectedTimeToShow = rangeTimeData.first['title'];
+
     super.initState();
   }
   @override
@@ -60,8 +62,28 @@ class _DetailAccountWalletPageState extends State<DetailAccountWalletPage> {
               padding: paddingAll12,
               color: secondaryColor,
               child: Center(
-                child: RightArrowRichText(
-                    text: rangeTimeData[0]['title'], color: primaryColor, fontWeight: FontWeight.w500
+                child: GestureDetector(
+                  onTap: ()async{
+                    String result = await CustomNavigationHelper.router.push(
+                        '${CustomNavigationHelper.accountWalletPath}/'
+                        '${CustomNavigationHelper.selectTimeShowExpenseRecordPath}') as String;
+                    if(!context.mounted){return;}
+                    if(result.isNotEmpty){
+                      setState(() {
+                        if(result == 'all'){
+                          selectedTimeToShow = rangeTimeData.first['title'];
+                        }else{
+                          selectedTimeToShow  = result;
+                        }
+
+                      });
+                      await Provider.of<UserProvider>(context, listen: false)
+                          .getAllExpenseRecordByAccountWalletProvider(widget.accountWalletData['_id'], result);
+                    }
+                  },
+                  child: RightArrowRichText(
+                      text: selectedTimeToShow, color: primaryColor, fontWeight: FontWeight.w500
+                  ),
                 )
               ),
             ),

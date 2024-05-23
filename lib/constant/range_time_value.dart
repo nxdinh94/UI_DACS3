@@ -1,5 +1,11 @@
+
+String getCurrentMonth(){
+  return DateTime.now().month.toString();
+}
+
 List<Map<String, dynamic>> rangeTimeData = [
   {'title': 'Toàn thời gian', 'value': 'all'},
+  {'title': 'Tháng hiện tại', 'value': getCurrentMonth()},
   {'title': 'Tháng 1', 'value': '1'},
   {'title': 'Tháng 2', 'value': '2'},
   {'title': 'Tháng 3', 'value': '3'},

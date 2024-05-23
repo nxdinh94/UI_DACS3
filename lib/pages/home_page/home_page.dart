@@ -1,5 +1,6 @@
 
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -38,9 +39,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool isShowMoney = true;
+  String initialValueDropdown ='';
+  String titleDropdown = '';
   @override
   void initState() {
     super.initState();
+    initialValueDropdown = rangeTimeData.first['value'];
+    titleDropdown = rangeTimeData.first['title'];
     //get cashflowData from cache in homepage
     fetchDataCashFlow().whenComplete((){
       Provider.of<AppProvider>(context, listen: false).getAllCashFlowCache();
@@ -54,7 +59,8 @@ class _HomePageState extends State<HomePage> {
       Provider.of<UserProvider>(context, listen:  false).getAllAccountWallet();
       await Provider.of<ChartProvider>(context, listen:  false).getExpenseRecordForChartProvider(rangeTimeData[0]['value']);
       await Provider.of<UserProvider>(context, listen: false).getMeProvider();
-
+      await Provider.of<UserProvider>(context, listen: false)
+          .getAllExpenseRecordForNoteHistoryProvider(rangeTimeData[0]['value']);
     });
   }
   // if cache empty, fetch data api, then save to cache
@@ -91,6 +97,8 @@ class _HomePageState extends State<HomePage> {
                   await Provider.of<ChartProvider>(context, listen:  false).getExpenseRecordForChartProvider(rangeTimeData[0]['value']);
                   await Provider.of<UserProvider>(context, listen: false).getAllExpenseRecordForNoteHistoryProvider(rangeTimeData[0]['value']);
                   await Provider.of<UserProvider>(context, listen: false).getMeProvider();
+                  await Provider.of<UserProvider>(context, listen: false)
+                      .getAllExpenseRecordForNoteHistoryProvider(rangeTimeData[0]['value']);
                 },
                 indicatorBuilder: (BuildContext context, IndicatorController controller) {
                   return LoadingAnimationWidget.hexagonDots(
@@ -227,17 +235,7 @@ class _HomePageState extends State<HomePage> {
                           ),
                           Row(
                             children: [
-                              RichText(
-                                text:  const TextSpan(
-                                  text: 'Năm nay',
-                                  style: labelTextStyle,
-                                  children: [
-                                    WidgetSpan(
-                                        alignment: PlaceholderAlignment.middle,
-                                        child: Icon(Icons.keyboard_arrow_right, size: 30, color: iconColor,)
-                                    )
-                                  ]
-                                ))
+                             
                             ],
                           ),
                           //Row chart
@@ -371,9 +369,7 @@ class _HomePageState extends State<HomePage> {
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: [
                               GestureDetector(
-                                onTap:()async{
-                                  await Provider.of<UserProvider>(context, listen: false)
-                                    .getAllExpenseRecordForNoteHistoryProvider(rangeTimeData[0]['value']);
+                                onTap:(){
                                   CustomNavigationHelper.router.push(
                                     '${CustomNavigationHelper.homePath}/${CustomNavigationHelper.noteHistoryPath}'
                                   );

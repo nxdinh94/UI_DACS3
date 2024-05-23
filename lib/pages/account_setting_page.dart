@@ -68,7 +68,7 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                             radius: 43,
                             child: ClipOval(
                               child: meData['avatar'] ==''? Image.asset('assets/another_icon/avt-fb.jpg')
-                                  :  Image.asset('assets/beach and me.jpg'),
+                                  :  Image.network(meData['avatar']),
                             ),
                           ),
                         ),
@@ -85,7 +85,7 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                         ElevatedButton(
                             onPressed: (){
                               CustomNavigationHelper.router.push(
-                                  '${CustomNavigationHelper.anotherPath}/${CustomNavigationHelper.accountSettingPath}/${CustomNavigationHelper.userProfilePath}'
+                                  '${CustomNavigationHelper.accountSettingPath}/${CustomNavigationHelper.userProfilePath}'
                               );
                             },
                             style: ElevatedButton.styleFrom(

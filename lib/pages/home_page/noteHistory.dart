@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../../constant/color.dart';
 import '../../providers/user_provider.dart';
+import '../../utils/custom_navigation_helper.dart';
 import '../../widgets/back_toolbar_button.dart';
 import '../account_wallet/detail_account_wallet_page.dart';
 class Notehistory extends StatefulWidget {
@@ -18,7 +19,14 @@ class Notehistory extends StatefulWidget {
 }
 
 class _NotehistoryState extends State<Notehistory> {
+  String selectedTimeToShow = '';
 
+  @override
+  void initState() {
+    selectedTimeToShow = rangeTimeData.first['title'];
+
+    super.initState();
+  }
   @override
   Widget build(BuildContext context) {
     const Border dashBorder = DashedBorder(
@@ -40,11 +48,29 @@ class _NotehistoryState extends State<Notehistory> {
               color: secondaryColor,
               padding: paddingAll12,
               child: Center(
-                child: RightArrowRichText(
-                  text: rangeTimeData[0]['title'],
-                  color: primaryColor,
-                  fontWeight: FontWeight.w500,
-                ),
+                  child: GestureDetector(
+                    onTap: ()async{
+                      String result = await CustomNavigationHelper.router.push(
+                          '${CustomNavigationHelper.homePath}/'
+                              '${CustomNavigationHelper.selectTimeShowExpenseRecordPath}') as String;
+                      if(!context.mounted){return;}
+                      if(result.isNotEmpty){
+                        setState(() {
+                          if(result == 'all'){
+                            selectedTimeToShow = rangeTimeData.first['title'];
+                          }else{
+                            selectedTimeToShow  = result;
+
+                          }
+                        });
+                        await Provider.of<UserProvider>(context, listen: false)
+                            .getAllExpenseRecordForNoteHistoryProvider(result);
+                      }
+                    },
+                    child: RightArrowRichText(
+                        text: selectedTimeToShow, color: primaryColor, fontWeight: FontWeight.w500
+                    ),
+                  )
               ),
             ),
             spaceColumn,

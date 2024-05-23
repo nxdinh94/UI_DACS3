@@ -13,6 +13,7 @@ import 'package:practise_ui/pages/adding_workspace/update_workspace.dart';
 import 'package:practise_ui/pages/home_page/detail_spending_revenue_statistical_page/detail_cashflow_category_parent.dart';
 import 'package:practise_ui/pages/home_page/detail_spending_revenue_statistical_page/detail_spending_revenue_statistical_page.dart';
 import 'package:practise_ui/pages/home_page/noteHistory.dart';
+import 'package:practise_ui/pages/select_time_show_expense_record.dart';
 import 'package:practise_ui/pages/spending_limit/add_and_edit_spending_limit_page.dart';
 import 'package:practise_ui/pages/adding_workspace/adding_workspace.dart';
 import 'package:practise_ui/pages/another_page.dart';
@@ -76,7 +77,7 @@ class CustomNavigationHelper {
   static const String editSpendingLimitPath = '/editSpendingLimit';
   static const String repeatCyclePath = '/repeatCycle';
 
-  static const String accountSettingPath = 'accountSetting';
+  static const String accountSettingPath = '/accountSetting';
   static const String selectCategoryPath = 'selectCategory';
 
 
@@ -92,6 +93,7 @@ class CustomNavigationHelper {
   static const String detailCashFlowCategoryParentPath = 'detailCashFlowCategoryParent';
   static const String updateWorkSpacePath = 'updateWorkSpace';
   static const String noteHistoryPath = 'noteHistory';
+  static const String selectTimeShowExpenseRecordPath = 'selectTimeShowExpenseRecord';
 
 
 
@@ -120,8 +122,17 @@ class CustomNavigationHelper {
                       path: detailSpendingRevenueStatisticalPath,
                       pageBuilder: (context, state) {
                         return getPage(
-                          child: DetailSpendingRevenueStatisticalPage(),
+                          child: const DetailSpendingRevenueStatisticalPage(),
                           state: state
+                        );
+                      },
+                    ),
+                    GoRoute(
+                      path: selectTimeShowExpenseRecordPath,
+                      pageBuilder: (context, state) {
+                        return getPage(
+                            child: const SelectTimeShowExpenseRecord(),
+                            state: state
                         );
                       },
                     ),
@@ -240,6 +251,15 @@ class CustomNavigationHelper {
                           );
                         }
                     ),
+                    GoRoute(
+                      path: selectTimeShowExpenseRecordPath,
+                      pageBuilder: (context, state) {
+                        return getPage(
+                            child: SelectTimeShowExpenseRecord(),
+                            state: state
+                        );
+                      },
+                    )
                   ]
                 ),
               ],
@@ -303,42 +323,19 @@ class CustomNavigationHelper {
               navigatorKey: anotherTabNavigatorKey,
               routes: [
                 GoRoute(
-                  path: anotherPath,
+                  path: accountSettingPath,
                   pageBuilder: (context, state) {
                     return getPage(
-                      child: const AnotherPage(),
+                      child: const AccountSettingPage(),
                       state: state,
                     );
                   },
                   routes: <RouteBase>[
                     GoRoute(
-                      path: accountSettingPath,
+                      path: userProfilePath,
                       pageBuilder: (context, state){
-                        return getPage(
-                          child: const AccountSettingPage(),
-                          state: state
-                        );
-                      },
-                      routes: [
-                        GoRoute(
-                          path: userProfilePath,
-                          pageBuilder: (context, state){
-                            return CustomTransitionPage(
-                              key: state.pageKey,
-                              child: UserProfile(),
-                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                // Change the opacity of the screen using a Curve based on the the animation's
-                                // value
-                                return FadeTransition(
-                                  opacity:
-                                  CurveTween(curve: Curves.easeInOutCirc).animate(animation),
-                                  child: child,
-                                );
-                              },
-                            );
-                          }
-                        )
-                      ]
+                        return getPage(child: UserProfile(), state: state);
+                      }
                     )
                   ]
                 ),

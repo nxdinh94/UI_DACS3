@@ -148,7 +148,7 @@ class _HaveAccountCaseState extends State<HaveAccountCase> {
                         onTap:() async{
                           // get data before forward page
                           await Provider.of<UserProvider>(context, listen: false)
-                              .getAllExpenseRecordByAccountWalletProvider(widget.accountWalletData[index]['_id'], rangeTimeData[0]['value']);
+                              .getAllExpenseRecordByAccountWalletProvider(widget.accountWalletData[index]['_id'], rangeTimeData.first['value']!);
 
                           CustomNavigationHelper.router.push(
                               '${CustomNavigationHelper.accountWalletPath}/${CustomNavigationHelper.detailAccountWalletPath}',

@@ -24,7 +24,8 @@ class AnotherPage extends StatelessWidget {
                 child: CircleAvatar(
                   radius: 20,
                   child: ClipOval(
-                    child:  Image.asset(meData['avatar'] ==''? 'assets/another_icon/avt-fb.jpg': 'assets/beach and me.jpg'),
+                    child: meData['avatar'] ==''? Image.asset( 'assets/another_icon/avt-fb.jpg')
+                    : Image.network(meData['avatar']),
                   ),
                 ),
               ),
