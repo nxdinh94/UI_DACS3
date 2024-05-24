@@ -143,14 +143,14 @@ class _AddAccountWalletPageState extends State<AddAccountWalletPage> {
                           horizontalTitleGap: 20,
                           vertiCalPadding: 5,
                           onTap: ()async{
-                            Map<String, dynamic> result = await CustomNavigationHelper.router.push(
+                            final result = await CustomNavigationHelper.router.push(
                                 '${CustomNavigationHelper.accountWalletPath}/'
                                     '${CustomNavigationHelper.addAccountWalletPath}/'
                                     '${CustomNavigationHelper.selectBankPath}'
-                            ) as  Map<String, dynamic>;
+                            );
                             if(!context.mounted){ return ; }
-                            if(result.isNotEmpty){
-                              resultChosenBank = result;
+                            if(result != null){
+                              resultChosenBank = result as Map<String, dynamic>;
                               idChosenBank = result['id'];
                             }
                           }

@@ -56,17 +56,17 @@ final gradientList = <List<Color>>[
   ],
 ];
 final pieChartColorList = <Color>[
-  const Color(0xffFFB1B1),
-  const Color(0xff9DDE8B),
-  const Color(0xffFF6969),
-  const Color(0xffD875C7),
-  const Color(0xff6DC5D1),
-  const Color(0xffFEB941),
-  const Color(0xff8c67ef),
-  const Color(0xffF6E9B2),
+  const Color(0xffFFDA78),
+  const Color(0xfffdbbe4),
+  const Color(0xff9BCF53),
+  const Color(0xffff7a51),
   const Color(0xff5DEBD7),
-  const Color(0xffFFE5E5),
-  const Color(0xffd73535),
-
+  const Color(0xff41B06E),
+  const Color(0xff4CCD99),
+  const Color(0xffFEB941),
+  const Color(0xffE1ACAC),
+  const Color(0xffA6F6FF),
+  const Color(0xffF6E9B2),
+  const Color(0xffA6F6FF),
 
 ];

@@ -366,13 +366,13 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                           contentPadding: const EdgeInsets.only(left: 0, top: 8, bottom: 8, right: 0),
                           onTap: ()async{
 
-                            Map<String, dynamic> result =await CustomNavigationHelper.router.push(
+                            final result =await CustomNavigationHelper.router.push(
                              '${CustomNavigationHelper.addingWorkspacePath}/${CustomNavigationHelper.chooseAccountWalletPath}'
-                            ) as Map<String, dynamic>;
+                            );
                             if(!context.mounted){return ;}
-                            if(result.isNotEmpty){
+                            if(result != null){
                               setState(() {
-                                chosenAccountWallet = result;
+                                chosenAccountWallet = result as Map<String, dynamic>;
                                 idChosenAccountWallet = result['id'];
                               });
                             }
@@ -453,10 +453,13 @@ class ChooseCashFlowCategoryState extends State<ChooseCashFlowCategory> {
           'selectCategory', extra: widget.cashFlowType
         );
         if(!context.mounted) return;
-        setState(() {
-          currentOption = result as  Map<String , dynamic>;
-        });
-        widget.onSelectCashFlowCate!(currentOption['_id'], currentOption['name']);
+        if(result != null){
+          setState(() {
+            currentOption = result as  Map<String , dynamic>;
+          });
+          widget.onSelectCashFlowCate!(currentOption['_id'], currentOption['name']);
+        }
+
       },
     );
   }

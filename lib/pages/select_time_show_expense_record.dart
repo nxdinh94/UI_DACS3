@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/constant/divider.dart';
 import 'package:practise_ui/constant/font.dart';
@@ -17,7 +18,7 @@ class _SelectTimeShowExpenseRecordState extends State<SelectTimeShowExpenseRecor
   int currentYear = DateTime.now().year + 1;
   List<String>listYear= [];
   String selectedDate = '';
-  String selectedYear = 'yyyy';
+  String selectedYear = '2024';
   String selectedMonth = 'mm';
   @override
   void initState() {
@@ -42,62 +43,62 @@ class _SelectTimeShowExpenseRecordState extends State<SelectTimeShowExpenseRecor
           )
         ],
       ),
-      body: Container(
-        child: SingleChildScrollView(
-          child: Column(
-            children: [
-              Container(
-                color: Colors.grey.shade100,
-                padding: paddingAll12,
-                child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: listYear.map((String e){
-                      return TextButton(
-                          onPressed: (){
-                            setState(() {
-                              selectedYear = e;
-                            });
-                            if(selectedYear != 'yyyy' && selectedMonth != 'mm'){
-                              selectedDate = '$selectedMonth-$selectedYear';
-                              Navigator.pop(context, selectedDate);
-                            }
-                          },
-                          style: TextButton.styleFrom(
-                            elevation: 0,
-                            backgroundColor: primaryColor
-                          ),
-                          child: Text(e,
-                            style: const TextStyle(fontSize: textSmall,fontWeight: FontWeight.w500, color: secondaryColor),));
-                    }).toList()
-                ),
-              ),
-              Column(
-                children: rangeTimeData.map((e){
-                  return Column(
-                    children: [
-                      ListTile(
-                        onTap: (){
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            Container(
+              color: Colors.grey.shade100,
+              padding: paddingAll12,
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: listYear.map((String e){
+                    return TextButton(
+                        onPressed: (){
                           setState(() {
-                            selectedMonth = e['value'];
-                            selectedDate = '$selectedMonth-$selectedYear';
+                            selectedYear = e;
                           });
-                          if(selectedYear != 'yyyy' && selectedMonth != 'mm'){
+                          if(selectedMonth != 'mm'){
+                            selectedDate = '$selectedMonth-$selectedYear';
                             Navigator.pop(context, selectedDate);
                           }
-                          if(selectedMonth == 'all'){
-                            Navigator.pop(context, 'all');
-                          }
                         },
-                        title: Text(e['title']),
-                        titleTextStyle: defaultTextStyle,
-                      ),
-                      defaultDivider
-                    ],
-                  );
-                }).toList(),
+                        style: TextButton.styleFrom(
+                          elevation: 0,
+                          backgroundColor: primaryColor
+                        ),
+                        child: Text(e,
+                          style: const TextStyle(fontSize: textSmall,fontWeight: FontWeight.w500, color: secondaryColor),));
+                  }).toList()
               ),
-            ],
-          ),
+            ),
+            Column(
+              children: rangeTimeData.map((e){
+                return Column(
+                  children: [
+                    ListTile(
+                      onTap: (){
+                        setState(() {
+                          selectedMonth = e['value'];
+                          selectedDate = '$selectedMonth-$selectedYear';
+                        });
+                        if(selectedMonth == 'all'){
+                          Navigator.pop(context, 'all');
+                          return;
+                        }
+                        if(selectedMonth != 'mm'){
+                          Navigator.pop(context, selectedDate);
+                        }
+
+                      },
+                      title: Text(e['title']),
+                      titleTextStyle: defaultTextStyle,
+                    ),
+                    defaultDivider
+                  ],
+                );
+              }).toList(),
+            ),
+          ],
         ),
       ),
     );

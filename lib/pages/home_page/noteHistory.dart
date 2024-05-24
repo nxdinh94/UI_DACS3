@@ -44,33 +44,33 @@ class _NotehistoryState extends State<Notehistory> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              color: secondaryColor,
-              padding: paddingAll12,
-              child: Center(
-                  child: GestureDetector(
-                    onTap: ()async{
-                      String result = await CustomNavigationHelper.router.push(
-                          '${CustomNavigationHelper.homePath}/'
-                              '${CustomNavigationHelper.selectTimeShowExpenseRecordPath}') as String;
-                      if(!context.mounted){return;}
-                      if(result.isNotEmpty){
-                        setState(() {
-                          if(result == 'all'){
-                            selectedTimeToShow = rangeTimeData.first['title'];
-                          }else{
-                            selectedTimeToShow  = result;
-
-                          }
-                        });
-                        await Provider.of<UserProvider>(context, listen: false)
-                            .getAllExpenseRecordForNoteHistoryProvider(result);
-                      }
-                    },
+            GestureDetector(
+              behavior: HitTestBehavior.opaque,
+              onTap: ()async{
+                String result = await CustomNavigationHelper.router.push(
+                    '${CustomNavigationHelper.homePath}/'
+                        '${CustomNavigationHelper.selectTimeShowExpenseRecordPath}') as String;
+                if(!context.mounted){return;}
+                if(result.isNotEmpty){
+                  setState(() {
+                    if(result == 'all'){
+                      selectedTimeToShow = rangeTimeData.first['title'];
+                    }else{
+                      selectedTimeToShow  = result;
+                    }
+                  });
+                  await Provider.of<UserProvider>(context, listen: false)
+                      .getAllExpenseRecordForNoteHistoryProvider(result);
+                }
+              },
+              child: Container(
+                color: secondaryColor,
+                padding: paddingAll12,
+                child: Center(
                     child: RightArrowRichText(
                         text: selectedTimeToShow, color: primaryColor, fontWeight: FontWeight.w500
-                    ),
-                  )
+                    )
+                ),
               ),
             ),
             spaceColumn,

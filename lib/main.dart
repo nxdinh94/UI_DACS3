@@ -124,6 +124,7 @@ class CustomRouter extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       builder: (context, router) {
         return Scaffold(
+          resizeToAvoidBottomInset: false,
           body: router!,
         );
       },

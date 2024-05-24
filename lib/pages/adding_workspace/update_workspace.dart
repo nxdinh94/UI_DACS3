@@ -515,14 +515,17 @@ class ChooseCashFlowCategoryState extends State<ChooseCashFlowCategory> {
       trailing: keyBoardArrowRightIcon,
       contentPadding: const EdgeInsets.only(left:  16, top: 8, bottom: 8, right: 8),
       onTap: ()async{
-        final result = await CustomNavigationHelper.router.pushNamed(
+         final result = await CustomNavigationHelper.router.pushNamed(
           'selectCategory', extra: widget.cashFlowType
         );
         if(!context.mounted) return;
-        setState(() {
-          currentOption = result as  Map<String , dynamic>;
-        });
-        widget.onSelectCashFlowCate!(currentOption['_id'], currentOption['name']);
+        if(result != null){
+          setState(() {
+            currentOption = result as Map<String, dynamic>;
+          });
+          widget.onSelectCashFlowCate!(currentOption['_id'], currentOption['name']);
+        }
+
       },
     );
   }

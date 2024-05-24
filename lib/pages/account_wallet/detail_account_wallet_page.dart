@@ -93,40 +93,44 @@ class _DetailAccountWalletPageState extends State<DetailAccountWalletPage> {
                 return Visibility(
                   // appear if both != 0
                   visible: !(totalSpendingMoney == '0' && totalRevenueMoney == '0'),
-                  child: Container(
-                    color: secondaryColor,
-                    child: IntrinsicHeight(
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Padding(
-                              padding: paddingAll12,
-                              child: TotalRevenueOrSpendingItem(
-                                title: 'Tổng thu',
-                                amountOfMoney: totalRevenueMoney,
-                                foreground: revenueMoneyColor,
+                  child: Column(
+                    children: [
+                      Container(
+                        color: secondaryColor,
+                        child: IntrinsicHeight(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Padding(
+                                  padding: paddingAll12,
+                                  child: TotalRevenueOrSpendingItem(
+                                    title: 'Tổng thu',
+                                    amountOfMoney: totalRevenueMoney,
+                                    foreground: revenueMoneyColor,
+                                  ),
+                                ),
                               ),
-                            ),
-                          ),
-                          const VerticalDivider(thickness: 1, color: underLineColor),
-                          Expanded(
-                            child: Padding(
-                              padding: paddingAll12,
-                              child: TotalRevenueOrSpendingItem(
-                                title: 'Tổng chi',
-                                amountOfMoney: totalSpendingMoney,
-                                foreground: spendingMoneyColor,
+                              const VerticalDivider(thickness: 1, color: underLineColor),
+                              Expanded(
+                                child: Padding(
+                                  padding: paddingAll12,
+                                  child: TotalRevenueOrSpendingItem(
+                                    title: 'Tổng chi',
+                                    amountOfMoney: totalSpendingMoney,
+                                    foreground: spendingMoneyColor,
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
-                        ],
+                        ),
                       ),
-                    ),
+                      spaceColumn,
+                    ],
                   ),
                 );
               },
             ),
-            spaceColumn,
             Container(
               padding: paddingAll12,
               color: secondaryColor,
