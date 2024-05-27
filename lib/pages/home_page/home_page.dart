@@ -439,6 +439,7 @@ class _HomePageState extends State<HomePage> {
                           SpendingLimitItems(),
                           spaceColumn,
                           GestureDetector(
+                            behavior: HitTestBehavior.opaque,
                             onTap: (){
                               CustomNavigationHelper.router.push(
                                 CustomNavigationHelper.listSpendingLimitItemPath

@@ -1,13 +1,10 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:go_router/go_router.dart';
 import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/constant/side.dart';
-import 'package:practise_ui/utils/function/currency_format.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';
 import 'package:practise_ui/utils/progress_bar.dart';
-import 'package:practise_ui/widgets/vnd_icon.dart';
+import 'package:practise_ui/widgets/rich_text/vnd_rich_text.dart';
 import '../../constant/font.dart';
 import '../custom_stack_three_images.dart';
 class SpendingLimitItems extends StatefulWidget {
@@ -24,6 +21,7 @@ class _SpendingLimitItemsState extends State<SpendingLimitItems> {
     bool isDetailSpendingLimitItemPage =
     currentRoute =='/detailSpendingLimitItem'? true: false;
     return GestureDetector(
+      behavior: HitTestBehavior.opaque,
       onTap: (){
         if(!isDetailSpendingLimitItemPage){
           CustomNavigationHelper.router.push(
@@ -81,21 +79,9 @@ class _SpendingLimitItemsState extends State<SpendingLimitItems> {
                       children: [
                         Text(
                           '01/04 - 30/4',
-                          style: const TextStyle(
-                            color: labelColor,
-                            fontSize: textSmall
-                          )),
-                        RichText(
-                          text: TextSpan(
-                            text: formatCurrencyVND(7000000),
-                            style: const TextStyle(color: textColor, fontSize: textBig),
-                            children: const [
-                              WidgetSpan(
-                                child: VndIcon(color: textColor, size: 16),
-                                alignment: PlaceholderAlignment.middle
-                              )
-                            ]
-                          ), 
+                          style: const TextStyle(color: labelColor, fontSize: textSmall)),
+                        VndRichText(
+                          value: 7000000, fontSize: textBig, color: textColor, iconSize: 16
                         ),
                       ],
                     ),
@@ -114,21 +100,9 @@ class _SpendingLimitItemsState extends State<SpendingLimitItems> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Còn 1 ngày', style: TextStyle(
-                fontSize: textSmall,
-                color: labelColor
-              ),),
-              RichText(
-                text: TextSpan(
-                    text: formatCurrencyVND(7000000),
-                    style: const TextStyle(color: textColor, fontSize: textBig),
-                    children: const [
-                      WidgetSpan(
-                          child: VndIcon(color: textColor, size: 16),
-                          alignment: PlaceholderAlignment.middle
-                      )
-                    ]
-                ),
+              Text('Còn 1 ngày', style: TextStyle(fontSize: textSmall, color: labelColor)),
+              VndRichText(
+                value: 7000000, fontSize: textBig, color: textColor, iconSize: 16
               ),
             ],
           ),
