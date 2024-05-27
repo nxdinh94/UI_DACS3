@@ -231,7 +231,7 @@ class _UpdateWorkspaceState extends State<UpdateWorkspace> {
               .deleteExpenseRecordProvider(widget.dataToUpdate['_id']);
           if(result['status'] == '200'){
             showCustomSuccessToast(context, result['result'], duration: 2);
-            await Provider.of<ChartProvider>(context, listen:  false).getExpenseRecordForChartProvider(rangeTimeData[0]['value']);
+            // await Provider.of<ChartProvider>(context, listen:  false).getExpenseRecordForChartProvider(rangeTimeData[0]['value']);
             await Provider.of<UserProvider>(context, listen: false)
                 .getAllExpenseRecordByAccountWalletProvider( widget.dataToUpdate['money_account_id'],rangeTimeData[0]['value']);
             Navigator.pop(context);

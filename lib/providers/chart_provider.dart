@@ -14,13 +14,13 @@ class ChartProvider with ChangeNotifier, DiagnosticableTreeMixin{
 
   bool isLoading = false;
 
-  final Map<String, double> _filteredSpendingDataForPieChartHomePage = {};
+  Map<String, double> _filteredSpendingDataForPieChartHomePage = {};
   Map<String, double> get filteredSpendingDataForPieChartHomePage => _filteredSpendingDataForPieChartHomePage;
 
-  final Map<String, double> _filteredRevenueDataForPieChartHomePage = {};
+  Map<String, double> _filteredRevenueDataForPieChartHomePage = {};
   Map<String, double> get filteredRevenueDataForPieChartHomePage => _filteredRevenueDataForPieChartHomePage;
 
-  final List<CollumChartModel> _filteredColumnChartDataHomePage = [];
+  List<CollumChartModel> _filteredColumnChartDataHomePage = [];
   List<CollumChartModel> get filteredColumnChartDataHomePage => _filteredColumnChartDataHomePage;
 
   //in homePage
@@ -39,22 +39,42 @@ class ChartProvider with ChangeNotifier, DiagnosticableTreeMixin{
     return tokenDecoded['access_token'];
   }
 
-  Future<void> getExpenseRecordForChartProvider(String time)async{
+  Future<void> getExpenseRecordForChartProvider(String url)async{
     isLoading = true;
     String accessToken = await getAccessToken();
-    Map<String, dynamic> result = await chartServices.getExpenseRecordForChartService(accessToken, time);
-    if(result.isNotEmpty){
+    Map<String, dynamic> result = await chartServices.getExpenseRecordForChartService(accessToken, url);
+    //"result": {
+    //         "spending_money": [],
+    //         "revenue_money": []
+    //     }
+    if(result['status'] == '200'){
+      List<dynamic> dataSpendingMoneyToMap = [];
+      List<dynamic> dataRevenueMoneyToMap = [];
       _expenseRecordForChart = result;
+      dataSpendingMoneyToMap = result['result']['spending_money'];
+      dataRevenueMoneyToMap = result['result']['revenue_money'];
+      await filterDataForChartProvider(dataSpendingMoneyToMap, dataRevenueMoneyToMap);
+      isLoading = false;
     }
-    await filterDataForChartProvider();
-    isLoading = false;
     notifyListeners();
   }
-  Future<void> filterDataForChartProvider()async{
+  Future<void> filterDataForChartProvider(List<dynamic>dataSpendingMoneyToMap,List<dynamic> dataRevenueMoneyToMap)async{
     double revenueMoneyCount = 0;
     double spendingMoneyCount = 0;
-    List<dynamic> dataSpendingMoneyToMap = expenseRecordForChart['result']['spending_money'];
-    List<dynamic> dataRevenueMoneyToMap = expenseRecordForChart['result']['revenue_money'];
+
+    _filteredSpendingDataForPieChartHomePage = {};
+    _totalSpendingMoney = 0;
+
+    _filteredRevenueDataForPieChartHomePage = {};
+    _totalRevenueMoney = 0;
+
+    _filteredColumnChartDataHomePage = [];
+
+    if(dataSpendingMoneyToMap.isEmpty && dataRevenueMoneyToMap.isEmpty){
+      _filteredColumnChartDataHomePage = [];
+      return;
+    }
+
     if(dataSpendingMoneyToMap.isNotEmpty){
       for (var e in dataSpendingMoneyToMap) {
       // Ensure result is a map
@@ -62,24 +82,28 @@ class ChartProvider with ChangeNotifier, DiagnosticableTreeMixin{
         spendingMoneyCount += double.parse(e['total_money'][r'$numberDecimal'] as String);
       }
       _totalSpendingMoney = spendingMoneyCount;
-      _filteredColumnChartDataHomePage.add(CollumChartModel(2, totalSpendingMoney, chartCollumn2));
+      _filteredColumnChartDataHomePage.add(CollumChartModel(2, _totalSpendingMoney, chartCollumn2));
     }else {
+      //if dataSpendingMoneyToMap == []
+      _filteredSpendingDataForPieChartHomePage = {};
+      _totalSpendingMoney = 0;
       // value == 0
-      _filteredColumnChartDataHomePage.add(CollumChartModel(2, totalSpendingMoney, chartCollumn2));
+      _filteredColumnChartDataHomePage.add(CollumChartModel(2, _totalSpendingMoney, chartCollumn2));
     }
-
+    
     if(dataRevenueMoneyToMap.isNotEmpty){
       for(var e in dataRevenueMoneyToMap){
         _filteredRevenueDataForPieChartHomePage[e['parent_name']] = double.parse(e['total_money'][r'$numberDecimal'] as String);
         revenueMoneyCount += double.parse(e['total_money'][r'$numberDecimal']);
       }
       _totalRevenueMoney = revenueMoneyCount;
-      _filteredColumnChartDataHomePage.add(CollumChartModel(1, totalRevenueMoney, chartCollumn1));
-
+      _filteredColumnChartDataHomePage.add(CollumChartModel(1, _totalRevenueMoney, chartCollumn1));
     }else {
+      //if dataRevenueMoneyToMap==[]
+      _filteredRevenueDataForPieChartHomePage = {};
+      _totalRevenueMoney = 0;
       //value == 0
-      _filteredColumnChartDataHomePage.add(CollumChartModel(1, totalRevenueMoney, chartCollumn1));
-
+      _filteredColumnChartDataHomePage.add(CollumChartModel(1, _totalRevenueMoney, chartCollumn1));
     }
     notifyListeners();
   }

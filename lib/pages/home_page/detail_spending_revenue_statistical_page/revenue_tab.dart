@@ -11,6 +11,7 @@ import '../../../utils/custom_navigation_helper.dart';
 import '../../../utils/function/percentage_format.dart';
 import '../../../widgets/charts/pie_chart.dart';
 import '../../../widgets/vnd_icon.dart';
+import '../../account_wallet/account_page.dart';
 class RevenueTab extends StatefulWidget {
   const RevenueTab({
     super.key
@@ -71,21 +72,21 @@ class _RevenueTabState extends State<RevenueTab> {
           spaceColumn,
           Consumer<ChartProvider>(
             builder: (context, value, child){
-              Map<String, double> data = value.filteredRevenueDataForPieChartHomePage;
-              return Visibility(
-                visible: data.isNotEmpty,
-                child: Container(
-                  height: 240,
-                  color: secondaryColor,
-                  child: Center(
-                    child: MyPieChart(
-                      dataMap: data,
-                      isShowLegend: false,
-                      isShowChartValue: false,
-                      isShowPercentageValue: true,
-                      height: 200,
-                    )
-                  ),
+              Map<String, double> revenueData = value.filteredRevenueDataForPieChartHomePage;
+              if(revenueData.isEmpty){
+                return NoAccountCase();
+              }
+              return Container(
+                height: 240,
+                color: secondaryColor,
+                child: Center(
+                  child: MyPieChart(
+                    dataMap: revenueData,
+                    isShowLegend: false,
+                    isShowChartValue: false,
+                    isShowPercentageValue: true,
+                    height: 200,
+                  )
                 ),
               );
             },
