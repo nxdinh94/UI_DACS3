@@ -13,6 +13,7 @@ import '../../constant/range_time_value.dart';
 import '../../providers/user_provider.dart';
 import '../../utils/function/currency_format.dart';
 import '../../utils/custom_navigation_helper.dart';
+import '../../widgets/empty_value_screen.dart';
 class AccountPage extends StatefulWidget {
   const AccountPage({super.key});
 
@@ -53,7 +54,10 @@ class _AccountPageState extends State<AccountPage> {
         body:  Consumer<UserProvider>(
           builder: (context, value, child){
             List<dynamic> accountWalletList = value.accountWalletList;
-            return accountWalletList.isNotEmpty? HaveAccountCase(accountWalletData: accountWalletList): const NoAccountCase();
+            return accountWalletList.isNotEmpty? HaveAccountCase(accountWalletData: accountWalletList):
+            const EmptyValueScreen(
+              title: 'Bạn chưa có tài khoản nào',
+            );
           }
         ),
         floatingActionButton: FloatingActionButton(
@@ -198,43 +202,3 @@ class _HaveAccountCaseState extends State<HaveAccountCase> {
   }
 }
 
-class NoAccountCase extends StatelessWidget {
-  const NoAccountCase({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        margin: const EdgeInsets.only(top: 60),
-        child: Column(
-          children: [
-            Image.asset('assets/another_icon/grey-coin.png', width: 100,),
-            spaceColumn,
-            const Text('Bạn chưa có tài khoản nào',style: TextStyle(
-              color: labelColor, fontSize: textSize
-            )),
-            spaceColumn6,
-            GestureDetector(
-              onTap: (){
-                CustomNavigationHelper.router.push(
-                  '${CustomNavigationHelper.accountWalletPath}/${CustomNavigationHelper.addAccountWalletPath}'
-                );
-              },
-              child: RichText(
-                text: const TextSpan(
-                  text: '+',
-                  style: TextStyle(color: primaryColor, fontSize: 22),
-                  children: [
-                    TextSpan(text: 'Thêm tài khoản', style:  TextStyle(
-                        color: primaryColor, fontSize: textSize
-                    ))
-                  ]
-                )
-              ),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}

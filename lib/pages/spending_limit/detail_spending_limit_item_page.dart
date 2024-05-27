@@ -28,6 +28,7 @@ class _DetailSpendingLimitItemState extends State<DetailSpendingLimitItem> {
         backgroundColor: primaryColor,
         title: Text(
           'Tiền sinh hoạt hằng tháng',
+          overflow: TextOverflow.ellipsis,
           style: const TextStyle(
               color: secondaryColor,
               fontSize: textBig,

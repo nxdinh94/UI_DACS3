@@ -10,8 +10,8 @@ import '../../../utils/function/currency_format.dart';
 import '../../../utils/custom_navigation_helper.dart';
 import '../../../utils/function/percentage_format.dart';
 import '../../../widgets/charts/pie_chart.dart';
+import '../../../widgets/empty_value_screen.dart';
 import '../../../widgets/vnd_icon.dart';
-import '../../account_wallet/account_page.dart';
 class RevenueTab extends StatefulWidget {
   const RevenueTab({
     super.key
@@ -74,7 +74,11 @@ class _RevenueTabState extends State<RevenueTab> {
             builder: (context, value, child){
               Map<String, double> revenueData = value.filteredRevenueDataForPieChartHomePage;
               if(revenueData.isEmpty){
-                return NoAccountCase();
+                return const EmptyValueScreen(
+                  title: 'Không có bản ghi',
+                  isAccountPage: false,
+                  iconSize: 75,
+                );
               }
               return Container(
                 height: 240,
