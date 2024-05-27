@@ -1,6 +1,5 @@
 
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
-import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -11,10 +10,8 @@ import 'package:practise_ui/constant/range_time_value.dart';
 import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/models/cashs_flow_model.dart';
 import 'package:practise_ui/providers/app_provider.dart';
-import 'package:practise_ui/providers/auth_provider.dart';
 import 'package:practise_ui/providers/chart_provider.dart';
 import 'package:practise_ui/providers/user_provider.dart';
-import 'package:practise_ui/utils/function/currency_format.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';
 import 'package:practise_ui/widgets/charts/pie_chart.dart';
 import 'package:practise_ui/widgets/charts/collumn_chart.dart';
@@ -23,7 +20,6 @@ import 'package:practise_ui/widgets/hidden_money_label.dart';
 import 'package:practise_ui/widgets/rich_text/right_arrow_rich_text.dart';
 import 'package:practise_ui/widgets/rich_text/vnd_rich_text.dart';
 import 'package:practise_ui/widgets/spendingLimit/spendingLimitItems.dart';
-import 'package:practise_ui/widgets/vnd_icon.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -44,8 +40,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-    initialValueDropdown = rangeTimeData.first['value'];
-    titleDropdown = rangeTimeData.first['title'];
+    initialValueDropdown = rangeTimeHomePageChart.first['value'];
+    titleDropdown = rangeTimeHomePageChart.first['title'];
     //get cashflowData from cache in homepage
     fetchDataCashFlow().whenComplete((){
       Provider.of<AppProvider>(context, listen: false).getAllCashFlowCache();
@@ -133,8 +129,8 @@ class _HomePageState extends State<HomePage> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   IconButton(
-                                      onPressed: () async{
-                                        await Provider.of<AuthProvider>(context, listen: false).logout();
+                                      onPressed: (){
+
                                       },
                                       icon: const Icon(
                                         Icons.refresh, color: secondaryColor, size: 29,
@@ -235,7 +231,40 @@ class _HomePageState extends State<HomePage> {
                           ),
                           Row(
                             children: [
-                             
+                              DropdownButton<String>(
+                                underline: const SizedBox(),
+                                icon: const Icon(Icons.keyboard_arrow_down, color: labelColor,),
+                                iconSize: 26,
+                                dropdownColor: secondaryColor,
+                                elevation: 0,
+                                isDense: true,
+                                // onTap: (){print('object');},
+                                value: initialValueDropdown,
+                                onChanged: (String? value) {
+                                  setState(() {
+                                    initialValueDropdown = value!;
+                                  });
+                                },
+                                style: const TextStyle(color: Colors.blue),
+                                selectedItemBuilder: (BuildContext context) {
+                                  return rangeTimeHomePageChart.map((Map<String, dynamic> value) {
+                                    return Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        value['title'],
+                                        style: labelTextStyle,
+                                      ),
+                                    );
+                                  }).toList();
+                                },
+                                items: rangeTimeHomePageChart.map<DropdownMenuItem<String>>((Map<String, dynamic> value) {
+                                  return DropdownMenuItem<String>(
+
+                                    value: value['value'],
+                                    child: Text(value['title'],style: defaultTextStyle),
+                                  );
+                                }).toList(),
+                              ),
                             ],
                           ),
                           //Row chart
