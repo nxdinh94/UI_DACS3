@@ -3,6 +3,7 @@ import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:practise_ui/Section/home_travel_section_item.dart';
 import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/constant/font.dart';
@@ -17,6 +18,7 @@ import 'package:practise_ui/widgets/charts/pie_chart.dart';
 import 'package:practise_ui/widgets/charts/collumn_chart.dart';
 import 'package:practise_ui/widgets/charts/custom_legend_column_chart.dart';
 import 'package:practise_ui/widgets/hidden_money_label.dart';
+import 'package:practise_ui/widgets/loading_animation.dart';
 import 'package:practise_ui/widgets/rich_text/right_arrow_rich_text.dart';
 import 'package:practise_ui/widgets/rich_text/vnd_rich_text.dart';
 import 'package:practise_ui/widgets/spendingLimit/spendingLimitItems.dart';
@@ -26,7 +28,6 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../../constant/server_url.dart';
 import '../../constant/share_prefercence_key.dart';
 import '../../models/collum_chart_model.dart';
-
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -82,6 +83,15 @@ class _HomePageState extends State<HomePage> {
       await Provider.of<AppProvider>(context, listen: false).saveCashFlowCateApi();
     }
   }
+  Future<void> onRefreshData ()async{
+    await Provider.of<AppProvider>(context, listen: false).getAccountWalletType();
+    await Provider.of<UserProvider>(context, listen:  false).getAllAccountWallet();
+    await Provider.of<UserProvider>(context, listen:  false).getMeProvider();
+    await Provider.of<ChartProvider>(context, listen:  false).getExpenseRecordForChartProvider(defaultUrlForChart);
+    await Provider.of<UserProvider>(context, listen: false).getAllExpenseRecordForNoteHistoryProvider(rangeTimeData[0]['value']);
+    await Provider.of<UserProvider>(context, listen: false)
+        .getAllExpenseRecordForNoteHistoryProvider(rangeTimeData[0]['value']);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -91,20 +101,16 @@ class _HomePageState extends State<HomePage> {
           children: [
             Expanded(
               child: CustomMaterialIndicator(
+
                 onRefresh: () async {
-                  await Provider.of<AppProvider>(context, listen: false).getAccountWalletType();
-                  await Provider.of<UserProvider>(context, listen:  false).getAllAccountWallet();
-                  await Provider.of<UserProvider>(context, listen:  false).getMeProvider();
-                  await Provider.of<ChartProvider>(context, listen:  false).getExpenseRecordForChartProvider(defaultUrlForChart);
-                  await Provider.of<UserProvider>(context, listen: false).getAllExpenseRecordForNoteHistoryProvider(rangeTimeData[0]['value']);
-                  await Provider.of<UserProvider>(context, listen: false)
-                      .getAllExpenseRecordForNoteHistoryProvider(rangeTimeData[0]['value']);
+                  await onRefreshData();
                 },
                 indicatorBuilder: (BuildContext context, IndicatorController controller) {
                   return LoadingAnimationWidget.hexagonDots(
                     color: primaryColor,
-                    size: 30);
-                  },
+                    size: 30
+                  );
+                },
                 child: ListView(
                   children: [
                     Container(
@@ -134,12 +140,15 @@ class _HomePageState extends State<HomePage> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   IconButton(
-                                      onPressed: (){
-
+                                      onPressed: () async{
+                                        context.loaderOverlay.show();
+                                        await onRefreshData();
+                                        Future.delayed(const Duration(milliseconds: 1500),(){
+                                          context.loaderOverlay.hide();
+                                        });
                                       },
                                       icon: const Icon(
                                         Icons.refresh, color: secondaryColor, size: 29,
-
                                       )
                                   ),
                                   IconButton(
@@ -291,13 +300,7 @@ class _HomePageState extends State<HomePage> {
                                   builder: (context, value, child)  {
                                     final List<CollumChartModel> dataColumnChart  = value.filteredColumnChartDataHomePage;
                                     if(value.isLoading){
-                                      return SizedBox(
-                                        height: 400,
-                                        child: LoadingAnimationWidget.inkDrop(
-                                          color: primaryColor,
-                                          size: 80,
-                                        ),
-                                      );
+                                      return const LoadingAnimation();
                                     }
                                     if(dataColumnChart.isEmpty){
                                       return const SizedBox(

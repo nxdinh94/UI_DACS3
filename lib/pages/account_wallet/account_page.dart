@@ -54,11 +54,12 @@ class _AccountPageState extends State<AccountPage> {
         body:  Consumer<UserProvider>(
           builder: (context, value, child){
             List<dynamic> accountWalletList = value.accountWalletList;
-            return accountWalletList.isNotEmpty? HaveAccountCase(accountWalletData: accountWalletList):
-            const EmptyValueScreen(
-              title: 'Bạn chưa có tài khoản nào',
-            );
-          }
+            return accountWalletList.isNotEmpty?
+                  HaveAccountCase(accountWalletData: accountWalletList):
+                  const EmptyValueScreen(
+                    title: 'Bạn chưa có tài khoản nào',
+                  );
+            }
         ),
         floatingActionButton: FloatingActionButton(
           onPressed: (){

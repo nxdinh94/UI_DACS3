@@ -10,8 +10,9 @@ import 'package:practise_ui/providers/auth_provider.dart';
 import 'package:practise_ui/providers/chart_provider.dart';
 import 'package:practise_ui/providers/user_provider.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';
+import 'package:practise_ui/widgets/loading_animation.dart';
 import 'package:provider/provider.dart';
-
+import 'package:loader_overlay/loader_overlay.dart';
 void main() {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
@@ -55,20 +56,28 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue.shade400),
-        useMaterial3: true,
-        unselectedWidgetColor: Colors.grey,
-      ),
-      home: Container(
-        color: primaryColor,
-        child: GestureDetector(
-          onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-          child: SafeArea(
-            child: AuthMiddleware(
-              child: CustomRouter(), // Use CustomRouter as home
+    return GlobalLoaderOverlay(
+      useDefaultLoading: false,
+      overlayWidgetBuilder: (_){
+        return const Center(
+            child: LoadingAnimation(iconSize: 50)
+        );
+      },
+      child: MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          colorScheme: ColorScheme.fromSeed(seedColor: Colors.lightBlue.shade400),
+          useMaterial3: true,
+          unselectedWidgetColor: Colors.grey,
+        ),
+        home: Container(
+          color: primaryColor,
+          child: GestureDetector(
+            onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+            child: SafeArea(
+              child: AuthMiddleware(
+                child: CustomRouter(), // Use CustomRouter as home
+              ),
             ),
           ),
         ),
