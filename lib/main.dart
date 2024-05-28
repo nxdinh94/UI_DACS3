@@ -63,6 +63,14 @@ class _MyAppState extends State<MyApp> {
             child: LoadingAnimation(iconSize: 50)
         );
       },
+      overlayColor: backgroundColor.withOpacity(1),
+      overlayWholeScreen: false,
+      switchInCurve: Curves.easeIn,
+      overlayWidth: 100,
+      overlayHeight: 100,
+      duration: const Duration(milliseconds: 200),
+      reverseDuration: const Duration(milliseconds: 200),
+
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         theme: ThemeData(
