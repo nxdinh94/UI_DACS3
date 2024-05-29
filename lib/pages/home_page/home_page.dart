@@ -37,21 +37,19 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool isShowMoney = true;
-  String initialValueDropdown ='';
-  String initialTitleDropdown = '';
+  String defaultRangeTimeChartHomePage ='';
   String defaultUrlForChart = '';
   @override
   void initState() {
     super.initState();
-    initialValueDropdown = rangeTimeHomePageChart[2]['value'];
-    initialTitleDropdown = rangeTimeHomePageChart[2]['title'];
-    defaultUrlForChart = '$PORT/app/expense-record-for-statistics/$initialValueDropdown';
-
+    defaultRangeTimeChartHomePage = rangeTimeHomePageChart[2]['value'];
+    defaultUrlForChart = '$PORT/app/expense-record-for-statistics/$defaultRangeTimeChartHomePage';
     //get cashflowData from cache in homepage
     fetchDataCashFlow().whenComplete((){
       Provider.of<AppProvider>(context, listen: false).getAllCashFlowCache();
     });
     fetchDataCashFlowCate().whenComplete(() async {
+      Provider.of<AppProvider>(context, listen: false).changeUrlGetExpenseRecordForChartProvider(defaultUrlForChart);
       Provider.of<AppProvider>(context, listen: false).getAllCashFlowCateCache();
 
       //start all necessary provider
@@ -142,10 +140,11 @@ class _HomePageState extends State<HomePage> {
                                   IconButton(
                                       onPressed: () async{
                                         context.loaderOverlay.show();
-                                        await onRefreshData();
-                                        Future.delayed(const Duration(milliseconds: 1500),(){
+
+                                        Future.delayed(const Duration(milliseconds: 1000),(){
                                           context.loaderOverlay.hide();
                                         });
+                                        await onRefreshData();
                                       },
                                       icon: const Icon(
                                         Icons.refresh, color: secondaryColor, size: 29,
@@ -252,17 +251,19 @@ class _HomePageState extends State<HomePage> {
                                 dropdownColor: secondaryColor,
                                 elevation: 0,
                                 isDense: true,
-                                value: initialValueDropdown,
+                                value: defaultRangeTimeChartHomePage,
                                 onChanged: (String? value) async {
                                   setState(() {
-                                    initialValueDropdown = value!;
+                                    defaultRangeTimeChartHomePage = value!;
                                   });
                                   if(value! == 'all'){
                                     defaultUrlForChart = '$PORT/app/expense-record-for-statistics';
                                   }else {
                                     defaultUrlForChart = '$PORT/app/expense-record-for-statistics/$value';
                                   }
+
                                   await Provider.of<ChartProvider>(context, listen:  false).getExpenseRecordForChartProvider(defaultUrlForChart);
+                                  Provider.of<AppProvider>(context, listen: false).changeUrlGetExpenseRecordForChartProvider(defaultUrlForChart);
 
                                 },
                                 style: const TextStyle(color: Colors.blue),
@@ -380,7 +381,6 @@ class _HomePageState extends State<HomePage> {
                                                             fontSize: textBig,
                                                             iconSize: textSize,
                                                             color: textColor)
-
                                                       ],
                                                     )
                                                   ],
@@ -398,7 +398,7 @@ class _HomePageState extends State<HomePage> {
                                   builder: (context, value, child){
                                     Map<String, double> data = value.filteredSpendingDataForPieChartHomePage;
                                     return Visibility(
-                                      visible: data.isNotEmpty,
+                                      visible: data.isNotEmpty && !value.isLoading,
                                       child: Padding(
                                         padding: const EdgeInsets.only(left: 22),
                                         child: MyPieChart(dataMap: data),

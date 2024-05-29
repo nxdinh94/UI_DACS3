@@ -5,6 +5,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/widgets/custom_popup_menu.dart';
+import 'package:practise_ui/widgets/rich_text/vnd_rich_text.dart';
 import 'package:provider/provider.dart';
 
 import '../../constant/color.dart';
@@ -125,13 +126,14 @@ class _HaveAccountCaseState extends State<HaveAccountCase> {
                   text: TextSpan(
                   text: 'Tổng tiền: ', style: richText1,
                   children: [
-                    TextSpan(text: formatCurrencyVND(totalMoney), style: const  TextStyle(fontWeight: FontWeight.bold)),
                     WidgetSpan(
                       alignment: PlaceholderAlignment.middle,
-                      child: SvgPicture.asset(
-                        'assets/svg/dong-svg-repo.svg', width: 15,
-                        colorFilter: const ColorFilter.mode(Colors.black , BlendMode.srcIn),
-                      ),
+                      child: VndRichText(
+                        value: totalMoney,
+                        fontWeight: FontWeight.w700,
+                        iconSize: 17,
+                        fontSize: textBig,
+                      )
                     ),
                   ],
                   ),

@@ -1,14 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:practise_ui/providers/user_provider.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';
+import 'package:practise_ui/widgets/rich_text/vnd_rich_text.dart';
 import 'package:provider/provider.dart';
 
 import '../../../constant/color.dart';
 import '../../../constant/font.dart';
-import '../../../utils/function/currency_format.dart';
 import '../../../utils/function/format_iso_date_to_date.dart';
 import '../../../widgets/back_toolbar_button.dart';
-import '../../../widgets/vnd_icon.dart';
 class DetailCashflowCategoryParent extends StatefulWidget {
   const DetailCashflowCategoryParent({super.key, required this.data});
   final Map<String, dynamic> data;
@@ -21,7 +20,6 @@ class _DetailCashflowCategoryParentState extends State<DetailCashflowCategoryPar
   List<dynamic> subItem = [];
   List<List> transformData = [];//[[a, a. a], [b,b],[c,c,c]]
   double totalMoney = 0;
-
 
   List<dynamic> allWalletUserData = [];
   String iconWallet = '';
@@ -54,6 +52,8 @@ class _DetailCashflowCategoryParentState extends State<DetailCashflowCategoryPar
     // Extract the values from the map and return as a list of lists
     return elementGroups.values.toList();
   }
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -102,26 +102,23 @@ class _DetailCashflowCategoryParentState extends State<DetailCashflowCategoryPar
                               color: textColor, fontSize: textSize, fontWeight: FontWeight.w500),),
                           ],
                       ),
-                      trailing: RichText(
-                        text: TextSpan(
-                            text: formatCurrencyVND(totalMoney),
-                            style: const TextStyle(fontSize: textSize, color: spendingMoneyColor),
-                            children: const [
-                              WidgetSpan(
-                                  child: VndIcon(color: spendingMoneyColor, size: textSmall),
-                                  alignment: PlaceholderAlignment.middle
-                              )
-                            ]
-                        ),
+                      trailing: VndRichText(
+                        value: totalMoney,
+                        fontSize: textSize, color: spendingMoneyColor,
+                        iconSize: 16,
                       ),
                       controlAffinity: ListTileControlAffinity.leading,
                       children: e.map((e1){
                         return  ListTile(
-                          onTap: (){
-                            CustomNavigationHelper.router.push(
+                          onTap: ()async{
+                             bool result =await CustomNavigationHelper.router.push(
                               '${CustomNavigationHelper.homePath}/${CustomNavigationHelper.updateWorkSpacePath}',
                               extra: e1
-                            );
+                             ) as bool;
+                             if(!context.mounted){return;}
+                             if(result){
+                               Navigator.pop(context);
+                             }
                           },
                           leading: const SizedBox(),
                           subtitle: Text(e1['description'], style: const TextStyle(color: labelColor, fontSize: textSmall),) ,
@@ -130,17 +127,9 @@ class _DetailCashflowCategoryParentState extends State<DetailCashflowCategoryPar
                             crossAxisAlignment: CrossAxisAlignment.end,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              RichText(
-                                text: TextSpan(
-                                    text: formatCurrencyVND(double.parse(e1['amount_of_money'][r'$numberDecimal'])),
-                                    style: const TextStyle(fontSize: textSize, color: spendingMoneyColor),
-                                    children:  const [
-                                      WidgetSpan(
-                                          child: VndIcon(color: spendingMoneyColor, size: textSmall),
-                                          alignment: PlaceholderAlignment.middle
-                                      )
-                                    ]
-                                ),
+                              VndRichText(
+                                value: double.parse(e1['amount_of_money'][r'$numberDecimal']) ,
+                                color: spendingMoneyColor, iconSize: 16, fontSize: textSize,
                               ),
                               const SizedBox(height: 3),
                               Padding(
@@ -151,7 +140,6 @@ class _DetailCashflowCategoryParentState extends State<DetailCashflowCategoryPar
                                     Text(nameWallet, style: const TextStyle(color: labelColor, fontSize: 12)),
                                     const SizedBox(width: 2),
                                     Image.asset(iconWallet, width: 18),
-
                                   ],
                                 ),
                               )

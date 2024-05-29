@@ -27,6 +27,8 @@ class AppProvider extends ChangeNotifier {
   List<dynamic> _bank = [];
   List<dynamic> get bank =>_bank;
 
+  String _urlGetExpenseRecordForChart = '';
+  String get  urlGetExpenseRecordForChart  => _urlGetExpenseRecordForChart;
 
   //call api and save to cache
   Future<void> saveCashFlowApi() async {
@@ -79,6 +81,9 @@ class AppProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-
+  void changeUrlGetExpenseRecordForChartProvider(String url){
+    _urlGetExpenseRecordForChart = url;
+    notifyListeners();
+  }
 
 }

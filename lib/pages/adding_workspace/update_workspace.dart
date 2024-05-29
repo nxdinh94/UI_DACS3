@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/constant/divider.dart';
@@ -48,7 +49,7 @@ class _UpdateWorkspaceState extends State<UpdateWorkspace> {
   Map<String, dynamic> cashFlowCategoryData = {};
   List<dynamic> cashFlowFiltered = [];
   String initialMoney = '';
-  
+  String urlGetExpenseRecordForChartProvider = '';
   // all value;
   late String idCashFlowCate = '';
   final TextEditingController moneyEditTextController = TextEditingController();
@@ -127,6 +128,7 @@ class _UpdateWorkspaceState extends State<UpdateWorkspace> {
   }
   @override
   void initState() {
+    urlGetExpenseRecordForChartProvider = context.read<AppProvider>().urlGetExpenseRecordForChart;
     currentDate = DateTime.parse( widget.dataToUpdate['occur_date']);
     _selectedDate = DateFormat('yyyy-MM-dd').format(currentDate);
     cashFlowData = context.read<AppProvider>().cashFlowData;
@@ -223,124 +225,127 @@ class _UpdateWorkspaceState extends State<UpdateWorkspace> {
                     selectedItem: onSelectedDropdownItem,
                   ),
           ),
-    centerTitle: true,
-    actions: [
-      GestureDetector(
-        onTap: ()async{
-          Map<String, dynamic> result = await Provider.of<UserProvider>(context, listen: false)
-              .deleteExpenseRecordProvider(widget.dataToUpdate['_id']);
-          if(result['status'] == '200'){
-            showCustomSuccessToast(context, result['result'], duration: 2);
-            // await Provider.of<ChartProvider>(context, listen:  false).getExpenseRecordForChartProvider(rangeTimeData[0]['value']);
-            await Provider.of<UserProvider>(context, listen: false)
-                .getAllExpenseRecordByAccountWalletProvider( widget.dataToUpdate['money_account_id'],rangeTimeData[0]['value']);
-            Navigator.pop(context);
-          }else {
-            showCustomErrorToast(context, result['result'], 2);
-
-          }
-        },
-        child: Padding(
-          padding: const EdgeInsets.only(right: 18),
-          child: SvgPicture.asset('assets/svg/trash.svg', width: 22),
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.only(right: 15),
-        child: GestureDetector(
-          onTap: () async {
-            Map<String, String> dataToSubmit = {
-              // required field
-              'expense_record_id' : widget.dataToUpdate['_id'],
-              'cash_flow_category_id': idCashFlowCate,
-              'amount_of_money': moneyEditTextController.text,
-              'money_account_id': idChosenAccountWallet,
-
-              'occur_date': _selectedDate,
-              'trip_or_event': eventEditTextController.text,
-              'description': descriptEditTextController.text,
-              'report' : isNotIncludeInReport.toString(),
-            };
-            if( idCashFlowCate.isNotEmpty &&
-              moneyEditTextController.text.isNotEmpty&&
-              idChosenAccountWallet.isNotEmpty
-            ){
-              //if have borrow_to_pay
-              if(cashFlowType.toLowerCase().contains('chi tiền') ||
-                nameCashFlowCate.toLowerCase().contains('cho vay')||
-                nameCashFlowCate.toLowerCase().contains('trả nợ')
-              ){
-              if(isBorrowToPay == 1){
-                dataToSubmit['borrow_to_pay'] = isBorrowToPay.toString();
-              }else {
-                dataToSubmit.remove('borrow_to_pay');
-              }
-              }else {
-                dataToSubmit.remove('borrow_to_pay');
-              }
-              //if have fee
-              if(cashFlowType.toLowerCase().contains('chi tiền')
-                || nameCashFlowCate.toLowerCase().contains('cho vay')
-                || nameCashFlowCate.toLowerCase().contains('cho vay')
-              ){
-                if(isFee){
-                  String id = idCostIncuredCategory;
-                  dataToSubmit['cost_incurred'] = costIncurredEditTextController.text;
-                  dataToSubmit['cost_incurred_category_id'] = id;
+          centerTitle: true,
+          actions: [
+            GestureDetector(
+              onTap: ()async{
+                Map<String, dynamic> result = await Provider.of<UserProvider>(context, listen: false)
+                    .deleteExpenseRecordProvider(widget.dataToUpdate['_id']);
+                if(result['status'] == '200'){
+                  showCustomSuccessToast(context, result['result'], duration: 2);
+                  //get latest data
+                  await Provider.of<ChartProvider>(context, listen:  false).getExpenseRecordForChartProvider(urlGetExpenseRecordForChartProvider);
+                  await Provider.of<UserProvider>(context, listen: false)
+                      .getAllExpenseRecordByAccountWalletProvider( widget.dataToUpdate['money_account_id'],rangeTimeData[0]['value']);
+                  Navigator.pop(context, true);
                 }else {
-                  dataToSubmit.remove('cost_incurred');
-                  dataToSubmit.remove('cost_incurred_category_id');
+                  showCustomErrorToast(context, result['result'], 2);
                 }
-              }else {
-                dataToSubmit.remove('cost_incurred');
-                dataToSubmit.remove('cost_incurred_category_id');
-              }
-
-              if(!cashFlowType.toLowerCase().contains('tiền')){
-                dataToSubmit.remove('trip_or_event');
-              }
-              if(
-                cashFlowType.toLowerCase().contains('chi tiền')||
-                nameCashFlowCate.toLowerCase().contains('cho vay')
-              ){
-                dataToSubmit['pay_for_who'] = contactPerson;
-              }
-              if(
-                cashFlowType.toLowerCase().contains('thu tiền')||
-                nameCashFlowCate.toLowerCase().contains('đi vay')
-              ){
-                dataToSubmit['collect_from_who'] = contactPerson;
-              }
-              }else {
-                if(idCashFlowCate.isEmpty){
-                  showCustomErrorToast(context, 'Hạng mục không được trống', 1);
-              }
-              if(moneyEditTextController.text.isEmpty){
-                setState(() {alertOnNullMoneyTextField = true;});
-              }
-              if(idChosenAccountWallet.isEmpty){
-                showCustomErrorToast(context, 'Ví không được trống', 1);
-              }
-                return;
-              }
-              Map<String, dynamic> result = await Provider.of<UserProvider>(context, listen: false).updateExpenseRecordProvider(dataToSubmit);
-              if(result['status'] == '200'){
-                showCustomSuccessToast(context, result['result'], duration: 1);
-                Navigator.pop(context);
-              }else {
-                showCustomErrorToast(context, result['result'], 1);
-              }
-            },
-            child: SvgPicture.asset(
-              'assets/svg/tick.svg',
-              colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-              width: 38, // Adjust the width as needed
-              height: 38, // Adjust the height as needed
+              },
+              child: Padding(
+                padding: const EdgeInsets.only(right: 18),
+                child: SvgPicture.asset('assets/svg/trash.svg', width: 22),
+              ),
             ),
-          ),
-        ),
+            Padding(
+              padding: const EdgeInsets.only(right: 15),
+              child: GestureDetector(
+                onTap: () async {
+                  Map<String, String> dataToSubmit = {
+                    // required field
+                    'expense_record_id' : widget.dataToUpdate['_id'],
+                    'cash_flow_category_id': idCashFlowCate,
+                    'amount_of_money': moneyEditTextController.text,
+                    'money_account_id': idChosenAccountWallet,
 
-        ],
+                    'occur_date': _selectedDate,
+                    'trip_or_event': eventEditTextController.text,
+                    'description': descriptEditTextController.text,
+                    'report' : isNotIncludeInReport.toString(),
+                  };
+                  if( idCashFlowCate.isNotEmpty &&
+                    moneyEditTextController.text.isNotEmpty&&
+                    idChosenAccountWallet.isNotEmpty
+                  ){
+                    //if have borrow_to_pay
+                    if(cashFlowType.toLowerCase().contains('chi tiền') ||
+                      nameCashFlowCate.toLowerCase().contains('cho vay')||
+                      nameCashFlowCate.toLowerCase().contains('trả nợ')
+                    ){
+                    if(isBorrowToPay == 1){
+                      dataToSubmit['borrow_to_pay'] = isBorrowToPay.toString();
+                    }else {
+                      dataToSubmit.remove('borrow_to_pay');
+                    }
+                    }else {
+                      dataToSubmit.remove('borrow_to_pay');
+                    }
+                    //if have fee
+                    if(cashFlowType.toLowerCase().contains('chi tiền')
+                      || nameCashFlowCate.toLowerCase().contains('cho vay')
+                      || nameCashFlowCate.toLowerCase().contains('cho vay')
+                    ){
+                      if(isFee){
+                        String id = idCostIncuredCategory;
+                        dataToSubmit['cost_incurred'] = costIncurredEditTextController.text;
+                        dataToSubmit['cost_incurred_category_id'] = id;
+                      }else {
+                        dataToSubmit.remove('cost_incurred');
+                        dataToSubmit.remove('cost_incurred_category_id');
+                      }
+                    }else {
+                      dataToSubmit.remove('cost_incurred');
+                      dataToSubmit.remove('cost_incurred_category_id');
+                    }
+
+                    if(!cashFlowType.toLowerCase().contains('tiền')){
+                      dataToSubmit.remove('trip_or_event');
+                    }
+                    if(
+                      cashFlowType.toLowerCase().contains('chi tiền')||
+                      nameCashFlowCate.toLowerCase().contains('cho vay')
+                    ){
+                      dataToSubmit['pay_for_who'] = contactPerson;
+                    }
+                    if(
+                      cashFlowType.toLowerCase().contains('thu tiền')||
+                      nameCashFlowCate.toLowerCase().contains('đi vay')
+                    ){
+                      dataToSubmit['collect_from_who'] = contactPerson;
+                    }
+                    }else {
+                      if(idCashFlowCate.isEmpty){
+                        showCustomErrorToast(context, 'Hạng mục không được trống', 1);
+                    }
+                    if(moneyEditTextController.text.isEmpty){
+                      setState(() {alertOnNullMoneyTextField = true;});
+                    }
+                    if(idChosenAccountWallet.isEmpty){
+                      showCustomErrorToast(context, 'Ví không được trống', 1);
+                    }
+                      return;
+                    }
+                    Map<String, dynamic> result = await Provider.of<UserProvider>(context, listen: false).updateExpenseRecordProvider(dataToSubmit);
+                    if(result['status'] == '200'){
+                      showCustomSuccessToast(context, result['result'], duration: 1);
+                      await Provider.of<ChartProvider>(context, listen:  false).getExpenseRecordForChartProvider(urlGetExpenseRecordForChartProvider);
+                      await Provider.of<UserProvider>(context, listen: false)
+                          .getAllExpenseRecordByAccountWalletProvider( widget.dataToUpdate['money_account_id'],rangeTimeData[0]['value']);
+                      Navigator.pop(context, true);
+                    }else {
+                      showCustomErrorToast(context, result['result'], 1);
+                    }
+                  },
+                  child: SvgPicture.asset(
+                    'assets/svg/tick.svg',
+                    colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                    width: 38, // Adjust the width as needed
+                    height: 38, // Adjust the height as needed
+                  ),
+                ),
+              ),
+
+          ],
         ),
         body: Container(
           color: backgroundColor,
