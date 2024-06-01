@@ -344,7 +344,6 @@ class _UpdateWorkspaceState extends State<UpdateWorkspace> {
                   ),
                 ),
               ),
-
           ],
         ),
         body: Container(

@@ -28,6 +28,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import '../../constant/server_url.dart';
 import '../../constant/share_prefercence_key.dart';
 import '../../models/collum_chart_model.dart';
+import '../../widgets/dialog_ask_user_accept_policy.dart';
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -39,9 +40,12 @@ class _HomePageState extends State<HomePage> {
   bool isShowMoney = true;
   String defaultRangeTimeChartHomePage ='';
   String defaultUrlForChart = '';
+  String defaultTitleRangeTimeChartHomePage='';
+
   @override
   void initState() {
     super.initState();
+    defaultTitleRangeTimeChartHomePage = rangeTimeHomePageChart[2]['title'];
     defaultRangeTimeChartHomePage = rangeTimeHomePageChart[2]['value'];
     defaultUrlForChart = '$PORT/app/expense-record-for-statistics/$defaultRangeTimeChartHomePage';
     //get cashflowData from cache in homepage
@@ -49,19 +53,21 @@ class _HomePageState extends State<HomePage> {
       Provider.of<AppProvider>(context, listen: false).getAllCashFlowCache();
     });
     fetchDataCashFlowCate().whenComplete(() async {
-      Provider.of<AppProvider>(context, listen: false).changeUrlGetExpenseRecordForChartProvider(defaultUrlForChart);
       Provider.of<AppProvider>(context, listen: false).getAllCashFlowCateCache();
 
       //start all necessary provider
+      Provider.of<AppProvider>(context, listen: false).changeUrlGetExpenseRecordForChartProvider(defaultUrlForChart);
       Provider.of<AppProvider>(context, listen: false).getAccountWalletType();
-      Provider.of<AppProvider>(context, listen:  false).getBank();
-      Provider.of<UserProvider>(context, listen:  false).getAllAccountWallet();
+      await Provider.of<AppProvider>(context, listen:  false).getBank();
+      await Provider.of<UserProvider>(context, listen:  false).getMeProvider();
+      await Provider.of<UserProvider>(context, listen:  false).getAllAccountWallet();
       await Provider.of<ChartProvider>(context, listen:  false)
           .getExpenseRecordForChartProvider(defaultUrlForChart);
       await Provider.of<UserProvider>(context, listen: false).getMeProvider();
       await Provider.of<UserProvider>(context, listen: false)
           .getAllExpenseRecordForNoteHistoryProvider(rangeTimeData[0]['value']);
     });
+
   }
   // if cache empty, fetch data api, then save to cache
   Future<void> fetchDataCashFlow() async {
@@ -125,14 +131,17 @@ class _HomePageState extends State<HomePage> {
                               contentPadding: EdgeInsets.zero,
                               dense: true,
                               title: Consumer<UserProvider>(
-                                  builder: (context, value, child) => Text(
-                                    overflow: TextOverflow.ellipsis,
-                                    'Hello ${value.meData['name']??'Anonymous'}!',
-                                    style: const TextStyle(
-                                        color: secondaryColor,
-                                        fontSize: textBig
-                                    ),
-                                  )
+                                  builder: (context, value, child){
+                                    Map<String, dynamic> meData = value.meData;
+                                    return Text(
+                                      overflow: TextOverflow.ellipsis,
+                                      'Hello ${meData['name']??'Anonymous'}!',
+                                      style: const TextStyle(
+                                          color: secondaryColor,
+                                          fontSize: textBig
+                                      ),
+                                    );
+                                  }
                               ),
                               trailing: Row(
                                 mainAxisSize: MainAxisSize.min,
@@ -140,7 +149,6 @@ class _HomePageState extends State<HomePage> {
                                   IconButton(
                                       onPressed: () async{
                                         context.loaderOverlay.show();
-
                                         Future.delayed(const Duration(milliseconds: 1000),(){
                                           context.loaderOverlay.hide();
                                         });
@@ -252,16 +260,16 @@ class _HomePageState extends State<HomePage> {
                                 elevation: 0,
                                 isDense: true,
                                 value: defaultRangeTimeChartHomePage,
-                                onChanged: (String? value) async {
+                                onChanged: (String? time) async {
+
                                   setState(() {
-                                    defaultRangeTimeChartHomePage = value!;
+                                    defaultRangeTimeChartHomePage = time!;
                                   });
-                                  if(value! == 'all'){
+                                  if(time == 'all'){
                                     defaultUrlForChart = '$PORT/app/expense-record-for-statistics';
                                   }else {
-                                    defaultUrlForChart = '$PORT/app/expense-record-for-statistics/$value';
+                                    defaultUrlForChart = '$PORT/app/expense-record-for-statistics/$time';
                                   }
-
                                   await Provider.of<ChartProvider>(context, listen:  false).getExpenseRecordForChartProvider(defaultUrlForChart);
                                   Provider.of<AppProvider>(context, listen: false).changeUrlGetExpenseRecordForChartProvider(defaultUrlForChart);
 
@@ -280,7 +288,7 @@ class _HomePageState extends State<HomePage> {
                                 },
                                 items: rangeTimeHomePageChart.map<DropdownMenuItem<String>>((Map<String, dynamic> value) {
                                   return DropdownMenuItem<String>(
-                                    value: value['value'],
+                                    value: '${value['value']}',
                                     child: Text(value['title'],style: defaultTextStyle),
                                   );
                                 }).toList(),
@@ -378,9 +386,10 @@ class _HomePageState extends State<HomePage> {
                                                             color: textColor, fontWeight: FontWeight.bold,
                                                           ),
                                                         ): const HiddenMoneyLabel(
-                                                            fontSize: textBig,
-                                                            iconSize: textSize,
-                                                            color: textColor)
+                                                          fontSize: textBig,
+                                                          iconSize: textSize,
+                                                          color: textColor
+                                                        )
                                                       ],
                                                     )
                                                   ],

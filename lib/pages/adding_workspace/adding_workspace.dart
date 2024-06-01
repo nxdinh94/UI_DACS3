@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:practise_ui/constant/color.dart';
@@ -16,6 +17,7 @@ import 'package:practise_ui/widgets/adding_workspace/dropdown_adding_workspace.d
 import 'package:practise_ui/widgets/adding_workspace/pick_contact_listtitle.dart';
 import 'package:provider/provider.dart';
 import '../../widgets/adding_workspace/expand_input_adding_space.dart';
+import '../../widgets/dialog_ask_user_accept_policy.dart';
 import '../../widgets/input_money_textfield.dart';
 import '../../widgets/listtitle_textfield.dart';
 
@@ -38,6 +40,8 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
   late String nameCashFlowCate = '';
   late bool alertOnNullMoneyTextField = false;
   late bool isFee = false;
+  Map<String, dynamic> userData = {};
+
 
   // all value;
   late String idCashFlowCate = '';
@@ -119,6 +123,12 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
   }
   @override
   void initState() {
+    //if user doesnot accept policy
+    userData = context.read<UserProvider>().meData;
+    if(userData['agree_policy'] == 0){
+      SchedulerBinding.instance.addPostFrameCallback((_) =>
+          showDialogAskUserAccepPolicy(context));
+    }
     cashFlowData = context.read<AppProvider>().cashFlowData;
     if(cashFlowData.isNotEmpty){
       currentCashFlowOption = cashFlowData[0];
@@ -136,10 +146,6 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
     super.initState();
   }
 
-  @override
-  void dispose() {
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -234,8 +240,8 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
                     ){
                       dataToSubmit['collect_from_who'] = contactPerson;
                     }
-                    
-                   
+
+
 
                   }else {
                     if(idCashFlowCate.isEmpty){
