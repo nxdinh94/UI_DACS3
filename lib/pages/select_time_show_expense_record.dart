@@ -46,9 +46,7 @@ class _SelectTimeShowExpenseRecordState extends State<SelectTimeShowExpenseRecor
                   children: [
                     ListTile(
                       onTap: (){
-
-                        print(e['value']);
-
+                        Navigator.pop(context, e);
                       },
                       title: Text(e['title']),
                       titleTextStyle: defaultTextStyle,

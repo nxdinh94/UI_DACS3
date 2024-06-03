@@ -48,20 +48,16 @@ class _NotehistoryState extends State<Notehistory> {
             GestureDetector(
               behavior: HitTestBehavior.opaque,
               onTap: ()async{
-                String result = await CustomNavigationHelper.router.push(
+                Map<String, dynamic> result = await CustomNavigationHelper.router.push(
                     '${CustomNavigationHelper.homePath}/'
-                        '${CustomNavigationHelper.selectTimeShowExpenseRecordPath}') as String;
+                        '${CustomNavigationHelper.selectTimeShowExpenseRecordPath}') as Map<String, dynamic>;
                 if(!context.mounted){return;}
                 if(result.isNotEmpty){
                   setState(() {
-                    if(result == 'all'){
-                      selectedTimeToShow = rangeTimeForExpenseRecord.first['title'];
-                    }else{
-                      selectedTimeToShow  = result;
-                    }
+                      selectedTimeToShow  = result['title'];
                   });
                   await Provider.of<UserProvider>(context, listen: false)
-                      .getAllExpenseRecordForNoteHistoryProvider(result);
+                      .getAllExpenseRecordForNoteHistoryProvider(result['value']);
                 }
               },
               child: Container(

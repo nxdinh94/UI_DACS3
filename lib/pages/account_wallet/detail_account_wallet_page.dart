@@ -61,21 +61,16 @@ class _DetailAccountWalletPageState extends State<DetailAccountWalletPage> {
               child: Center(
                 child: GestureDetector(
                   onTap: ()async{
-                    String result = await CustomNavigationHelper.router.push(
+                    Map<String, dynamic> result = await CustomNavigationHelper.router.push(
                         '${CustomNavigationHelper.accountWalletPath}/'
-                        '${CustomNavigationHelper.selectTimeShowExpenseRecordPath}') as String;
+                        '${CustomNavigationHelper.selectTimeShowExpenseRecordPath}') as Map<String, dynamic>;
                     if(!context.mounted){return;}
                     if(result.isNotEmpty){
                       setState(() {
-                        if(result == 'all'){
-                          selectedTimeToShow = rangeTimeForExpenseRecord.first['title'];
-                        }else{
-                          selectedTimeToShow  = result;
-                        }
-
+                        selectedTimeToShow = result['title'];
                       });
                       await Provider.of<UserProvider>(context, listen: false)
-                          .getAllExpenseRecordByAccountWalletProvider(widget.accountWalletData['_id'], result);
+                          .getAllExpenseRecordByAccountWalletProvider(widget.accountWalletData['_id'], result['value']);
                     }
                   },
                   child: RightArrowRichText(
