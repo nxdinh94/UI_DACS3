@@ -185,7 +185,7 @@ class _HomePageState extends State<HomePage> {
                                         crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           const RightArrowRichText(
-                                            text: 'Total balance', fontSize: textSize, color: labelColor,
+                                            text: 'Tổng số dư', fontSize: textSize, color: labelColor,
                                           ),
                                           Consumer<UserProvider>(
                                               builder: (context, value, child){
@@ -199,7 +199,8 @@ class _HomePageState extends State<HomePage> {
                                                   child: VndRichText(
                                                     value: totalMoney,
                                                     fontWeight: FontWeight.bold,
-                                                    fontSize: 30, color: spendingMoneyColor, iconSize: 24,
+                                                    fontSize: 30, iconSize: 24,
+                                                    color: totalMoney >=0 ? primaryColor:  spendingMoneyColor,
                                                   ),
                                                 ) : const HiddenMoneyLabel(
                                                     fontSize: 30, iconSize: 24, color: spendingMoneyColor);
