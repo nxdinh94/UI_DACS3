@@ -10,7 +10,8 @@ import 'package:provider/provider.dart';
 
 import '../../constant/color.dart';
 import '../../constant/font.dart';
-import '../../constant/range_time_value.dart';
+import '../../constant/range_time/range_time_for_expense_record.dart';
+import '../../constant/range_time/rangeTimeHomePageChart.dart';
 import '../../utils/function/show_the_day_of_the_week.dart';
 import '../../widgets/dash_line_painter/dash_line_painter.dart';
 class DetailAccountWalletPage extends StatefulWidget {
@@ -27,7 +28,7 @@ class _DetailAccountWalletPageState extends State<DetailAccountWalletPage> {
   String selectedTimeToShow = '';
   @override
   void initState() {
-    selectedTimeToShow = rangeTimeData.first['title'];
+    selectedTimeToShow = rangeTimeForExpenseRecord.first['title'];
 
     super.initState();
   }
@@ -67,7 +68,7 @@ class _DetailAccountWalletPageState extends State<DetailAccountWalletPage> {
                     if(result.isNotEmpty){
                       setState(() {
                         if(result == 'all'){
-                          selectedTimeToShow = rangeTimeData.first['title'];
+                          selectedTimeToShow = rangeTimeForExpenseRecord.first['title'];
                         }else{
                           selectedTimeToShow  = result;
                         }

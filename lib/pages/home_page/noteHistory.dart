@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 import 'package:practise_ui/constant/font.dart';
-import 'package:practise_ui/constant/range_time_value.dart';
+import 'package:practise_ui/constant/range_time/rangeTimeHomePageChart.dart';
 import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/widgets/rich_text/right_arrow_rich_text.dart';
 import 'package:provider/provider.dart';
 
 import '../../constant/color.dart';
+import '../../constant/range_time/range_time_for_expense_record.dart';
 import '../../providers/user_provider.dart';
 import '../../utils/custom_navigation_helper.dart';
 import '../../widgets/back_toolbar_button.dart';
@@ -23,7 +24,7 @@ class _NotehistoryState extends State<Notehistory> {
 
   @override
   void initState() {
-    selectedTimeToShow = rangeTimeData.first['title'];
+    selectedTimeToShow = rangeTimeForExpenseRecord.first['title'];
 
     super.initState();
   }
@@ -54,7 +55,7 @@ class _NotehistoryState extends State<Notehistory> {
                 if(result.isNotEmpty){
                   setState(() {
                     if(result == 'all'){
-                      selectedTimeToShow = rangeTimeData.first['title'];
+                      selectedTimeToShow = rangeTimeForExpenseRecord.first['title'];
                     }else{
                       selectedTimeToShow  = result;
                     }

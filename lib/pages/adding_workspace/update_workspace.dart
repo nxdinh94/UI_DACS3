@@ -17,7 +17,8 @@ import 'package:practise_ui/widgets/adding_workspace/dropdown_adding_workspace.d
 import 'package:practise_ui/widgets/adding_workspace/pick_contact_listtitle.dart';
 import 'package:practise_ui/widgets/back_toolbar_button.dart';
 import 'package:provider/provider.dart';
-import '../../constant/range_time_value.dart';
+import '../../constant/range_time/range_time_for_expense_record.dart';
+import '../../constant/range_time/rangeTimeHomePageChart.dart';
 import '../../providers/chart_provider.dart';
 import '../../widgets/adding_workspace/expand_input_update_adding_space.dart';
 import '../../widgets/input_money_textfield.dart';
@@ -236,7 +237,7 @@ class _UpdateWorkspaceState extends State<UpdateWorkspace> {
                   //get latest data
                   await Provider.of<ChartProvider>(context, listen:  false).getExpenseRecordForChartProvider(urlGetExpenseRecordForChartProvider);
                   await Provider.of<UserProvider>(context, listen: false)
-                      .getAllExpenseRecordByAccountWalletProvider( widget.dataToUpdate['money_account_id'],rangeTimeData[0]['value']);
+                      .getAllExpenseRecordByAccountWalletProvider( widget.dataToUpdate['money_account_id'],rangeTimeForExpenseRecord[0]['value']);
                   Navigator.pop(context, true);
                 }else {
                   showCustomErrorToast(context, result['result'], 2);
@@ -330,7 +331,7 @@ class _UpdateWorkspaceState extends State<UpdateWorkspace> {
                       showCustomSuccessToast(context, result['result'], duration: 1);
                       await Provider.of<ChartProvider>(context, listen:  false).getExpenseRecordForChartProvider(urlGetExpenseRecordForChartProvider);
                       await Provider.of<UserProvider>(context, listen: false)
-                          .getAllExpenseRecordByAccountWalletProvider( widget.dataToUpdate['money_account_id'],rangeTimeData[0]['value']);
+                          .getAllExpenseRecordByAccountWalletProvider( widget.dataToUpdate['money_account_id'],rangeTimeForExpenseRecord[0]['value']);
                       Navigator.pop(context, true);
                     }else {
                       showCustomErrorToast(context, result['result'], 1);

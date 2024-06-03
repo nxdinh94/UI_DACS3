@@ -10,7 +10,7 @@ import 'package:provider/provider.dart';
 
 import '../../constant/color.dart';
 import '../../constant/font.dart';
-import '../../constant/range_time_value.dart';
+import '../../constant/range_time/range_time_for_expense_record.dart';
 import '../../providers/user_provider.dart';
 import '../../utils/function/currency_format.dart';
 import '../../utils/custom_navigation_helper.dart';
@@ -155,7 +155,7 @@ class _HaveAccountCaseState extends State<HaveAccountCase> {
                         onTap:() async{
                           // get data before forward page
                           await Provider.of<UserProvider>(context, listen: false)
-                              .getAllExpenseRecordByAccountWalletProvider(widget.accountWalletData[index]['_id'], rangeTimeData.first['value']!);
+                              .getAllExpenseRecordByAccountWalletProvider(widget.accountWalletData[index]['_id'], rangeTimeForExpenseRecord.first['value']!);
 
                           CustomNavigationHelper.router.push(
                               '${CustomNavigationHelper.accountWalletPath}/${CustomNavigationHelper.detailAccountWalletPath}',

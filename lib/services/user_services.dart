@@ -167,7 +167,7 @@ class UserServices{
   Future<Map<String, dynamic>> getAllExpenseRecordByAccountWalletServices(String accessToken, String id, String time)async{
     Map<String, dynamic> result = {};
     try{
-      String url = '$PORT/app/expense-record/$id/$time';
+      String url = '$PORT/app/expense-record/money-account/$id/$time';
       final uri = Uri.parse(url);
       final res = await http.get(uri,
         headers: <String, String>{
@@ -189,7 +189,7 @@ class UserServices{
   Future<Map<String, dynamic>> getAllExpenseRecordForNoteHistoryServices(String accessToken, String time)async{
     Map<String, dynamic> result = {};
     try{
-      String url = '$PORT/app/expense-record/$time';
+      String url = '$PORT/app/expense-record/history/$time';
       final uri = Uri.parse(url);
       final res = await http.get(uri,
         headers: <String, String>{

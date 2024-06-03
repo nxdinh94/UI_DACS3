@@ -1,12 +1,12 @@
-import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/constant/divider.dart';
 import 'package:practise_ui/constant/font.dart';
-import 'package:practise_ui/constant/range_time_value.dart';
 import 'package:practise_ui/constant/side.dart';
+
+import '../constant/range_time/range_time_for_expense_record.dart';
+import '../widgets/back_toolbar_button.dart';
 class SelectTimeShowExpenseRecord extends StatefulWidget {
   const SelectTimeShowExpenseRecord({super.key});
 
@@ -34,60 +34,20 @@ class _SelectTimeShowExpenseRecordState extends State<SelectTimeShowExpenseRecor
         backgroundColor: primaryColor,
         centerTitle: true,
         title: const Text('Chọn thời gian', style: TextStyle(color: secondaryColor, fontSize: textSize, fontWeight: FontWeight.w500),),
-        leading: const SizedBox(),
-        actions: [
-          Padding(
-            padding: const EdgeInsets.only(right: 12.0),
-            child: Text('$selectedMonth-$selectedYear',
-              style: const TextStyle(color: secondaryColor, fontSize: textSize),),
-          )
-        ],
+        leading: const BackToolbarButton(),
+
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              color: Colors.grey.shade100,
-              padding: paddingAll12,
-              child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: listYear.map((String e){
-                    return TextButton(
-                        onPressed: (){
-                          setState(() {
-                            selectedYear = e;
-                          });
-                          if(selectedMonth != 'mm'){
-                            selectedDate = '$selectedMonth-$selectedYear';
-                            Navigator.pop(context, selectedDate);
-                          }
-                        },
-                        style: TextButton.styleFrom(
-                          elevation: 0,
-                          backgroundColor: primaryColor
-                        ),
-                        child: Text(e,
-                          style: const TextStyle(fontSize: textSmall,fontWeight: FontWeight.w500, color: secondaryColor),));
-                  }).toList()
-              ),
-            ),
             Column(
-              children: rangeTimeData.map((e){
+              children: rangeTimeForExpenseRecord.map((e){
                 return Column(
                   children: [
                     ListTile(
                       onTap: (){
-                        setState(() {
-                          selectedMonth = e['value'];
-                          selectedDate = '$selectedMonth-$selectedYear';
-                        });
-                        if(selectedMonth == 'all'){
-                          Navigator.pop(context, 'all');
-                          return;
-                        }
-                        if(selectedMonth != 'mm'){
-                          Navigator.pop(context, selectedDate);
-                        }
+
+                        print(e['value']);
 
                       },
                       title: Text(e['title']),

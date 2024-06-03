@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
 
 class MyBottomNavigationBar extends StatefulWidget {
@@ -22,6 +23,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
       ),
       bottomNavigationBar:  BottomNavigationBar(
         type: BottomNavigationBarType.fixed,
+
         currentIndex: widget.child.currentIndex,
         onTap: (index) {
           widget.child.goBranch(
@@ -34,7 +36,7 @@ class _MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
         unselectedItemColor: Colors.grey,
         selectedLabelStyle: const TextStyle(fontSize: 14),
         backgroundColor: Colors.white,
-        items: const <BottomNavigationBarItem>[
+        items: <BottomNavigationBarItem>[
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Trang chủ',

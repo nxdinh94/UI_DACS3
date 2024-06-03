@@ -7,7 +7,7 @@ import 'package:loader_overlay/loader_overlay.dart';
 import 'package:practise_ui/Section/home_travel_section_item.dart';
 import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/constant/font.dart';
-import 'package:practise_ui/constant/range_time_value.dart';
+import 'package:practise_ui/constant/range_time/rangeTimeHomePageChart.dart';
 import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/models/cashs_flow_model.dart';
 import 'package:practise_ui/providers/app_provider.dart';
@@ -25,10 +25,10 @@ import 'package:practise_ui/widgets/spendingLimit/spendingLimitItems.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
+import '../../constant/range_time/range_time_for_expense_record.dart';
 import '../../constant/server_url.dart';
 import '../../constant/share_prefercence_key.dart';
 import '../../models/collum_chart_model.dart';
-import '../../widgets/dialog_ask_user_accept_policy.dart';
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -65,7 +65,7 @@ class _HomePageState extends State<HomePage> {
           .getExpenseRecordForChartProvider(defaultUrlForChart);
       await Provider.of<UserProvider>(context, listen: false).getMeProvider();
       await Provider.of<UserProvider>(context, listen: false)
-          .getAllExpenseRecordForNoteHistoryProvider(rangeTimeData[0]['value']);
+          .getAllExpenseRecordForNoteHistoryProvider(rangeTimeForExpenseRecord[0]['value']);
     });
 
   }
@@ -92,9 +92,9 @@ class _HomePageState extends State<HomePage> {
     await Provider.of<UserProvider>(context, listen:  false).getAllAccountWallet();
     await Provider.of<UserProvider>(context, listen:  false).getMeProvider();
     await Provider.of<ChartProvider>(context, listen:  false).getExpenseRecordForChartProvider(defaultUrlForChart);
-    await Provider.of<UserProvider>(context, listen: false).getAllExpenseRecordForNoteHistoryProvider(rangeTimeData[0]['value']);
+    await Provider.of<UserProvider>(context, listen: false).getAllExpenseRecordForNoteHistoryProvider(rangeTimeForExpenseRecord[0]['value']);
     await Provider.of<UserProvider>(context, listen: false)
-        .getAllExpenseRecordForNoteHistoryProvider(rangeTimeData[0]['value']);
+        .getAllExpenseRecordForNoteHistoryProvider(rangeTimeForExpenseRecord[0]['value']);
   }
 
   @override
