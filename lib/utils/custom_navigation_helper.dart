@@ -16,15 +16,14 @@ import 'package:practise_ui/pages/home_page/noteHistory.dart';
 import 'package:practise_ui/pages/select_time_show_expense_record.dart';
 import 'package:practise_ui/pages/spending_limit/add_and_edit_spending_limit_page.dart';
 import 'package:practise_ui/pages/adding_workspace/adding_workspace.dart';
-import 'package:practise_ui/pages/another_page.dart';
+import 'package:practise_ui/pages/spending_limit/choose_wallet_page.dart';
 import 'package:practise_ui/pages/spending_limit/detail_spending_limit_item_page.dart';
 import 'package:practise_ui/pages/spending_limit/list_spending_limit_item_page.dart';
-import 'package:practise_ui/pages/repeat_cycle_page.dart';
+import 'package:practise_ui/pages/spending_limit/repeat_cycle_page.dart';
 import 'package:practise_ui/pages/report/report_page.dart';
 import 'package:practise_ui/pages/adding_workspace/select_cashflow_category_page.dart';
 import 'package:practise_ui/pages/user_profile.dart';
 import 'package:practise_ui/utils/bottom_navigation_bar.dart';
-
 import '../pages/home_page/home_page.dart';
 import '../pages/auth/signin_page.dart';
 import '../pages/auth/signup_page.dart';
@@ -95,7 +94,8 @@ class CustomNavigationHelper {
   static const String noteHistoryPath = 'noteHistory';
   static const String selectTimeShowExpenseRecordPath = 'selectTimeShowExpenseRecord';
 
-
+  static const String repeatTimeForSpendingLimitPath = 'repeatTimeForSpendingLimit';
+  static const String selectWalletSpendingPath = 'selectWalletSpending';
 
   factory CustomNavigationHelper() {
     return _instance;
@@ -293,8 +293,8 @@ class CustomNavigationHelper {
                         path: chooseAccountWalletPath,
                         pageBuilder: (context, state){
                           return getPage(
-                              child: ChooseAccountWalletPage(),
-                              state: state
+                            child: ChooseAccountWalletPage(),
+                            state: state
                           );
                         }
                     )
@@ -394,6 +394,26 @@ class CustomNavigationHelper {
               state: state,
             );
           },
+          routes: <RouteBase>[
+            GoRoute(
+              path: repeatTimeForSpendingLimitPath,
+              pageBuilder: (context, state){
+                return getPage(
+                  child: RepeatCyclePage(),
+                  state: state
+                );
+              }
+            ),
+            GoRoute(
+              path: selectWalletSpendingPath,
+              pageBuilder: (context, state) {
+                return getPage(
+                  child: ChooseWalletPage(),
+                  state: state
+                );
+              },
+            )
+          ]
         ),
         GoRoute(
           parentNavigatorKey: parentNavigatorKey,
@@ -415,16 +435,7 @@ class CustomNavigationHelper {
             );
           },
         ),
-        GoRoute(
-          parentNavigatorKey: parentNavigatorKey,
-          path: repeatCyclePath,
-          pageBuilder: (context, state) {
-            return getPage(
-              child: RepeatCyclePage(),
-              state: state,
-            );
-          },
-        ),
+
       ];
 
     router = GoRouter(

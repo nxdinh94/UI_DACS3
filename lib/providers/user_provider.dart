@@ -117,6 +117,13 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin{
     return result;
   }
 
+  Future<bool>addSpendingLimitProvider(Map<String, dynamic> dataToPass)async{
+    String accessToken = await getAccessToken();
+    bool result = false;
+    result = await userServices.addSpendingLimitService(accessToken, dataToPass);
+    return result;
+  }
+
   /// Makes `Counter` readable inside the devtools by listing all of its properties
   @override
   void debugFillProperties(DiagnosticPropertiesBuilder properties) {

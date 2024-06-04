@@ -13,6 +13,7 @@ import 'package:practise_ui/models/cashs_flow_model.dart';
 import 'package:practise_ui/providers/app_provider.dart';
 import 'package:practise_ui/providers/chart_provider.dart';
 import 'package:practise_ui/providers/user_provider.dart';
+import 'package:practise_ui/services/app_services.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';
 import 'package:practise_ui/widgets/charts/pie_chart.dart';
 import 'package:practise_ui/widgets/charts/collumn_chart.dart';
@@ -56,6 +57,7 @@ class _HomePageState extends State<HomePage> {
       Provider.of<AppProvider>(context, listen: false).getAllCashFlowCateCache();
 
       //start all necessary provider
+      await Provider.of<AppProvider>(context, listen: false).getRepeatTimeSpendingLimitProvider();
       Provider.of<AppProvider>(context, listen: false).changeUrlGetExpenseRecordForChartProvider(defaultUrlForChart);
       Provider.of<AppProvider>(context, listen: false).getAccountWalletType();
       await Provider.of<AppProvider>(context, listen:  false).getBank();
@@ -200,13 +202,11 @@ class _HomePageState extends State<HomePage> {
                                                     value: totalMoney,
                                                     fontWeight: FontWeight.bold,
                                                     fontSize: 30, iconSize: 24,
-                                                    color: totalMoney >=0 ? primaryColor:  spendingMoneyColor,
+                                                    color: totalMoney >= 0 ? primaryColor:  spendingMoneyColor,
                                                   ),
-                                                ) : const HiddenMoneyLabel(
-                                                    fontSize: 30, iconSize: 24, color: spendingMoneyColor);
+                                                ) : const HiddenMoneyLabel(fontSize: 30, iconSize: 24, color: spendingMoneyColor);
                                               }
                                           ),
-
                                         ],
                                       ),
                                       IconButton(

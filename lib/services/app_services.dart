@@ -81,5 +81,22 @@ class AppServices{
     return data;
   }
 
+  Future<List<dynamic>> getRepeatTimeSpendingLimitService()async{
+    List<dynamic> result = [];
+    final uri = Uri.parse(getRepeatTimeSpendingLimitApi);
+    try{
+      final res = await http.get(uri);
+      if(res.statusCode == 200){
+        final resultEncoded = jsonDecode(res.body);
+        result = resultEncoded['result'] as List<dynamic>;
+      }else{
+        result = [];
+      }
+    }catch(e){
+      throw Exception(e);
+    }
+
+    return result;
+  }
 
 }

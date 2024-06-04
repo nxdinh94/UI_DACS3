@@ -18,4 +18,7 @@ const labelTextStyle = TextStyle(
     fontSize: textSize,
     color: labelColor
 );
+const appBarTitleTextStyle = TextStyle(
+    color: secondaryColor,fontSize: textBig, fontWeight: FontWeight.w500
+);
 

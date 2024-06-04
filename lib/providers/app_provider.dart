@@ -30,6 +30,11 @@ class AppProvider extends ChangeNotifier {
   String _urlGetExpenseRecordForChart = '';
   String get  urlGetExpenseRecordForChart  => _urlGetExpenseRecordForChart;
 
+  List<dynamic> _repeatTimeSpendingLimit = [];
+  List<dynamic> get repeatTimeSpendingLimit => _repeatTimeSpendingLimit;
+
+
+
   //call api and save to cache
   Future<void> saveCashFlowApi() async {
     notifyListeners();
@@ -85,5 +90,12 @@ class AppProvider extends ChangeNotifier {
     _urlGetExpenseRecordForChart = url;
     notifyListeners();
   }
-
+  Future<void> getRepeatTimeSpendingLimitProvider() async {
+    final appServices = AppServices();
+    List<dynamic> result = await appServices.getRepeatTimeSpendingLimitService();
+    if(result.isNotEmpty){
+      _repeatTimeSpendingLimit = result;
+    }
+    notifyListeners();
+  }
 }

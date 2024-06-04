@@ -190,7 +190,6 @@ class _HaveAccountCaseState extends State<HaveAccountCase> {
                           representationIcon: SvgPicture.asset('assets/svg/three-dots-vertical.svg', width: 18),
                           selectedItemData: widget.accountWalletData[index] as Map<String, dynamic>,
                         ),
-
                       ),
                       const Divider(color: underLineColor, height: 0,)
                     ],

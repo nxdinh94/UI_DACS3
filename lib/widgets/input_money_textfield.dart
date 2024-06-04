@@ -25,7 +25,6 @@ class InputMoneyTextField extends StatefulWidget {
 class InputMoneyTextFieldState extends State<InputMoneyTextField> {
   @override
   void dispose() {
-    widget.controller.dispose();
     super.dispose();
   }
   @override

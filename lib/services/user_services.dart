@@ -270,7 +270,6 @@ class UserServices{
         },
         body: jsonEncode(dataToUpdate)
       );
-      print(res.body);
       if(res.statusCode == 200){
         result = {
           'status': '200',
@@ -298,7 +297,7 @@ class UserServices{
           'Authorization': 'Bearer $accessToken',
         },
       );
-      print(res.body);
+
       if(res.statusCode == 200){
         result = {
           'status': '200',
@@ -315,4 +314,56 @@ class UserServices{
     }
     return result;
   }
+
+  Future<bool> addSpendingLimitService(String accessToken, Map<String, dynamic> dataToPass)async{
+    bool result = false;
+    try{
+      final uri = Uri.parse(postSpendingLimitApi);
+      final res = await http.post(
+        uri,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $accessToken',
+          },
+          body: jsonEncode(dataToPass)
+      );
+      if(res.statusCode == 200){
+        result = true;
+      }else {
+        result = false;
+      }
+    }catch(e){
+      throw Exception(e);
+    }
+    return result;
+  }
+  Future<Map<String, dynamic>> getSpendingLimitService(String accessToken, String idExpenseRecord)async{
+    Map<String, dynamic> result ={};
+    try{
+      String url = '$PORT/app/delete-expense-record/$idExpenseRecord';
+      final uri = Uri.parse(url);
+      final res = await http.delete(uri,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+
+      if(res.statusCode == 200){
+        result = {
+          'status': '200',
+          'result': 'Xóa bản ghi thành công'
+        };
+      }else {
+        result = {
+          'status': '403',
+          'result': 'Xóa bản ghi không thành công'
+        };
+      }
+    }catch(e){
+      throw Exception('Error while delete expense record $e');
+    }
+    return result;
+  }
+
 }

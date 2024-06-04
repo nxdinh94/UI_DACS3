@@ -1,12 +1,16 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:practise_ui/constant/side.dart';
+import 'package:practise_ui/utils/custom_toast.dart';
+import 'package:practise_ui/widgets/back_toolbar_button.dart';
 import 'package:practise_ui/widgets/custom_stack_three_images.dart';
 import 'package:practise_ui/widgets/input_money_textfield.dart';
+import 'package:provider/provider.dart';
 import '../../constant/color.dart';
 import '../../constant/font.dart';
+import '../../providers/user_provider.dart';
 import '../../utils/custom_navigation_helper.dart';
 import '../../widgets/my_listtitle.dart';
 class AddAndEditSpendingLimitPage extends StatefulWidget {
@@ -17,13 +21,72 @@ class AddAndEditSpendingLimitPage extends StatefulWidget {
 }
 
 class _AddAndEditSpendingLimitPageState extends State<AddAndEditSpendingLimitPage> {
+  //all value
   late final TextEditingController _moneyInputController  = TextEditingController();
   late final TextEditingController _nameSpendingLitmit    = TextEditingController();
+  String firstDayOfMonth = '';
+  String endDayOfMonth = '';
+  String idRepeatTime = '665aff73d0afad070a580426';
+  List<String> idWalletList = [];
 
+
+  bool alertMoneyNull = false;
   bool isNextPeriod = false;
-  String repeat = 'Hằng tháng';
-  // A method that launches the SelectionScreen and awaits the result from
-// Navigator.pop.
+  String repeatTitle = 'Hàng tháng';
+  List<String> listNameOfWallet = [];
+
+  DateTime selectedStartDate = DateTime.now();
+
+  //Providing a day value of zero for the next month gives you the previous month's last day
+  DateTime nextMonth = DateTime.now();
+  DateTime selectedEndDate = DateTime.now();
+
+
+  Future<void> _selectStartDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedStartDate,
+        firstDate: DateTime(1901, 1),
+        lastDate: DateTime(2100));
+    if (picked != null && picked != selectedStartDate) {
+      setState(() {
+        String formattedDate = DateFormat('yyyy-MM-dd').format(picked);
+        firstDayOfMonth = formattedDate;
+      });
+    }
+  }
+  Future<void> _selectEndDate(BuildContext context) async {
+    final DateTime? picked = await showDatePicker(
+        context: context,
+        initialDate: selectedEndDate,
+        firstDate: DateTime(1901, 1),
+        lastDate: DateTime(2100));
+    if (picked != null && picked != selectedEndDate) {
+      setState(() {
+        String formattedDate = DateFormat('yyyy-MM-dd').format(picked);
+        endDayOfMonth = formattedDate;
+      });
+    }
+  }
+  @override
+  void initState() {
+    firstDayOfMonth = '${DateTime.now().year}-0${DateTime.now().month}-01';
+    selectedStartDate = DateFormat('yyyy-MM-dd').parse(firstDayOfMonth);
+    nextMonth = DateTime(DateTime.now().year, DateTime.now().month+1, 0);
+    endDayOfMonth = '${DateTime.now().year}-0${DateTime.now().month}-${nextMonth.day}';
+    selectedEndDate = DateFormat('yyyy-MM-dd').parse(endDayOfMonth);
+
+    //default is all id of accountWallet
+    List<dynamic> accountWalletList = context.read<UserProvider>().accountWalletList;
+
+    for(final e in accountWalletList){
+      idWalletList.add(e['_id']);
+      listNameOfWallet.add(e['name']);
+    }
+
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -31,38 +94,16 @@ class _AddAndEditSpendingLimitPageState extends State<AddAndEditSpendingLimitPag
     const sidePaddingRL = EdgeInsets.only(right: 12, left: 20);
     const marginRight =  EdgeInsets.only(right: 30);
     const trailing = Icon( Icons.keyboard_arrow_right, color: iconColor, size: 33);
-    String currentRoute = GoRouterState.of(context).uri.toString();
-    String title = '';
-    bool isAddingPage = false;
-    if(currentRoute=='/addSpendingLimit'){
-      title = 'Thêm hạn mức chi';
-      isAddingPage = true;
-    }else if(currentRoute == '/editSpendingLimit'){
-      title = 'Sửa hạn mức chi';
-      isAddingPage = false;
-    }
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: primaryColor,
-        title: Text(
-          title,
-          style: const TextStyle(
-              color: secondaryColor,fontSize: textBig, fontWeight: FontWeight.w500
-          ),
+        title: const Text(
+          "Thêm hạn mức chi",
+          style: TextStyle(color: secondaryColor,fontSize: textBig, fontWeight: FontWeight.w500),
         ),
         centerTitle: true,
-        leading: Builder(
-            builder: (BuildContext context){
-              return IconButton(
-                icon: const Icon(
-                    Icons.keyboard_arrow_left, color: secondaryColor, size: 43
-                ),
-                onPressed: () {
-                  CustomNavigationHelper.router.pop();
-                },
-              );
-            }
-        ),
+        leading: const BackToolbarButton(),
         actions: [
           GestureDetector(
             onTap: (){
@@ -81,12 +122,12 @@ class _AddAndEditSpendingLimitPageState extends State<AddAndEditSpendingLimitPag
       ),
       body: Container(
         color: backgroundColor,
-        height: 2000,
         child: ListView(
           children: [
             InputMoneyTextField(
               controller: _moneyInputController,
-              title: 'Số tiền'
+              title: 'Số tiền',
+              alertOnNull: alertMoneyNull,
             ),
             spaceColumn,
             Container(
@@ -117,8 +158,8 @@ class _AddAndEditSpendingLimitPageState extends State<AddAndEditSpendingLimitPag
                               height: 25 / textSize,
                               color: textColor,
                             ),
-                            decoration: InputDecoration(
-                              contentPadding: const EdgeInsets.symmetric(horizontal: 0, vertical: 12),
+                            decoration: const InputDecoration(
+                              contentPadding: EdgeInsets.symmetric(horizontal: 0, vertical: 12),
                               border: InputBorder.none,
                               hintText: 'Tên hạn mức',
                               hintStyle: TextStyle(color: labelColor)
@@ -132,9 +173,9 @@ class _AddAndEditSpendingLimitPageState extends State<AddAndEditSpendingLimitPag
                   divider,
                   MyStackListTile(
                     leading: StackThreeCircleImages(
-                      imageOne: 'assets/sampleImage/aolen.jpg',
-                      imageTwo: 'assets/sampleImage/girl1.jpg',
-                      imageThree: 'assets/sampleImage/girl3.jpg'
+                      imageOne: 'assets/icon_category/spending_money_icon/anUong/dinner.png',
+                      imageTwo: 'assets/icon_category/spending_money_icon/anUong/cutlery.png',
+                      imageThree: 'assets/icon_category/spending_money_icon/anUong/burger_parent.png'
                   ),
                     centerText: 'Tất cả hạng mục',
                     trailing: trailing,
@@ -146,9 +187,25 @@ class _AddAndEditSpendingLimitPageState extends State<AddAndEditSpendingLimitPag
                       'assets/svg/wallet.svg', height: 30,
                       colorFilter: const ColorFilter.mode(labelColor, BlendMode.srcIn),
                     ),
-                    centerText: 'Tất cả tài khoản',
+                    centerText: listNameOfWallet.join(", "),
                     trailing: trailing,
-                    onTap: (){}
+                    onTap: ()async{
+                      List<Map<String, dynamic>>result = await CustomNavigationHelper.router.push(
+                        '${CustomNavigationHelper.addSpendingLimitPath}/${CustomNavigationHelper.selectWalletSpendingPath}'
+                      ) as List<Map<String, dynamic>>;
+                      if(!context.mounted){return;}
+                      if(result.isNotEmpty){
+                        //reset value
+                        idWalletList.clear();
+                        listNameOfWallet.clear();
+                        setState(() {
+                          for(final e in result){
+                            idWalletList.add(e['_id']);
+                            listNameOfWallet.add(e['name']);
+                          }
+                        });
+                      }
+                    }
                   ),
                   divider,
                 ],
@@ -166,16 +223,20 @@ class _AddAndEditSpendingLimitPageState extends State<AddAndEditSpendingLimitPag
                       width: 25,
                       colorFilter: const ColorFilter.mode(labelColor, BlendMode.srcIn),
                     ),
-                    centerText: repeat,
+                    centerText: repeatTitle,
                     trailing: trailing,
                     onTap: () async {
-                      final result = await CustomNavigationHelper.router.push(
-                          CustomNavigationHelper.repeatCyclePath
-                      );
-                      if(!context.mounted) return;
-                      setState(() {
-                        repeat= result as String;
-                      });
+                      Map<String, dynamic > result =
+                      await CustomNavigationHelper.router.push(
+                          '${CustomNavigationHelper.addSpendingLimitPath}/${CustomNavigationHelper.repeatTimeForSpendingLimitPath}'
+                      ) as Map<String, dynamic>;
+                      if(!context.mounted){return;}
+                      if(result.isNotEmpty){
+                        setState(() {
+                          idRepeatTime = result['_id'];
+                          repeatTitle = result['name'];
+                        });
+                      }
                     }
                   ),
                   divider,
@@ -186,10 +247,10 @@ class _AddAndEditSpendingLimitPageState extends State<AddAndEditSpendingLimitPag
                         colorFilter: const ColorFilter.mode(labelColor, BlendMode.srcIn),
                       ),
                       title: 'Ngày bắt đầu',
-                      subtitle: Text('10/12/2022'),
+                      subtitle: Text(firstDayOfMonth),
                       trailing: const SizedBox(height: 0),
-                      onTap: (){
-
+                      onTap: () async{
+                        await _selectStartDate(context);
                       }
                   ),
                   divider,
@@ -200,9 +261,11 @@ class _AddAndEditSpendingLimitPageState extends State<AddAndEditSpendingLimitPag
                         colorFilter: const ColorFilter.mode(labelColor, BlendMode.srcIn),
                       ),
                       title: 'Ngày kết thúc',
-                      subtitle: Text('10/12/2022'),
+                      subtitle: Text(endDayOfMonth),
                       trailing:  const SizedBox(height: 0),
-                      onTap: (){}
+                      onTap: (){
+                        _selectEndDate(context);
+                      }
                   ),
                   divider,
                   spaceColumn6,
@@ -217,9 +280,8 @@ class _AddAndEditSpendingLimitPageState extends State<AddAndEditSpendingLimitPag
                         Switch(
                           value: isNextPeriod,
                           activeColor: switchColorButton,
-                          trackOutlineColor: const MaterialStatePropertyAll(Colors.transparent),
-
-                          thumbColor: const MaterialStatePropertyAll<Color>(secondaryColor),
+                          trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
+                          thumbColor: const WidgetStatePropertyAll<Color>(secondaryColor),
                           onChanged: (bool value) {
                             setState(() {
                               isNextPeriod= value;
@@ -229,34 +291,58 @@ class _AddAndEditSpendingLimitPageState extends State<AddAndEditSpendingLimitPag
                       ],
                     ),
                   ),
-                  Padding(
+                  const Padding(
                     padding: sidePadding,
                     child: Text(
                       'Số tiền dư hoặc bội chi sẽ được chuyển sang kì sau',
-                      style: TextStyle(
-                        color: labelColor,
-                        fontSize: textSmall,
-                      ),
+                      style: TextStyle(color: labelColor, fontSize: textSmall),
                     ),
                   ),
                   spaceColumn
                 ],
               ),
             ),
-            spaceColumn6,
             Container(
-              padding: sidePadding,
-              width: double.infinity,
+              padding: paddingAll12,
+              width: MediaQuery.of(context).size.width,
               child: ElevatedButton(
-                onPressed: (){},
+                onPressed: ()async{
+                  Map<String, dynamic> dataToSubmit = {
+                    'amount_of_money': _moneyInputController.text,
+                    'name': _nameSpendingLitmit.text,
+                    'money_account_id': idWalletList,
+                    'cash_flow_category_id':["663a2d6342d9f401e41b0901"],
+                    'repeat': idRepeatTime,
+                    'start_time': firstDayOfMonth,
+                    'end_time': endDayOfMonth
+                  };
+                  if(_nameSpendingLitmit.text.isNotEmpty && _moneyInputController.text.isNotEmpty){
+                    bool result = await Provider.of<UserProvider>(context, listen: false).addSpendingLimitProvider(dataToSubmit);
+                    if(result){
+                      showCustomSuccessToast(context, 'Đã ghi!');
+                    }
+                    setState(() {
+                      alertMoneyNull = false;
+                    });
+                  }else {
+                    showCustomErrorToast(context, 'Tên không được trống', 2);
+                    setState(() {
+                      alertMoneyNull = true;
+                    });
+                  }
+                },
                 style: ElevatedButton.styleFrom(
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(5)
                   ),
                   backgroundColor: primaryColor,
                 ),
-                child: const Text('LƯU', style:
-                  TextStyle(fontSize: textBig,color: secondaryColor)),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(vertical: 8.0),
+                  child: Text('LƯU', style:
+                    TextStyle(fontSize: textBig,color: secondaryColor),
+                  ),
+                ),
               ),
             )
           ],
