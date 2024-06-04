@@ -123,6 +123,12 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin{
     result = await userServices.addSpendingLimitService(accessToken, dataToPass);
     return result;
   }
+  Future<Map<String, dynamic>>getSpendingLimitProvider(String idSpendingLimit)async{
+    String accessToken = await getAccessToken();
+    Map<String, dynamic> result = {};
+    result = await userServices.getSpendingLimitService(accessToken, idSpendingLimit);
+    return result;
+  }
 
   /// Makes `Counter` readable inside the devtools by listing all of its properties
   @override

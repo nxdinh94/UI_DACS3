@@ -162,6 +162,8 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   IconButton(
                                       onPressed: ()async{
+
+                                        final result = await Provider.of<UserProvider>(context, listen: false).getSpendingLimitProvider('665edadb1a4b40ae2029d53b');
                                       },
                                       icon: const Icon(
                                         Icons.add_alert, color: secondaryColor, size: 26,

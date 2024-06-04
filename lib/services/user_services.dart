@@ -337,12 +337,12 @@ class UserServices{
     }
     return result;
   }
-  Future<Map<String, dynamic>> getSpendingLimitService(String accessToken, String idExpenseRecord)async{
+  Future<Map<String, dynamic>> getSpendingLimitService(String accessToken, String idSpendingLimit)async{
     Map<String, dynamic> result ={};
     try{
-      String url = '$PORT/app/delete-expense-record/$idExpenseRecord';
+      String url = '$PORT/app/spending-limit/$idSpendingLimit';
       final uri = Uri.parse(url);
-      final res = await http.delete(uri,
+      final res = await http.get(uri,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $accessToken',
@@ -350,14 +350,15 @@ class UserServices{
       );
 
       if(res.statusCode == 200){
+        Map<String, dynamic> jsonResult = jsonDecode(res.body);
         result = {
           'status': '200',
-          'result': 'Xóa bản ghi thành công'
+          'result': jsonResult['result'],
         };
       }else {
         result = {
           'status': '403',
-          'result': 'Xóa bản ghi không thành công'
+          'result': {}
         };
       }
     }catch(e){
