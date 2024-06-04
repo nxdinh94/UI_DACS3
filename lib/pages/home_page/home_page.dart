@@ -13,7 +13,6 @@ import 'package:practise_ui/models/cashs_flow_model.dart';
 import 'package:practise_ui/providers/app_provider.dart';
 import 'package:practise_ui/providers/chart_provider.dart';
 import 'package:practise_ui/providers/user_provider.dart';
-import 'package:practise_ui/services/app_services.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';
 import 'package:practise_ui/widgets/charts/pie_chart.dart';
 import 'package:practise_ui/widgets/charts/collumn_chart.dart';
@@ -113,8 +112,7 @@ class _HomePageState extends State<HomePage> {
                 },
                 indicatorBuilder: (BuildContext context, IndicatorController controller) {
                   return LoadingAnimationWidget.hexagonDots(
-                    color: primaryColor,
-                    size: 30
+                    color: primaryColor, size: 30
                   );
                 },
                 child: ListView(
@@ -163,7 +161,6 @@ class _HomePageState extends State<HomePage> {
                                   IconButton(
                                       onPressed: ()async{
 
-                                        final result = await Provider.of<UserProvider>(context, listen: false).getSpendingLimitProvider('665edadb1a4b40ae2029d53b');
                                       },
                                       icon: const Icon(
                                         Icons.add_alert, color: secondaryColor, size: 26,

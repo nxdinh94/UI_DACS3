@@ -11,7 +11,6 @@ import 'package:provider/provider.dart';
 import '../../constant/color.dart';
 import '../../constant/font.dart';
 import '../../constant/range_time/range_time_for_expense_record.dart';
-import '../../constant/range_time/rangeTimeHomePageChart.dart';
 import '../../utils/function/show_the_day_of_the_week.dart';
 import '../../widgets/dash_line_painter/dash_line_painter.dart';
 class DetailAccountWalletPage extends StatefulWidget {

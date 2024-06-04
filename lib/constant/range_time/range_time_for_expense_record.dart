@@ -151,7 +151,6 @@ String getRangeTimePreviousQuarter(){
     result = '01-01-${getCurrentYear()}/31-03-${getCurrentYear()}';
   }else if(previousQuarter == 2){
     result = '01-04-${getCurrentYear()}/31-06-${getCurrentYear()}';
-
   }else if(previousQuarter == 3){
     result = '01-07-${getCurrentYear()}/31-09-${getCurrentYear()}';
   }
@@ -167,6 +166,4 @@ List<Map<String, dynamic>> rangeTimeForExpenseRecord = [
   {'title': 'Quý trước', 'value': getRangeTimePreviousQuarter()},
   {'title': 'Năm nay', 'value': getRangeTimeCurrentYear()},
   {'title': 'Năm trước', 'value': getRangeTimePreviousYear()},
-
-  {'title': 'Tùy chọn', 'value': '8'},
 ];

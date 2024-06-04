@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/constant/font.dart';
 
+
 class ReportPage extends StatelessWidget {
   const ReportPage({super.key});
 
@@ -15,7 +16,6 @@ class ReportPage extends StatelessWidget {
         centerTitle: true,
         backgroundColor: primaryColor,
       ),
-
     );
   }
 }
