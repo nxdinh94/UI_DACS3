@@ -99,15 +99,14 @@ class _AddSpendingLimitPageState extends State<AddSpendingLimitPage> {
                         width: 250,
                         height: 52,
                         child: ElevatedButton(
-                            onPressed: (){
-                            },
-                            style: ElevatedButton.styleFrom(
-                                backgroundColor: Colors.orange
-                            ),
-                            child: const Text(
-                              'Nâng cấp Premium',
-                              style: TextStyle(color: secondaryColor, fontSize: textSize, fontWeight: FontWeight.w600),
-                            )
+                          onPressed: (){},
+                          style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.orange
+                          ),
+                          child: const Text(
+                            'Nâng cấp Premium',
+                            style: TextStyle(color: secondaryColor, fontSize: textSize, fontWeight: FontWeight.w600),
+                          )
                         ),
                       ),
                     )
@@ -391,13 +390,17 @@ class _AddSpendingLimitPageState extends State<AddSpendingLimitPage> {
                   if(_nameSpendingLitmit.text.isNotEmpty && _moneyInputController.text.isNotEmpty){
                     bool result = await Provider.of<UserProvider>(context, listen: false).addSpendingLimitProvider(dataToSubmit);
                     if(result){
-                      showCustomSuccessToast(context, 'Đã ghi!');
+                      showCustomSuccessToast(context, 'Đã ghi!', duration: 1);
+                      _moneyInputController.text ='';
+                      _nameSpendingLitmit.text ='';
+                    }else{
+                      showCustomErrorToast(context, 'Tên hạn mức tồn tại', 1);
                     }
                     setState(() {
                       alertMoneyNull = false;
                     });
                   }else {
-                    showCustomErrorToast(context, 'Tên không được trống', 2);
+                    showCustomErrorToast(context, 'Tên không được trống', 1);
                     setState(() {
                       alertMoneyNull = true;
                     });
