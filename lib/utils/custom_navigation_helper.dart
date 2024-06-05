@@ -14,7 +14,7 @@ import 'package:practise_ui/pages/home_page/detail_spending_revenue_statistical_
 import 'package:practise_ui/pages/home_page/detail_spending_revenue_statistical_page/detail_spending_revenue_statistical_page.dart';
 import 'package:practise_ui/pages/home_page/noteHistory.dart';
 import 'package:practise_ui/pages/select_time_show_expense_record.dart';
-import 'package:practise_ui/pages/spending_limit/add_and_edit_spending_limit_page.dart';
+import 'package:practise_ui/pages/spending_limit/add_spending_limit_page.dart';
 import 'package:practise_ui/pages/adding_workspace/adding_workspace.dart';
 import 'package:practise_ui/pages/spending_limit/choose_wallet_page.dart';
 import 'package:practise_ui/pages/spending_limit/detail_spending_limit_item_page.dart';
@@ -390,7 +390,7 @@ class CustomNavigationHelper {
           path: addSpendingLimitPath,
           pageBuilder: (context, state) {
             return getPage(
-              child: const AddAndEditSpendingLimitPage(),
+              child: const AddSpendingLimitPage(),
               state: state,
             );
           },
@@ -420,7 +420,7 @@ class CustomNavigationHelper {
           path: editSpendingLimitPath,
           pageBuilder: (context, state) {
             return getPage(
-              child: const AddAndEditSpendingLimitPage(),
+              child: const AddSpendingLimitPage(),
               state: state,
             );
           },

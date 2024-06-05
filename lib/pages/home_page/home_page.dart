@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loader_overlay/loader_overlay.dart';
-import 'package:practise_ui/Section/home_travel_section_item.dart';
 import 'package:practise_ui/constant/color.dart';
 import 'package:practise_ui/constant/font.dart';
 import 'package:practise_ui/constant/range_time/rangeTimeHomePageChart.dart';
@@ -106,7 +105,6 @@ class _HomePageState extends State<HomePage> {
           children: [
             Expanded(
               child: CustomMaterialIndicator(
-
                 onRefresh: () async {
                   await onRefreshData();
                 },
@@ -147,16 +145,16 @@ class _HomePageState extends State<HomePage> {
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
                                   IconButton(
-                                      onPressed: () async{
-                                        context.loaderOverlay.show();
-                                        Future.delayed(const Duration(milliseconds: 1000),(){
-                                          context.loaderOverlay.hide();
-                                        });
-                                        await onRefreshData();
-                                      },
-                                      icon: const Icon(
-                                        Icons.refresh, color: secondaryColor, size: 29,
-                                      )
+                                    onPressed: () async{
+                                      context.loaderOverlay.show();
+                                      Future.delayed(const Duration(milliseconds: 1000),(){
+                                        context.loaderOverlay.hide();
+                                      });
+                                      await onRefreshData();
+                                    },
+                                    icon: const Icon(
+                                      Icons.refresh, color: secondaryColor, size: 29,
+                                    )
                                   ),
                                   IconButton(
                                       onPressed: ()async{
@@ -479,30 +477,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     spaceColumn,
-                    //Du lịch
-                    Container(
-                      padding: paddingAll12,
-                      width: double.infinity,
-                      color: Colors.white,
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text("Du lịch", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 17)),
-                          HomeTravelSectionItem(),
-                          HomeTravelSectionItem(),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.end,
-                            children: [
-                              Text(
-                                  "Xem thêm >",
-                                  style: TextStyle(
-                                      color: Colors.blue
-                                  ))
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
+
                   ],
                 ),
               ),
