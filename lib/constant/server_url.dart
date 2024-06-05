@@ -1,5 +1,5 @@
 // 192.168.1.5 -> IPv4 address in your computer
-const String PORT = "http://192.168.1.137:4000";
+const String PORT = "http://192.168.1.138:4000";
 
 const String getCashFlowApi                 = '$PORT/app/get-cash-flow';
 const String getCashFlowCateApi             = '$PORT/app/get-cash-flow-category';
@@ -12,6 +12,8 @@ const String getRepeatTimeSpendingLimitApi     = '$PORT/admins/repeat-spending-l
 const String postAddingAccountMoney = '$PORT/app/add-money-account';
 const String postExpenseRecord      = '$PORT/app/add-expense-record';
 const String postSpendingLimitApi      = '$PORT/app/add-spending-limit';
+const String changePasswordApi      ='$PORT/users/change-password';
+
 
 const String updateAccountMoney     = '$PORT/app/update-money-account';
 const String updateMeApi            = '$PORT/users/update-me';

@@ -10,6 +10,7 @@ import 'package:practise_ui/pages/account_wallet/select_bank_page.dart';
 import 'package:practise_ui/pages/account_wallet/update_account_wallet_page.dart';
 import 'package:practise_ui/pages/adding_workspace/choose_account_wallet_page.dart';
 import 'package:practise_ui/pages/adding_workspace/update_workspace.dart';
+import 'package:practise_ui/pages/auth/change_password_page.dart';
 import 'package:practise_ui/pages/home_page/detail_spending_revenue_statistical_page/detail_cashflow_category_parent.dart';
 import 'package:practise_ui/pages/home_page/detail_spending_revenue_statistical_page/detail_spending_revenue_statistical_page.dart';
 import 'package:practise_ui/pages/home_page/noteHistory.dart';
@@ -96,6 +97,8 @@ class CustomNavigationHelper {
 
   static const String repeatTimeForSpendingLimitPath = 'repeatTimeForSpendingLimit';
   static const String selectWalletSpendingPath = 'selectWalletSpending';
+  static const String changePasswordPath = 'changePassword';
+
 
   factory CustomNavigationHelper() {
     return _instance;
@@ -334,9 +337,22 @@ class CustomNavigationHelper {
                     GoRoute(
                       path: userProfilePath,
                       pageBuilder: (context, state){
-                        return getPage(child: UserProfile(), state: state);
+                        return getPage(
+                          child: const UserProfile(),
+                          state: state
+                        );
                       }
-                    )
+                    ),
+                    GoRoute(
+                      path: changePasswordPath,
+                      pageBuilder: (context, state){
+                        return getPage(
+                          child: ChangePasswordPage(),
+                          state: state
+                        );
+                      }
+                    ),
+
                   ]
                 ),
               ],

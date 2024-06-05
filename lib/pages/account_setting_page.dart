@@ -173,7 +173,9 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                 _ListTitle(
                   title: 'Đổi mật khẩu',
                   onTap: () {
-
+                    CustomNavigationHelper.router.push(
+                      '${CustomNavigationHelper.accountSettingPath}/${CustomNavigationHelper.changePasswordPath}'
+                    );
                   },
                 ),
                 const Divider(height: 0,color: underLineColor,),

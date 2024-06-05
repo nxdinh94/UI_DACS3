@@ -103,17 +103,20 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin{
   Future<Map<String, dynamic>> updateMeProvider(Map<String, dynamic> dataToUpdate)async{
     String accessToken = await getAccessToken();
     Map<String, dynamic> result = await userServices.updateMeService(dataToUpdate, accessToken);
+    notifyListeners();
     return result;
   }
   Future<Map<String, dynamic>> updateExpenseRecordProvider(Map<String, dynamic> dataToUpdate)async{
     String accessToken = await getAccessToken();
     Map<String, dynamic> result = await userServices.updateExpenseRecordServices(dataToUpdate, accessToken);
+    notifyListeners();
     return result;
   }
   Future<Map<String, dynamic>> deleteExpenseRecordProvider(String idExpenseRecord)async{
     String accessToken = await getAccessToken();
     Map<String, dynamic> result = {};
     result = await userServices.deleteExpenseRecordService(accessToken, idExpenseRecord);
+    notifyListeners();
     return result;
   }
 
@@ -121,12 +124,21 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin{
     String accessToken = await getAccessToken();
     bool result = false;
     result = await userServices.addSpendingLimitService(accessToken, dataToPass);
+    notifyListeners();
     return result;
   }
   Future<Map<String, dynamic>>getSpendingLimitProvider(String idSpendingLimit)async{
     String accessToken = await getAccessToken();
     Map<String, dynamic> result = {};
     result = await userServices.getSpendingLimitService(accessToken, idSpendingLimit);
+    notifyListeners();
+    return result;
+  }
+  Future<bool>changePasswordProvider(Map<String, String> dataToUpdate)async{
+    String accessToken = await getAccessToken();
+    bool result = false;
+    result = await userServices.changePasswordSerive(accessToken, dataToUpdate);
+    notifyListeners();
     return result;
   }
 

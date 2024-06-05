@@ -35,6 +35,7 @@ class _ListTitleTextFieldState extends State<ListTitleTextField> {
       leading: widget.leading,
       horizontalTitleGap: widget.horizontalTitleGap,
       dense: true,
+
       contentPadding: EdgeInsets.only(left: widget.paddingLeftLeading,right: 18),
       title: TextField(
         controller: widget.controller,
@@ -52,6 +53,7 @@ class _ListTitleTextFieldState extends State<ListTitleTextField> {
           hintStyle:TextStyle(
               color: widget.alertWarming ? spendingMoneyColor :  labelColor
           ),
+
           suffixIcon: Visibility(
             visible: isSufficIconVisible,
             child: GestureDetector(

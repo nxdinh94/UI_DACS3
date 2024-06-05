@@ -366,5 +366,30 @@ class UserServices{
     }
     return result;
   }
+  Future<bool> changePasswordSerive(String accessToken, Map<String, String> dataToUpdate)async{
+    bool result = false;
+    try{
+      final uri = Uri.parse(changePasswordApi);
+      final res = await http.put(
+        uri,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken',
+        },
+        body: jsonEncode(dataToUpdate)
+      );
+      if(res.statusCode == 200){
+        result = true;
+      }else {
+        result = false;
+      }
+    }catch(e){
+      throw Exception(e);
+    }
+
+
+    return result;
+  }
+
 
 }
