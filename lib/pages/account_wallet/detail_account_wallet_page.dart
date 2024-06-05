@@ -269,7 +269,7 @@ class BodyOfPage extends StatelessWidget {
                                   child: ListTile(
                                     onTap: (){
                                       CustomNavigationHelper.router.push(
-                                        '${CustomNavigationHelper.accountWalletPath}/${CustomNavigationHelper.updateWorkSpacePath}',
+                                        CustomNavigationHelper.updateWorkSpacePath,
                                         extra: e
                                       );
                                     },

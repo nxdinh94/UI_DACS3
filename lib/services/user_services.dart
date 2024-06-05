@@ -201,7 +201,7 @@ class UserServices{
         Map<String, dynamic> jsonData = jsonDecode(res.body);
         result = {'result' : jsonData['result']};
       }else if(res.statusCode == 422){
-        result = {'errors': 'Thời gian không hợp lệ'};
+        result = {'result': null};
       }
     }catch(e){
       throw Exception('Error when fetching $e');

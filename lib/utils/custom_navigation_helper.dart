@@ -19,6 +19,7 @@ import 'package:practise_ui/pages/spending_limit/add_spending_limit_page.dart';
 import 'package:practise_ui/pages/adding_workspace/adding_workspace.dart';
 import 'package:practise_ui/pages/spending_limit/choose_wallet_page.dart';
 import 'package:practise_ui/pages/spending_limit/detail_spending_limit_item_page.dart';
+import 'package:practise_ui/pages/spending_limit/detail_spending_page.dart';
 import 'package:practise_ui/pages/spending_limit/list_spending_limit_item_page.dart';
 import 'package:practise_ui/pages/spending_limit/repeat_cycle_page.dart';
 import 'package:practise_ui/pages/report/report_page.dart';
@@ -91,13 +92,16 @@ class CustomNavigationHelper {
 
   static const String detailSpendingRevenueStatisticalPath = 'detailSpendingRevenueStatistical';
   static const String detailCashFlowCategoryParentPath = 'detailCashFlowCategoryParent';
-  static const String updateWorkSpacePath = 'updateWorkSpace';
+  static const String updateWorkSpacePath = '/updateWorkSpace';
   static const String noteHistoryPath = 'noteHistory';
   static const String selectTimeShowExpenseRecordPath = 'selectTimeShowExpenseRecord';
 
   static const String repeatTimeForSpendingLimitPath = 'repeatTimeForSpendingLimit';
   static const String selectWalletSpendingPath = 'selectWalletSpending';
   static const String changePasswordPath = 'changePassword';
+
+  static const String detailSpendingInSpendingLimitPath = 'detailSpendingInSpendingLimit';
+
 
 
   factory CustomNavigationHelper() {
@@ -139,18 +143,7 @@ class CustomNavigationHelper {
                         );
                       },
                     ),
-                    GoRoute(
-                      path: updateWorkSpacePath,
-                      pageBuilder: (context, state){
-                        Map<String, dynamic> dataFromExtra = state.extra as Map<String, dynamic>;
-                        return getPage(
-                          child: UpdateWorkspace(
-                            dataToUpdate: dataFromExtra,
-                          ),
-                          state: state
-                        );
-                      }
-                    ),
+
                     GoRoute(
                       path: detailCashFlowCategoryParentPath,
                       pageBuilder: (context, state) {
@@ -243,22 +236,10 @@ class CustomNavigationHelper {
                       }
                     ),
                     GoRoute(
-                        path: updateWorkSpacePath,
-                        pageBuilder: (context, state){
-                          Map<String, dynamic> dataFromExtra = state.extra as Map<String, dynamic>;
-                          return getPage(
-                              child: UpdateWorkspace(
-                                dataToUpdate: dataFromExtra,
-                              ),
-                              state: state
-                          );
-                        }
-                    ),
-                    GoRoute(
                       path: selectTimeShowExpenseRecordPath,
                       pageBuilder: (context, state) {
                         return getPage(
-                            child: SelectTimeShowExpenseRecord(),
+                            child: const SelectTimeShowExpenseRecord(),
                             state: state
                         );
                       },
@@ -401,6 +382,18 @@ class CustomNavigationHelper {
               state: state,
             );
           },
+          routes: <RouteBase>[
+            GoRoute(
+              path: detailSpendingInSpendingLimitPath,
+              pageBuilder: (context, state) {
+                List<List<dynamic>> dataFromExtra = state.extra as List<List<dynamic>>;
+                return getPage(
+                  child: DetailSpendingPage(transformData: dataFromExtra),
+                  state: state
+                );
+              },
+            )
+          ]
         ),
         GoRoute(
           parentNavigatorKey: parentNavigatorKey,
@@ -452,7 +445,18 @@ class CustomNavigationHelper {
             );
           },
         ),
-
+        GoRoute(
+            path: updateWorkSpacePath,
+            pageBuilder: (context, state){
+              Map<String, dynamic> dataFromExtra = state.extra as Map<String, dynamic>;
+              return getPage(
+                  child: UpdateWorkspace(
+                    dataToUpdate: dataFromExtra,
+                  ),
+                  state: state
+              );
+            }
+        ),
       ];
 
     router = GoRouter(

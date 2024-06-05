@@ -19,11 +19,9 @@ class _DetailCashflowCategoryParentState extends State<DetailCashflowCategoryPar
 
   List<dynamic> subItem = [];
   List<List> transformData = [];//[[a, a. a], [b,b],[c,c,c]]
-  double totalMoney = 0;
 
   List<dynamic> allWalletUserData = [];
-  String iconWallet = '';
-  String nameWallet = '';
+
   @override
   void initState() {
 
@@ -72,88 +70,106 @@ class _DetailCashflowCategoryParentState extends State<DetailCashflowCategoryPar
         centerTitle: true,
 
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          children: transformData.map((e){
-              // reset value each loop
-              totalMoney = 0;
-              // cal total money of each parent
-              for(var i in e){
-                totalMoney+=double.parse(i['amount_of_money'][r'$numberDecimal']);
+      body: BodyDetailCashflowCategoryParent(transformData: transformData, allWalletUserData: allWalletUserData),
+    );
+  }
+}
+
+class BodyDetailCashflowCategoryParent extends StatelessWidget {
+  const BodyDetailCashflowCategoryParent({
+    super.key,
+    required this.transformData,
+    required this.allWalletUserData,
+  });
+
+  final List<List> transformData;
+  final List allWalletUserData;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Column(
+        children: transformData.map((e){
+            // reset value each loop
+            double totalMoney = 0;
+            String iconWallet = '';
+            String nameWallet = '';
+            // cal total money of each parent
+            for(var i in e){
+              totalMoney+=double.parse(i['amount_of_money'][r'$numberDecimal']);
+            }
+            // find type of wallet
+            for(var i in allWalletUserData){
+              if(e[0]['money_account_id'] == i['_id']){
+                iconWallet = i['money_type_information']['icon'];
+                nameWallet = i['name'];
               }
-              // find type of wallet
-              for(var i in allWalletUserData){
-                if(e[0]['money_account_id'] == i['_id']){
-                  iconWallet = i['money_type_information']['icon'];
-                  nameWallet = i['name'];
-                }
-              }
-              return ColoredBox(
-                color: secondaryColor,
-                child: Column(
-                  children: [
-                    ExpansionTile(
-                      shape: const Border(),
-                      title: Row(
-                        children: [
-                          Image.asset(e[0]['icon'], width: 40),
-                          const SizedBox(width: 12,),
-                          Text(e[0]['name'], style: const TextStyle(
-                              color: textColor, fontSize: textSize, fontWeight: FontWeight.w500),),
-                          ],
-                      ),
-                      trailing: VndRichText(
-                        value: totalMoney,
-                        fontSize: textSize, color: spendingMoneyColor,
-                        iconSize: 16,
-                      ),
-                      controlAffinity: ListTileControlAffinity.leading,
-                      children: e.map((e1){
-                        return  ListTile(
-                          onTap: ()async{
-                             bool result =await CustomNavigationHelper.router.push(
-                              '${CustomNavigationHelper.homePath}/${CustomNavigationHelper.updateWorkSpacePath}',
-                              extra: e1
-                             ) as bool;
-                             if(!context.mounted){return;}
-                             if(result){
-                               Navigator.pop(context);
-                             }
-                          },
-                          leading: const SizedBox(),
-                          subtitle: Text(e1['description'], style: const TextStyle(color: labelColor, fontSize: textSmall),) ,
-                          title: Text(formatDate(e1['occur_date']), style: defaultTextStyle,),
-                          trailing: Column(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              VndRichText(
-                                value: double.parse(e1['amount_of_money'][r'$numberDecimal']) ,
-                                color: spendingMoneyColor, iconSize: 16, fontSize: textSize,
-                              ),
-                              const SizedBox(height: 3),
-                              Padding(
-                                padding: const EdgeInsets.only(right: 3.0),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(nameWallet, style: const TextStyle(color: labelColor, fontSize: 12)),
-                                    const SizedBox(width: 2),
-                                    Image.asset(iconWallet, width: 18),
-                                  ],
-                                ),
-                              )
-                            ],
-                          ),
-                        );
-                      }).toList(),
+            }
+            return ColoredBox(
+              color: secondaryColor,
+              child: Column(
+                children: [
+                  ExpansionTile(
+                    shape: const Border(),
+                    title: Row(
+                      children: [
+                        Image.asset(e[0]['icon'], width: 40),
+                        const SizedBox(width: 12,),
+                        Text(e[0]['name'], style: const TextStyle(
+                            color: textColor, fontSize: textSize, fontWeight: FontWeight.w500),),
+                        ],
                     ),
-                    const Divider(height: 0, color: underLineColor,)
-                  ],
-                ),
-              );
-          }).toList(),
-        ),
+                    trailing: VndRichText(
+                      value: totalMoney,
+                      fontSize: textSize, color: spendingMoneyColor,
+                      iconSize: 16,
+                    ),
+                    controlAffinity: ListTileControlAffinity.leading,
+                    children: e.map((e1){
+                      return  ListTile(
+                        onTap: ()async{
+                           bool result =await CustomNavigationHelper.router.push(
+                            CustomNavigationHelper.updateWorkSpacePath,
+                            extra: e1
+                           ) as bool;
+                           if(!context.mounted){return;}
+                           if(result){
+                             Navigator.pop(context);
+                           }
+                        },
+                        leading: const SizedBox(),
+                        subtitle: Text(e1['description']??'', style: const TextStyle(color: labelColor, fontSize: textSmall),) ,
+                        title: Text(formatDate(e1['occur_date']), style: defaultTextStyle,),
+                        trailing: Column(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            VndRichText(
+                              value: double.parse(e1['amount_of_money'][r'$numberDecimal']) ,
+                              color: spendingMoneyColor, iconSize: 16, fontSize: textSize,
+                            ),
+                            const SizedBox(height: 3),
+                            Padding(
+                              padding: const EdgeInsets.only(right: 3.0),
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Text(nameWallet, style: const TextStyle(color: labelColor, fontSize: 12)),
+                                  const SizedBox(width: 2),
+                                  Image.asset(iconWallet, width: 18),
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      );
+                    }).toList(),
+                  ),
+                  const Divider(height: 0, color: underLineColor,)
+                ],
+              ),
+            );
+        }).toList(),
       ),
     );
   }

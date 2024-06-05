@@ -160,8 +160,7 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   IconButton(
                                       onPressed: ()async{
-                                        List<dynamic> result = Provider.of<UserProvider>(context, listen:  false).allSpendingLimit;
-                                        print(result);
+
                                       },
                                       icon: const Icon(
                                         Icons.add_alert, color: secondaryColor, size: 26,
@@ -266,6 +265,7 @@ class _HomePageState extends State<HomePage> {
                                   setState(() {
                                     defaultRangeTimeChartHomePage = time!;
                                   });
+                                  // print(time);
                                   if(time == 'all'){
                                     defaultUrlForChart = '$PORT/app/expense-record-for-statistics';
                                   }else {

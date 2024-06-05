@@ -26,8 +26,12 @@ class _SpendingLimitItemsState extends State<SpendingLimitItems> {
   String startTime = '';
   String endTime = '';
   int remainDay = 0;
+  double remainMoney = 0;
   String name = '';
   String id = '';
+  double initialMoney = 0;
+  double totalSpendingMoney = 0;
+  double spendingPercentage = 0;
   int dateTimeToSecondsSinceEpoch(DateTime dateTime) {
     return (dateTime.millisecondsSinceEpoch / 1000).round();
   }
@@ -52,8 +56,18 @@ class _SpendingLimitItemsState extends State<SpendingLimitItems> {
     startTime = DateFormat('dd/MM').format(startDate);
     endTime = DateFormat('dd/MM').format(endDate);
     isSpendingLimitOutOfDate =  onSpendingLimitOutOfDate(endDate);
+    initialMoney = double.parse(widget.itemSpendingLimit['amount_of_money'][r'$numberDecimal']) ;
+
     name = widget.itemSpendingLimit['name'];
     id = widget.itemSpendingLimit['_id'];
+    totalSpendingMoney = double.parse(widget.itemSpendingLimit['total_spending'][r'$numberDecimal']) ;
+    remainMoney = initialMoney - totalSpendingMoney;
+
+    if(totalSpendingMoney > initialMoney){
+      spendingPercentage = 1;
+    }else {
+      spendingPercentage = (totalSpendingMoney / initialMoney);
+    }
     //calculate remain day
     int endDay = endDate.day;
     if(isSpendingLimitOutOfDate){
@@ -79,10 +93,11 @@ class _SpendingLimitItemsState extends State<SpendingLimitItems> {
       behavior: HitTestBehavior.opaque,
       onTap: ()async{
         if(!isDetailSpendingLimitItemPage){
-          CustomNavigationHelper.router.push(
+        await Provider.of<UserProvider>(context, listen: false).getSpecificSpendingLimitProvider(id);
+
+        CustomNavigationHelper.router.push(
               CustomNavigationHelper.detailSpendingLimitItemPath, extra: widget.itemSpendingLimit
           );
-          await Provider.of<UserProvider>(context, listen: false).getSpecificSpendingLimitProvider(id);
         }
       },
       child: Column(
@@ -152,16 +167,16 @@ class _SpendingLimitItemsState extends State<SpendingLimitItems> {
           ),
           spaceColumn,
           MyProgressBar(
-            percentage: 0.29,
-            color: Colors.red,
+            percentage: spendingPercentage,
+            color: spendingPercentage >= 0.8 ? Colors.red : Colors.orangeAccent,
           ),
           spaceColumn,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text('Còn $remainDay ngày', style: TextStyle(fontSize: textSmall, color: labelColor)),
+              Text('Còn $remainDay ngày', style: const TextStyle(fontSize: textSmall, color: labelColor)),
               VndRichText(
-                value: 7000000, fontSize: textBig, color: textColor, iconSize: 16
+                value: remainMoney, fontSize: textBig, color: textColor, iconSize: 16
               ),
             ],
           ),

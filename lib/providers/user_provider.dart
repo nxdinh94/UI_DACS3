@@ -95,7 +95,7 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin{
   Future<void> getAllExpenseRecordForNoteHistoryProvider(String time)async{
     String accessToken = await getAccessToken();
     Map<String, dynamic> result =  await userServices.getAllExpenseRecordForNoteHistoryServices(accessToken, time);
-    if(result['result'] != {}){
+    if(result['result'] != null){
       _expenseRecordDataForNoteHistory =  result['result'];
     }
     notifyListeners();

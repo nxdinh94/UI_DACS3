@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import '../../constant/color.dart';
 import '../../constant/font.dart';
 import '../../providers/app_provider.dart';
-import '../../utils/custom_navigation_helper.dart';
 import '../../widgets/rounded_checkbox_icon.dart';
 
 class SelectAccountWalletTypePage extends StatefulWidget {
