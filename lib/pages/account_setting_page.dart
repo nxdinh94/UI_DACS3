@@ -4,11 +4,14 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/providers/user_provider.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter/services.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../constant/color.dart';
 import '../constant/font.dart';
 import '../providers/auth_provider.dart';
 import '../utils/custom_navigation_helper.dart';
+import '../utils/qr_code_scanner/qr_code_scanner.dart';
 class AccountSettingPage extends StatefulWidget {
   const AccountSettingPage({super.key});
 
@@ -17,6 +20,55 @@ class AccountSettingPage extends StatefulWidget {
 }
 
 class _AccountSettingPageState extends State<AccountSettingPage> {
+
+  void setResult(String result) {
+    scannerSuccessDialog(context, result);
+  }
+  Future<void> _launchUrl(uri) async {
+    if (!await launchUrl(uri)) {
+      throw Exception('Could not launch $uri');
+    }
+  }
+  Future<void> scannerSuccessDialog(BuildContext context, String result) {
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text('Quét QR thành công'),
+          content: GestureDetector(
+            onTap: (){
+              final uri = Uri.parse(result);
+              _launchUrl(uri);
+            },
+            child: Text(
+              result, style: defaultTextStyle
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Copy', style: defaultTextStyle,),
+              onPressed: () {
+                //result is a link
+                Clipboard.setData(ClipboardData(text: result));
+              },
+            ),
+            TextButton(
+              style: TextButton.styleFrom(
+                textStyle: Theme.of(context).textTheme.labelLarge,
+              ),
+              child: const Text('Thoát', style: defaultTextStyle),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
+        );
+      },
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -32,11 +84,11 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       GestureDetector(
-                          onTap: (){
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(content: Text('Processing Data')),
-                            );
-                          },
+                          onTap: () => Navigator.of(context).push(
+                            MaterialPageRoute(
+                              builder: (context) => QrCodeScanner(setResult: setResult),
+                            ),
+                          ),
                           child:  SvgPicture.asset(
                             "assets/svg/qrcode.svg",
                             height: 40,
