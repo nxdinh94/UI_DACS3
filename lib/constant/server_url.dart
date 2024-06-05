@@ -8,6 +8,7 @@ const String getAllAccountWalletApi         = '$PORT/app/get-money-account';
 const String getExpenseRecordForChartApi    = '$PORT/app/expense-record-for-statistics';
 const String getMeApi                       = '$PORT/users/me';
 const String getRepeatTimeSpendingLimitApi     = '$PORT/admins/repeat-spending-limit';
+const String getAllSpendingLimitApi     = '$PORT/app/spending-limit';
 
 const String postAddingAccountMoney = '$PORT/app/add-money-account';
 const String postExpenseRecord      = '$PORT/app/add-expense-record';

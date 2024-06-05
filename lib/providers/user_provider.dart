@@ -22,6 +22,16 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin{
   Map<String, dynamic> _meData = {};
   Map<String, dynamic> get meData => _meData;
 
+  bool _isGetAllSpendingLimitLoading = false;
+  bool get isGetAllSpendingLimitLoading => _isGetAllSpendingLimitLoading;
+
+  List<dynamic> _allSpendingLimit = [];
+  List<dynamic> get allSpendingLimit => _allSpendingLimit;
+
+  Map<String, dynamic> _specificSpendingLimit = {};
+  Map<String, dynamic> get specificSpendingLimit => _specificSpendingLimit;
+
+
 
   Future<String> getAccessToken()async{
     final SharedPreferences pref = await SharedPreferences.getInstance();
@@ -127,12 +137,30 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin{
     notifyListeners();
     return result;
   }
-  Future<Map<String, dynamic>>getSpendingLimitProvider(String idSpendingLimit)async{
+  Future<Map<String, dynamic>>getSpecificSpendingLimitProvider(String idSpendingLimit)async{
     String accessToken = await getAccessToken();
     Map<String, dynamic> result = {};
     result = await userServices.getSpendingLimitService(accessToken, idSpendingLimit);
+    if(result['status'] == '200'){
+      _specificSpendingLimit = result['result'];
+    }else {
+      _specificSpendingLimit = {};
+    }
     notifyListeners();
     return result;
+  }
+  Future<void>getAllSpendingLimitProvider()async{
+    String accessToken = await getAccessToken();
+    _isGetAllSpendingLimitLoading = true;
+    Map<String, dynamic> result = {};
+    result = await userServices.getAllSpendingLimitService(accessToken);
+    if(result['result'].toString() != '{}'){
+      _allSpendingLimit = result['result'];
+      _isGetAllSpendingLimitLoading = false;
+    }else{
+      _allSpendingLimit = [];
+    }
+    notifyListeners();
   }
   Future<bool>changePasswordProvider(Map<String, String> dataToUpdate)async{
     String accessToken = await getAccessToken();

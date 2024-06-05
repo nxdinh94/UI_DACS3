@@ -5,6 +5,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:practise_ui/constant/color.dart';
+import 'package:practise_ui/constant/divider.dart';
 import 'package:practise_ui/constant/font.dart';
 import 'package:practise_ui/constant/range_time/rangeTimeHomePageChart.dart';
 import 'package:practise_ui/constant/side.dart';
@@ -40,7 +41,6 @@ class _HomePageState extends State<HomePage> {
   String defaultRangeTimeChartHomePage ='';
   String defaultUrlForChart = '';
   String defaultTitleRangeTimeChartHomePage='';
-
   @override
   void initState() {
     super.initState();
@@ -66,6 +66,7 @@ class _HomePageState extends State<HomePage> {
       await Provider.of<UserProvider>(context, listen: false).getMeProvider();
       await Provider.of<UserProvider>(context, listen: false)
           .getAllExpenseRecordForNoteHistoryProvider(rangeTimeForExpenseRecord[0]['value']);
+      await Provider.of<UserProvider>(context, listen: false).getAllSpendingLimitProvider();
     });
 
   }
@@ -95,6 +96,7 @@ class _HomePageState extends State<HomePage> {
     await Provider.of<UserProvider>(context, listen: false).getAllExpenseRecordForNoteHistoryProvider(rangeTimeForExpenseRecord[0]['value']);
     await Provider.of<UserProvider>(context, listen: false)
         .getAllExpenseRecordForNoteHistoryProvider(rangeTimeForExpenseRecord[0]['value']);
+    await Provider.of<UserProvider>(context, listen: false).getAllSpendingLimitProvider();
   }
 
   @override
@@ -158,7 +160,8 @@ class _HomePageState extends State<HomePage> {
                                   ),
                                   IconButton(
                                       onPressed: ()async{
-
+                                        List<dynamic> result = Provider.of<UserProvider>(context, listen:  false).allSpendingLimit;
+                                        print(result);
                                       },
                                       icon: const Icon(
                                         Icons.add_alert, color: secondaryColor, size: 26,
@@ -446,7 +449,40 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           const Text('Hạn mức chi', style: textStyleForTitleSection),
                           spaceColumn,
-                          SpendingLimitItems(),
+                          Consumer<UserProvider>(
+                            builder: (context, value, child) {
+                              List<dynamic> spendingLimitList = value.allSpendingLimit;
+                              if(value.isGetAllSpendingLimitLoading){
+                                return const Center(
+                                  child: LoadingAnimation(
+                                    iconSize: 60,
+                                    containerHeight: 190,
+                                  ),
+                                );
+                              }
+                              if(spendingLimitList.isEmpty){
+                                return const SizedBox(
+                                  height: 150,
+                                  child: Center(
+                                    child: Text('Không có bản ghi', style: labelTextStyle),
+                                  ),
+                                );
+                              }
+                              return Column(
+                                children: spendingLimitList.map((e){
+                                  return Column(
+                                    children: [
+                                      defaultDivider,
+                                      Padding(
+                                        padding: const EdgeInsets.symmetric(vertical: 12.0),
+                                        child: SpendingLimitItems(itemSpendingLimit: e),
+                                      ),
+                                    ],
+                                  );
+                                }).toList()
+                              );
+                            },
+                          ),
                           spaceColumn,
                           GestureDetector(
                             behavior: HitTestBehavior.opaque,

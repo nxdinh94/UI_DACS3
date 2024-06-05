@@ -391,5 +391,34 @@ class UserServices{
     return result;
   }
 
+  Future<Map<String, dynamic>> getAllSpendingLimitService(String accessToken)async{
+    Map<String, dynamic> result ={};
+    try{
+      String url = '$PORT/app/spending-limit';
+      final uri = Uri.parse(url);
+      final res = await http.get(uri,
+        headers: <String, String>{
+          'Content-Type': 'application/json; charset=UTF-8',
+          'Authorization': 'Bearer $accessToken',
+        },
+      );
+
+      if(res.statusCode == 200){
+        Map<String, dynamic> jsonResult = jsonDecode(res.body);
+        result = {
+          'status': '200',
+          'result': jsonResult['result'],
+        };
+      }else {
+        result = {
+          'status': '403',
+          'result': {}
+        };
+      }
+    }catch(e){
+      throw Exception('Error while delete expense record $e');
+    }
+    return result;
+  }
 
 }

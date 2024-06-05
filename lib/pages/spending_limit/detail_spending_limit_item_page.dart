@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:practise_ui/constant/color.dart';
-import 'package:just_the_tooltip/just_the_tooltip.dart';
 import 'package:practise_ui/constant/font.dart';
 import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';
@@ -9,12 +8,11 @@ import 'package:practise_ui/widgets/back_toolbar_button.dart';
 import 'package:practise_ui/widgets/charts/area_chart.dart';
 import 'package:practise_ui/widgets/rich_text/vnd_rich_text.dart';
 import 'package:practise_ui/widgets/spendingLimit/spendingLimitItems.dart';
-import 'package:practise_ui/widgets/vnd_icon.dart';
 
 import '../../widgets/custom_tooltip.dart';
 class DetailSpendingLimitItem extends StatefulWidget {
-  const DetailSpendingLimitItem({super.key});
-
+  const DetailSpendingLimitItem({super.key, required this.dataToPassSpendingLimitItemWidget});
+  final Map<String, dynamic> dataToPassSpendingLimitItemWidget;
   @override
   State<DetailSpendingLimitItem> createState() => _DetailSpendingLimitItemState();
 }
@@ -73,7 +71,7 @@ class _DetailSpendingLimitItemState extends State<DetailSpendingLimitItem> {
               Container(
                 color: secondaryColor,
                 padding: paddingAll12,
-                child: SpendingLimitItems(),
+                child: SpendingLimitItems(itemSpendingLimit: widget.dataToPassSpendingLimitItemWidget),
               ),
               spaceColumn,
               Container(

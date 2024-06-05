@@ -395,8 +395,9 @@ class CustomNavigationHelper {
           parentNavigatorKey: parentNavigatorKey,
           path: detailSpendingLimitItemPath,
           pageBuilder: (context, state) {
+            Map<String, dynamic> dataFromExtra = state.extra as Map<String, dynamic>;
             return getPage(
-              child: const DetailSpendingLimitItem(),
+              child: DetailSpendingLimitItem(dataToPassSpendingLimitItemWidget: dataFromExtra),
               state: state,
             );
           },
