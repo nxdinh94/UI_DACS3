@@ -297,10 +297,10 @@ class _AddSpendingLimitPageState extends State<AddSpendingLimitPage> {
               width: MediaQuery.of(context).size.width,
               child: ElevatedButton(
                 onPressed: ()async{
-                  if(allSpendingLimit.length == 1){
-                    showLimitToAddDialog(context);
-                    return;
-                  }
+                  // if(allSpendingLimit.length == 1){
+                  //   showLimitToAddDialog(context);
+                  //   return;
+                  // }
                   Map<String, dynamic> dataToSubmit = {
                     'amount_of_money': _moneyInputController.text,
                     'name': _nameSpendingLitmit.text,

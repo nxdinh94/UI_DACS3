@@ -29,6 +29,7 @@ class _DetailSpendingPageState extends State<DetailSpendingPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: backgroundColor,
       appBar: AppBar(
         backgroundColor: primaryColor,
         title: const Text(

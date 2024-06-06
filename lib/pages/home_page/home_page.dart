@@ -31,6 +31,7 @@ import '../../constant/range_time/range_time_for_expense_record.dart';
 import '../../constant/server_url.dart';
 import '../../constant/share_prefercence_key.dart';
 import '../../models/collum_chart_model.dart';
+import '../../widgets/spendingLimit/empty_data_spending_limit_in_home_page.dart';
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
 
@@ -352,9 +353,10 @@ class _HomePageState extends State<HomePage> {
                                                             color: chartCollumn1, fontWeight: FontWeight.bold,
                                                           ),
                                                         ):const HiddenMoneyLabel(
-                                                            fontSize: 17,
-                                                            iconSize: textSmall,
-                                                            color: chartCollumn1)
+                                                          fontSize: 17,
+                                                          iconSize: textSmall,
+                                                          color: chartCollumn1
+                                                        )
                                                       ],
                                                     ),
                                                     spaceColumn,
@@ -463,54 +465,7 @@ class _HomePageState extends State<HomePage> {
                                 );
                               }
                               if(spendingLimitList.isEmpty){
-                                return SizedBox(
-                                  height: 90,
-                                  child: Center(
-                                    child: Column(
-                                      children: [
-                                        RichText(
-                                          textAlign: TextAlign.center,
-                                          text: const TextSpan(
-                                            text: 'Cùng ', style: labelTextStyle,
-                                            children: [
-                                              TextSpan(
-                                                text: 'Sổ thu chi MISA ',
-                                                style: TextStyle(fontSize: textSize, color: textColor, fontWeight: FontWeight.w600)
-                                              ),
-                                              TextSpan(
-                                                text: 'lập ra các hạn mức chi để quản lý chi tiêu tốt hơn nhé! ',
-                                                style: labelTextStyle
-                                              ),
-
-                                            ]
-                                          )
-                                        ),
-                                        spaceColumn,
-                                        GestureDetector(
-                                          onTap: (){
-                                            CustomNavigationHelper.router.push(
-                                                CustomNavigationHelper.addSpendingLimitPath
-                                            );
-                                          },
-                                          child: RichText(
-                                            text: const TextSpan(
-                                              style: TextStyle(color: primaryColor, fontSize: textSize),
-                                              children: [
-                                                WidgetSpan(
-                                                  child: Icon(Icons.add,color: primaryColor, size: 30,),
-                                                  alignment: PlaceholderAlignment.middle
-                                                ),
-                                                TextSpan(
-                                                  text: 'Thêm hạn mức chi',
-                                                )
-                                              ]
-                                            ),
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                );
+                                return const EmptyDataSpendingLimitInHomePage();
                               }
                               return Column(
                                 children: spendingLimitList.map((e){
@@ -557,7 +512,6 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                     spaceColumn,
-
                   ],
                 ),
               ),
@@ -567,3 +521,4 @@ class _HomePageState extends State<HomePage> {
       );
   }
 }
+

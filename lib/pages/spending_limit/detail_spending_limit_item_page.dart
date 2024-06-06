@@ -170,6 +170,7 @@ class _DetailSpendingLimitItemState extends State<DetailSpendingLimitItem> {
                     child: SpendingLimitItems(itemSpendingLimit: widget.dataToPassSpendingLimitItemWidget),
                   ),
                   spaceColumn,
+
                   Container(
                     padding: const EdgeInsets.only(left: 12),
                     color: secondaryColor,

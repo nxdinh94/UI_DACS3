@@ -361,9 +361,10 @@ class _UpdateSpendingLimitPageState extends State<UpdateSpendingLimitPage> {
                           bool result = await Provider.of<UserProvider>(context, listen: false).updateSpendingLimitProvider(dataToUpdate);
                           if(result){
                             showCustomSuccessToast(context, 'Cập nhật thành công!', duration: 1);
+                            await Provider.of<UserProvider>(context, listen: false).getAllSpendingLimitProvider();
+
                           }else{
                             showCustomErrorToast(context, 'Cập nhật không thành công', 1);
-                            await Provider.of<UserProvider>(context, listen: false).getAllSpendingLimitProvider();
 
                           }
                           setState(() {

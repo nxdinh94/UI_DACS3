@@ -26,7 +26,11 @@ class _ListSpendingLimitItemPageState extends State<ListSpendingLimitItemPage> {
     
     super.initState();
   }
-  
+
+  Future<void> onRefresh()async{
+    await Provider.of<UserProvider>(context, listen: false).getAllSpendingLimitProvider();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,13 +62,6 @@ class _ListSpendingLimitItemPageState extends State<ListSpendingLimitItemPage> {
         ),
         actions: [
           GestureDetector(
-            onTap: (){},
-            child: Padding(
-              padding: const EdgeInsets.only(right: 24),
-              child: SvgPicture.asset('assets/svg/information-button.svg',width: 23),
-            ),
-          ),
-          GestureDetector(
             onTap: (){
               CustomNavigationHelper.router.push(
                 CustomNavigationHelper.addSpendingLimitPath
@@ -77,28 +74,38 @@ class _ListSpendingLimitItemPageState extends State<ListSpendingLimitItemPage> {
           ),
         ],
       ),
-      body: Consumer<UserProvider>(
-        builder: (context, value, child) {
-          List<dynamic> spendingLimitList = value.allSpendingLimit;
-          if(spendingLimitList.isEmpty){
-            return const EmptyValueScreen(title: 'Không có hạn mức chi', isAccountPage: false);
-          }
-          return ListView(
-              children: spendingLimitList.map((e){
-                return Column(
-                  children: [
-                    Container(
-                      padding: paddingAll12,
-                      color: secondaryColor,
-                      child: SpendingLimitItems(itemSpendingLimit: e),
-                    ),
-                    defaultDivider
-                  ],
-                );
-              }).toList()
+      body: CustomMaterialIndicator(
+        onRefresh: ()async{
+          await onRefresh();
+        },
+        indicatorBuilder: (BuildContext context, IndicatorController controller) {
+          return LoadingAnimationWidget.hexagonDots(
+              color: primaryColor, size: 30
           );
         },
-      ),
+        child: Consumer<UserProvider>(
+          builder: (context, value, child) {
+            List<dynamic> spendingLimitList = value.allSpendingLimit;
+            if(spendingLimitList.isEmpty){
+              return const EmptyValueScreen(title: 'Không có hạn mức chi', isAccountPage: false);
+            }
+            return ListView(
+                children: spendingLimitList.map((e){
+                  return Column(
+                    children: [
+                      Container(
+                        padding: paddingAll12,
+                        color: secondaryColor,
+                        child: SpendingLimitItems(itemSpendingLimit: e),
+                      ),
+                      defaultDivider
+                    ],
+                  );
+                }).toList()
+            );
+          },
+        ),
+      )
     );
   }
 }
