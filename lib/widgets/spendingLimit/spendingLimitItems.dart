@@ -63,7 +63,8 @@ class _SpendingLimitItemsState extends State<SpendingLimitItems> {
     totalSpendingMoney = double.parse(widget.itemSpendingLimit['total_spending'][r'$numberDecimal']) ;
     remainMoney = initialMoney - totalSpendingMoney;
 
-    if(totalSpendingMoney > initialMoney){
+    if(remainMoney < 0){
+      remainMoney = - remainMoney;
       spendingPercentage = 1;
     }else {
       spendingPercentage = (totalSpendingMoney / initialMoney);
@@ -169,14 +170,29 @@ class _SpendingLimitItemsState extends State<SpendingLimitItems> {
           MyProgressBar(
             percentage: spendingPercentage,
             color: spendingPercentage >= 0.8 ? Colors.red : Colors.orangeAccent,
+            lineHeight: 12,
           ),
           spaceColumn,
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Còn $remainDay ngày', style: const TextStyle(fontSize: textSmall, color: labelColor)),
-              VndRichText(
-                value: remainMoney, fontSize: textBig, color: textColor, iconSize: 16
+              RichText(
+                text: TextSpan(
+                  children: [
+                    spendingPercentage == 1 ? const TextSpan(
+                      text: '( Bội chi ) ',
+                      style: labelTextStyle
+                    ): const TextSpan(),
+                    WidgetSpan(
+                      child: VndRichText(
+                          value: remainMoney, fontSize: textSize,
+                          color: spendingPercentage == 1? spendingMoneyColor: textColor,
+                          iconSize: 14
+                      )
+                    )
+                  ]
+                )
               ),
             ],
           ),

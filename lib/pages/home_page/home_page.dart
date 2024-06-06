@@ -1,6 +1,8 @@
 
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loader_overlay/loader_overlay.dart';
@@ -461,10 +463,52 @@ class _HomePageState extends State<HomePage> {
                                 );
                               }
                               if(spendingLimitList.isEmpty){
-                                return const SizedBox(
-                                  height: 150,
+                                return SizedBox(
+                                  height: 90,
                                   child: Center(
-                                    child: Text('Không có bản ghi', style: labelTextStyle),
+                                    child: Column(
+                                      children: [
+                                        RichText(
+                                          textAlign: TextAlign.center,
+                                          text: const TextSpan(
+                                            text: 'Cùng ', style: labelTextStyle,
+                                            children: [
+                                              TextSpan(
+                                                text: 'Sổ thu chi MISA ',
+                                                style: TextStyle(fontSize: textSize, color: textColor, fontWeight: FontWeight.w600)
+                                              ),
+                                              TextSpan(
+                                                text: 'lập ra các hạn mức chi để quản lý chi tiêu tốt hơn nhé! ',
+                                                style: labelTextStyle
+                                              ),
+
+                                            ]
+                                          )
+                                        ),
+                                        spaceColumn,
+                                        GestureDetector(
+                                          onTap: (){
+                                            CustomNavigationHelper.router.push(
+                                                CustomNavigationHelper.addSpendingLimitPath
+                                            );
+                                          },
+                                          child: RichText(
+                                            text: const TextSpan(
+                                              style: TextStyle(color: primaryColor, fontSize: textSize),
+                                              children: [
+                                                WidgetSpan(
+                                                  child: Icon(Icons.add,color: primaryColor, size: 30,),
+                                                  alignment: PlaceholderAlignment.middle
+                                                ),
+                                                TextSpan(
+                                                  text: 'Thêm hạn mức chi',
+                                                )
+                                              ]
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 );
                               }

@@ -23,6 +23,8 @@ class DetailSpendingLimitItem extends StatefulWidget {
 class _DetailSpendingLimitItemState extends State<DetailSpendingLimitItem> {
   final TextStyle labelStyle = const TextStyle(fontSize: 15, color: labelColor);
   String name = '';
+  Map<String, dynamic> spendingLimitToUpdate = {};
+
   @override
   void initState() {
     name = widget.dataToPassSpendingLimitItemWidget['name'];
@@ -86,7 +88,17 @@ class _DetailSpendingLimitItemState extends State<DetailSpendingLimitItem> {
         leading: const BackToolbarButton(),
         actions: [
           GestureDetector(
-            onTap: (){},
+            onTap: ()async{
+              bool isDelete = await CustomNavigationHelper.router.push(
+                  '${CustomNavigationHelper.detailSpendingLimitItemPath}/${CustomNavigationHelper.updateSpendingLimitPath}',
+                extra: spendingLimitToUpdate
+              ) as bool;
+              if(!context.mounted){return;}
+              if(isDelete){
+                Navigator.pop(context);
+              }
+
+            },
             child: Padding(
               padding: const EdgeInsets.only(right: 16),
               child: SvgPicture.asset('assets/svg/pen-appbar.svg'),
@@ -97,6 +109,7 @@ class _DetailSpendingLimitItemState extends State<DetailSpendingLimitItem> {
       body: Consumer<UserProvider>(
         builder: (context, value, child) {
           Map<String, dynamic> thisSpendingLimit = value.specificSpendingLimit;
+          spendingLimitToUpdate = thisSpendingLimit;
           List<ChartData> areaChartData = [];
           areaChartData = initialChartData;
           if(thisSpendingLimit.isEmpty){

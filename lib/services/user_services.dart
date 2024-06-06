@@ -386,39 +386,81 @@ class UserServices{
     }catch(e){
       throw Exception(e);
     }
-
-
     return result;
   }
-
-  Future<Map<String, dynamic>> getAllSpendingLimitService(String accessToken)async{
-    Map<String, dynamic> result ={};
+  Future<bool> deleteSpendingLimitSerive(String accessToken, String idSpendingLimit)async{
+    bool result = false;
     try{
-      String url = '$PORT/app/spending-limit';
+      String url = '$PORT/app/delete-spending-limit/$idSpendingLimit';
       final uri = Uri.parse(url);
-      final res = await http.get(uri,
+      final res = await http.delete(
+        uri,
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
           'Authorization': 'Bearer $accessToken',
         },
       );
-
+      print(res.body);
       if(res.statusCode == 200){
-        Map<String, dynamic> jsonResult = jsonDecode(res.body);
-        result = {
-          'status': '200',
-          'result': jsonResult['result'],
-        };
+        result = true;
       }else {
-        result = {
-          'status': '403',
-          'result': {}
-        };
+        result = false;
       }
     }catch(e){
-      throw Exception('Error while delete expense record $e');
+      throw Exception(e);
     }
     return result;
   }
 
+  Future<Map<String, dynamic>> getAllSpendingLimitService(String accessToken)async{
+      Map<String, dynamic> result ={};
+      try{
+        String url = '$PORT/app/spending-limit';
+        final uri = Uri.parse(url);
+        final res = await http.get(uri,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $accessToken',
+          },
+        );
+
+        if(res.statusCode == 200){
+          Map<String, dynamic> jsonResult = jsonDecode(res.body);
+          result = {
+            'status': '200',
+            'result': jsonResult['result'],
+          };
+        }else {
+          result = {
+            'status': '403',
+            'result': {}
+          };
+        }
+      }catch(e){
+        throw Exception('Error while delete expense record $e');
+      }
+      return result;
+    }
+  Future<bool> updateSpendingLimitService(String accessToken, Map<String, dynamic>dataToUpdate)async{
+    bool result  = false;
+    try{
+      final uri = Uri.parse(updateSpendingLimitApi);
+      final res = await http.patch(
+          uri,
+          headers: <String, String>{
+            'Content-Type': 'application/json; charset=UTF-8',
+            'Authorization': 'Bearer $accessToken',
+          },
+          body: jsonEncode(dataToUpdate)
+      );
+      if(res.statusCode == 200){
+        result = true;
+      }else {
+        result= false;
+      }
+    }catch(e){
+    throw Exception(e);
+  }
+  return result;
+  }
 }

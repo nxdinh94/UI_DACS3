@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:http/http.dart';
 import 'package:practise_ui/pages/account_wallet/account_page.dart';
 import 'package:practise_ui/pages/account_setting_page.dart';
 import 'package:practise_ui/pages/account_wallet/add_account_wallet_page.dart';
@@ -24,6 +23,7 @@ import 'package:practise_ui/pages/spending_limit/list_spending_limit_item_page.d
 import 'package:practise_ui/pages/spending_limit/repeat_cycle_page.dart';
 import 'package:practise_ui/pages/report/report_page.dart';
 import 'package:practise_ui/pages/adding_workspace/select_cashflow_category_page.dart';
+import 'package:practise_ui/pages/spending_limit/update_spending_limit_page.dart';
 import 'package:practise_ui/pages/user_profile.dart';
 import 'package:practise_ui/utils/bottom_navigation_bar.dart';
 import '../pages/home_page/home_page.dart';
@@ -75,6 +75,7 @@ class CustomNavigationHelper {
   static const String detailSpendingLimitItemPath = '/detailSpendingLimitItem';
   static const String listSpendingLimitItemPath = '/listSpendingLimitItem';
   static const String addSpendingLimitPath = '/addSpendingLimit';
+  static const String updateSpendingLimitPath = 'updateSpendingLimit';
   static const String editSpendingLimitPath = '/editSpendingLimit';
   static const String repeatCyclePath = '/repeatCycle';
 
@@ -185,7 +186,7 @@ class CustomNavigationHelper {
                       path: addAccountWalletPath,
                       pageBuilder: (context, state){
                         return getPage(
-                          child: AddAccountWalletPage(),
+                          child: const AddAccountWalletPage(),
                           state: state
                         );
                       },
@@ -194,7 +195,7 @@ class CustomNavigationHelper {
                           path: selectAccountWalletTypePath,
                           pageBuilder: (context, state){
                           return getPage(
-                              child: SelectAccountWalletTypePage(),
+                              child: const SelectAccountWalletTypePage(),
                               state: state
                             );
                           }
@@ -203,7 +204,7 @@ class CustomNavigationHelper {
                           path: selectBankPath,
                           pageBuilder: (context, state){
                             return getPage(
-                              child: SelectBankPage(),
+                              child: const SelectBankPage(),
                               state: state
                             );
                           }
@@ -277,7 +278,7 @@ class CustomNavigationHelper {
                         path: chooseAccountWalletPath,
                         pageBuilder: (context, state){
                           return getPage(
-                            child: ChooseAccountWalletPage(),
+                            child: const ChooseAccountWalletPage(),
                             state: state
                           );
                         }
@@ -392,7 +393,18 @@ class CustomNavigationHelper {
                   state: state
                 );
               },
-            )
+            ),
+            GoRoute(
+              path: updateSpendingLimitPath,
+              pageBuilder: (context, state) {
+                Map<String, dynamic> dataFromExtra = state.extra as Map<String, dynamic>;
+                return getPage(
+                  child: UpdateSpendingLimitPage(dataToUpdate: dataFromExtra),
+                  state: state
+                );
+              },
+            ),
+
           ]
         ),
         GoRoute(
@@ -409,7 +421,7 @@ class CustomNavigationHelper {
               path: repeatTimeForSpendingLimitPath,
               pageBuilder: (context, state){
                 return getPage(
-                  child: RepeatCyclePage(),
+                  child: const RepeatCyclePage(),
                   state: state
                 );
               }
@@ -418,7 +430,7 @@ class CustomNavigationHelper {
               path: selectWalletSpendingPath,
               pageBuilder: (context, state) {
                 return getPage(
-                  child: ChooseWalletPage(),
+                  child: const ChooseWalletPage(),
                   state: state
                 );
               },

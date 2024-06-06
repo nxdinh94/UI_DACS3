@@ -17,7 +17,7 @@ import 'package:practise_ui/widgets/adding_workspace/dropdown_adding_workspace.d
 import 'package:practise_ui/widgets/adding_workspace/pick_contact_listtitle.dart';
 import 'package:provider/provider.dart';
 import '../../widgets/adding_workspace/expand_input_adding_space.dart';
-import '../../widgets/dialog_ask_user_accept_policy.dart';
+import '../../widgets/dialog/dialog_ask_user_accept_policy.dart';
 import '../../widgets/input_money_textfield.dart';
 import '../../widgets/listtitle_textfield.dart';
 
