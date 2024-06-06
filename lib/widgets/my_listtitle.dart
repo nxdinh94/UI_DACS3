@@ -12,6 +12,7 @@ class MyListTile extends StatelessWidget {
     required this.onTap,
     this.horizontalTitleGap = 35,
     this.vertiCalPadding = 0,
+    this.leftPadding = 20,
   });
   final Widget leading;
   final String centerText;
@@ -19,11 +20,11 @@ class MyListTile extends StatelessWidget {
   final VoidCallback onTap;
   final double horizontalTitleGap;
   final double vertiCalPadding;
+  final double leftPadding;
   @override
   Widget build(BuildContext context) {
-    const sidePaddingRL = EdgeInsets.only(right: 2, left: 20);
     return Padding(
-      padding: sidePaddingRL,
+      padding: EdgeInsets.only(right: 2, left: leftPadding),
       child: ListTile(
         // dense: true,
         onTap: onTap,

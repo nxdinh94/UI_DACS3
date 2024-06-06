@@ -163,12 +163,6 @@ class _AccountSettingPageState extends State<AccountSettingPage> {
             color: secondaryColor,
             child: Column(
               children: [
-                _ListTitle(
-                  title: 'Liên kết tài khoản',
-                  onTap: () {
-
-                  },
-                ),
                 const Divider(height: 0,color: underLineColor,),
                 _ListTitle(
                   title: 'Đổi mật khẩu',

@@ -13,6 +13,7 @@ import 'package:practise_ui/pages/auth/change_password_page.dart';
 import 'package:practise_ui/pages/home_page/detail_spending_revenue_statistical_page/detail_cashflow_category_parent.dart';
 import 'package:practise_ui/pages/home_page/detail_spending_revenue_statistical_page/detail_spending_revenue_statistical_page.dart';
 import 'package:practise_ui/pages/home_page/noteHistory.dart';
+import 'package:practise_ui/pages/report/current_finances.dart';
 import 'package:practise_ui/pages/select_time_show_expense_record.dart';
 import 'package:practise_ui/pages/spending_limit/add_spending_limit_page.dart';
 import 'package:practise_ui/pages/adding_workspace/adding_workspace.dart';
@@ -102,6 +103,7 @@ class CustomNavigationHelper {
   static const String changePasswordPath = 'changePassword';
 
   static const String detailSpendingInSpendingLimitPath = 'detailSpendingInSpendingLimit';
+  static const String currentFinancesPath = 'currentFinances';
 
 
 
@@ -299,7 +301,15 @@ class CustomNavigationHelper {
                     );
                   },
                   routes: <RouteBase>[
-
+                    GoRoute(
+                      path: currentFinancesPath,
+                      pageBuilder: (context, state) {
+                        return getPage(
+                          child: CurrentFinances(),
+                          state: state
+                        );
+                      },
+                    )
                   ]
                 ),
               ],
