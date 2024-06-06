@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
@@ -77,12 +78,6 @@ class _SpendingLimitItemsState extends State<SpendingLimitItems> {
       remainDay = endDay - DateTime.now().day;
     }
     super.initState();
-  }
-
-  @override
-  void didUpdateWidget(covariant SpendingLimitItems oldWidget) {
-    // TODO: implement didUpdateWidget
-    super.didUpdateWidget(oldWidget);
   }
 
   @override

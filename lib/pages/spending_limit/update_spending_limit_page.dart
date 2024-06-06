@@ -127,21 +127,6 @@ class _UpdateSpendingLimitPageState extends State<UpdateSpendingLimitPage> {
         ),
         centerTitle: true,
         leading: const BackToolbarButton(),
-        actions: [
-          GestureDetector(
-            onTap: (){
-
-            },
-            child: Padding(
-              padding: const EdgeInsets.only(right: 16),
-              child: SvgPicture.asset(
-                'assets/svg/tick.svg',
-                colorFilter: const ColorFilter.mode(secondaryColor, BlendMode.srcIn),
-                width: 38,
-              ),
-            ),
-          )
-        ],
       ),
       body: Container(
         color: backgroundColor,
@@ -378,6 +363,8 @@ class _UpdateSpendingLimitPageState extends State<UpdateSpendingLimitPage> {
                             showCustomSuccessToast(context, 'Cập nhật thành công!', duration: 1);
                           }else{
                             showCustomErrorToast(context, 'Cập nhật không thành công', 1);
+                            await Provider.of<UserProvider>(context, listen: false).getAllSpendingLimitProvider();
+
                           }
                           setState(() {
                             alertMoneyNull = false;
