@@ -35,67 +35,65 @@ class _CurrentFinancesState extends State<CurrentFinances> {
           for(var item in accountWalletList){
             totalMoney += double.parse(item['account_balance'][r'$numberDecimal']);
           }
-          return Container(
-            child: SingleChildScrollView(
-              child: Column(
-                children: [
-                  Container(
-                    padding: paddingAll12,
-                    color: secondaryColor,
-                    child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          const Text('Tài chính hiện tại', style: defaultTextStyle),
-                          VndRichText(value: totalMoney, fontSize: textBig, iconSize: 16, fontWeight: FontWeight.w700,),
-                        ]
-                    ),
-                  ),
-                  spaceColumn,spaceColumn,
-                  Container(
-                    padding: sidePadding,
-                    color: secondaryColor,
-                    child: Column(
+          return SingleChildScrollView(
+            child: Column(
+              children: [
+                Container(
+                  padding: paddingAll12,
+                  color: secondaryColor,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(vertical: 18),
-                          child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                const Text('Tổng có', style: defaultTextStyle),
-                                VndRichText(value: totalMoney, fontSize: textBig, iconSize: 16, fontWeight: FontWeight.w700,),
-                              ]
-                          ),
-                        ),
-                        defaultDivider
-                      ],
-                    ),
+                        const Text('Tài chính hiện tại', style: defaultTextStyle),
+                        VndRichText(value: totalMoney, fontSize: textBig, iconSize: 16, fontWeight: FontWeight.w700,),
+                      ]
                   ),
-                  Container(
-                    color: secondaryColor,
-                    padding: sidePadding,
-                    child: Column(
-                      children: accountWalletList.map((e){
-                        double accountBalance = double.parse(e['account_balance'][r'$numberDecimal']);
-                        return Column(
-                          children: [
-                            MyListTile(
-                                leading: Image.asset(e['money_type_information']['icon'], width: 40,),
-                                centerText: e['name'],
-                                trailing: VndRichText(value: accountBalance, iconSize: 16),
-                                horizontalTitleGap: 15,
-                                leftPadding: 0,
-                                onTap: (){
+                ),
+                spaceColumn,spaceColumn,
+                Container(
+                  padding: sidePadding,
+                  color: secondaryColor,
+                  child: Column(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(vertical: 18),
+                        child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              const Text('Tổng có', style: defaultTextStyle),
+                              VndRichText(value: totalMoney, fontSize: textBig, iconSize: 16, fontWeight: FontWeight.w700,),
+                            ]
+                        ),
+                      ),
+                      defaultDivider
+                    ],
+                  ),
+                ),
+                Container(
+                  color: secondaryColor,
+                  padding: sidePadding,
+                  child: Column(
+                    children: accountWalletList.map((e){
+                      double accountBalance = double.parse(e['account_balance'][r'$numberDecimal']);
+                      return Column(
+                        children: [
+                          MyListTile(
+                              leading: Image.asset(e['money_type_information']['icon'], width: 40,),
+                              centerText: e['name'],
+                              trailing: VndRichText(value: accountBalance, iconSize: 16),
+                              horizontalTitleGap: 15,
+                              leftPadding: 0,
+                              onTap: (){
 
-                                }
-                            ),
-                            defaultDivider
-                          ],
-                        );
-                      }).toList(),
-                    )
+                              }
+                          ),
+                          defaultDivider
+                        ],
+                      );
+                    }).toList(),
                   )
-                ],
-              ),
+                )
+              ],
             ),
           );
         },

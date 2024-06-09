@@ -20,12 +20,6 @@ class ListSpendingLimitItemPage extends StatefulWidget {
 }
 
 class _ListSpendingLimitItemPageState extends State<ListSpendingLimitItemPage> {
-  
-  @override
-  void initState() {
-    
-    super.initState();
-  }
 
   Future<void> onRefresh()async{
     await Provider.of<UserProvider>(context, listen: false).getAllSpendingLimitProvider();

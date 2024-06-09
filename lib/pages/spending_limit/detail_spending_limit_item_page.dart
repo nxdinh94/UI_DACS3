@@ -89,12 +89,12 @@ class _DetailSpendingLimitItemState extends State<DetailSpendingLimitItem> {
         actions: [
           GestureDetector(
             onTap: ()async{
-              bool isDelete = await CustomNavigationHelper.router.push(
+              dynamic isFromDeleteAction = await CustomNavigationHelper.router.push(
                   '${CustomNavigationHelper.detailSpendingLimitItemPath}/${CustomNavigationHelper.updateSpendingLimitPath}',
                 extra: spendingLimitToUpdate
-              ) as bool;
+              );
               if(!context.mounted){return;}
-              if(isDelete){
+              if(isFromDeleteAction == true){
                 Navigator.pop(context);
               }
 
@@ -136,7 +136,7 @@ class _DetailSpendingLimitItemState extends State<DetailSpendingLimitItem> {
             for(final item2 in item1){
               DateTime occurDate = DateTime.parse(item2['occur_date']);
               day = occurDate.day;
-              totalGroupMoney+=double.parse(item2['amount_of_money']);
+              totalGroupMoney+=(double.parse(item2['amount_of_money'])/1000);//remove three latest number
             }
             areaChartData[day] = ChartData(day, totalGroupMoney);
           }

@@ -45,7 +45,7 @@ class _MyAreaChartState extends State<MyAreaChart> {
             primaryYAxis: const NumericAxis(
               labelFormat: '{value}đ',
               title: AxisTitle(
-                text: '(Đơn vị:Trăm nghìn)',
+                text: '(Đơn vị: Trăm nghìn)',
                 alignment: ChartAlignment.far,
                 textStyle: TextStyle(
                   color: labelColor,

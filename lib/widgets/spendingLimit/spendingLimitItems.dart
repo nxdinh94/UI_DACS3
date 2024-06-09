@@ -11,18 +11,16 @@ import 'package:practise_ui/widgets/rich_text/vnd_rich_text.dart';
 import 'package:provider/provider.dart';
 import '../../constant/font.dart';
 import '../custom_stack_three_images.dart';
+
 class SpendingLimitItems extends StatefulWidget {
-  const SpendingLimitItems({
-    super.key,
-    required this.itemSpendingLimit
-  });
+  const SpendingLimitItems({super.key, required this.itemSpendingLimit});
   final Map<String, dynamic> itemSpendingLimit;
+
   @override
   State<SpendingLimitItems> createState() => _SpendingLimitItemsState();
 }
 
 class _SpendingLimitItemsState extends State<SpendingLimitItems> {
-
   bool isSpendingLimitOutOfDate = false;
   String startTime = '';
   String endTime = '';
@@ -33,133 +31,135 @@ class _SpendingLimitItemsState extends State<SpendingLimitItems> {
   double initialMoney = 0;
   double totalSpendingMoney = 0;
   double spendingPercentage = 0;
+
   int dateTimeToSecondsSinceEpoch(DateTime dateTime) {
     return (dateTime.millisecondsSinceEpoch / 1000).round();
   }
-  bool onSpendingLimitOutOfDate (DateTime endDate){
-    bool result = false;
+
+  bool onSpendingLimitOutOfDate(DateTime endDate) {
     DateTime now = DateTime.now();
     int endDateToSecond = dateTimeToSecondsSinceEpoch(endDate);
     int nowToSecond = dateTimeToSecondsSinceEpoch(now);
-    if(nowToSecond > endDateToSecond){
-      result = true;
-    }else {
-      result = false;
-    }
-    return result;
+    return nowToSecond > endDateToSecond;
   }
 
-  @override
-  void initState() {
+  void updateSpendingLimitState() {
     DateTime startDate = DateTime.parse(widget.itemSpendingLimit['start_time']);
     DateTime endDate = DateTime.parse(widget.itemSpendingLimit['end_time']);
 
     startTime = DateFormat('dd/MM').format(startDate);
     endTime = DateFormat('dd/MM').format(endDate);
-    isSpendingLimitOutOfDate =  onSpendingLimitOutOfDate(endDate);
-    initialMoney = double.parse(widget.itemSpendingLimit['amount_of_money'][r'$numberDecimal']) ;
-
+    isSpendingLimitOutOfDate = onSpendingLimitOutOfDate(endDate);
+    initialMoney = double.parse(widget.itemSpendingLimit['amount_of_money'][r'$numberDecimal']);
     name = widget.itemSpendingLimit['name'];
     id = widget.itemSpendingLimit['_id'];
-    totalSpendingMoney = double.parse(widget.itemSpendingLimit['total_spending'][r'$numberDecimal']) ;
+    totalSpendingMoney = double.parse(widget.itemSpendingLimit['total_spending'][r'$numberDecimal']);
     remainMoney = initialMoney - totalSpendingMoney;
 
-    if(remainMoney < 0){
+    if (remainMoney < 0) {
       remainMoney = - remainMoney;
       spendingPercentage = 1;
-    }else {
+    } else {
       spendingPercentage = (totalSpendingMoney / initialMoney);
     }
-    //calculate remain day
+
+    // Calculate remain day
     int endDay = endDate.day;
-    if(isSpendingLimitOutOfDate){
+    if (isSpendingLimitOutOfDate) {
       remainDay = 0;
-    }else{
+    } else {
       remainDay = endDay - DateTime.now().day;
     }
-    super.initState();
   }
 
   @override
+  void initState() {
+    super.initState();
+    updateSpendingLimitState();
+  }
+
+  @override
+  void didUpdateWidget(covariant SpendingLimitItems oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (!mapEquals(oldWidget.itemSpendingLimit, widget.itemSpendingLimit)) {
+      setState(() {
+        updateSpendingLimitState();
+      });
+    }
+  }
+  @override
   Widget build(BuildContext context) {
     var currentRoute = GoRouterState.of(context).uri.toString();
-    bool isDetailSpendingLimitItemPage =
-    currentRoute =='/detailSpendingLimitItem'? true: false;
+    bool isDetailSpendingLimitItemPage = currentRoute == '/detailSpendingLimitItem';
+
     return GestureDetector(
       behavior: HitTestBehavior.opaque,
-      onTap: ()async{
-        if(!isDetailSpendingLimitItemPage){
-        await Provider.of<UserProvider>(context, listen: false).getSpecificSpendingLimitProvider(id);
+      onTap: () async {
+        if (!isDetailSpendingLimitItemPage) {
+          await Provider.of<UserProvider>(context, listen: false).getSpecificSpendingLimitProvider(id);
 
-        CustomNavigationHelper.router.push(
-              CustomNavigationHelper.detailSpendingLimitItemPath, extra: widget.itemSpendingLimit
-          );
+          CustomNavigationHelper.router.push(
+              CustomNavigationHelper.detailSpendingLimitItemPath, extra: widget.itemSpendingLimit);
         }
       },
       child: Column(
         children: [
           Row(
-            children: [
-              Visibility(
-                visible: isDetailSpendingLimitItemPage ? false: true,
-                child: StackThreeCircleImages(
-                    imageOne: 'assets/icon_category/spending_money_icon/anUong/dinner.png',
-                    imageTwo: 'assets/icon_category/spending_money_icon/anUong/cutlery.png',
-                    imageThree: 'assets/icon_category/spending_money_icon/anUong/burger_parent.png'
+              children: [
+                Visibility(
+                  visible: !isDetailSpendingLimitItemPage,
+                  child: StackThreeCircleImages(
+                      imageOne: 'assets/icon_category/spending_money_icon/anUong/dinner.png',
+                      imageTwo: 'assets/icon_category/spending_money_icon/anUong/cutlery.png',
+                      imageThree: 'assets/icon_category/spending_money_icon/anUong/burger_parent.png'
+                  ),
                 ),
-              ),
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      mainAxisAlignment: isDetailSpendingLimitItemPage?
-                      MainAxisAlignment.start : MainAxisAlignment.spaceBetween,
-                      children: [
-                        Visibility(
-                          visible: isDetailSpendingLimitItemPage ? false: true,
-                          child: Flexible(
-                            child: Text(
-                              overflow: TextOverflow.ellipsis,
-                              name,
-                              style: defaultTextStyle,
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        mainAxisAlignment: isDetailSpendingLimitItemPage ? MainAxisAlignment.start : MainAxisAlignment.spaceBetween,
+                        children: [
+                          Visibility(
+                              visible: !isDetailSpendingLimitItemPage,
+                              child: Flexible(
+                                child: Text(
+                                  overflow: TextOverflow.ellipsis,
+                                  name,
+                                  style: defaultTextStyle,
+                                ),
+                              )
+                          ),
+                          Visibility(
+                            visible: isSpendingLimitOutOfDate,
+                            child: Container(
+                              padding: const EdgeInsets.all(3),
+                              decoration: BoxDecoration(
+                                border: Border.all(color: spendingMoneyColor, width: 2),
+                                borderRadius: BorderRadius.circular(4),
+                              ),
+                              child: const Text('Hết hạn', style: TextStyle(
+                                  color: spendingMoneyColor, fontSize: textSmall
+                              )),
                             ),
                           )
-                        ),
-                        Visibility(
-                          visible: isSpendingLimitOutOfDate,
-                          child: Container(
-                            padding: const EdgeInsets.all(3),
-                            decoration: BoxDecoration(
-                              border: Border.all(color: spendingMoneyColor, width: 2),
-                              borderRadius: BorderRadius.circular(4),
-                            ),
-                            child: const Text('Hết hạn', style: TextStyle(
-                              color: spendingMoneyColor, fontSize: textSmall
-                            )),
+                        ],
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text('$startTime - $endTime', style: const TextStyle(color: labelColor, fontSize: textSmall)),
+                          VndRichText(
+                              value: double.parse(widget.itemSpendingLimit['amount_of_money'][r'$numberDecimal']),
+                              fontSize: textBig, color: textColor, iconSize: 16
                           ),
-                        )
-                      ],
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          '$startTime - $endTime',
-                          style: const TextStyle(color: labelColor, fontSize: textSmall)),
-                        VndRichText(
-                          value: double.parse(
-                            widget.itemSpendingLimit['amount_of_money'][r'$numberDecimal']
-                          ),
-                          fontSize: textBig, color: textColor, iconSize: 16
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              )
-            ]
-
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+              ]
           ),
           spaceColumn,
           MyProgressBar(
@@ -173,21 +173,21 @@ class _SpendingLimitItemsState extends State<SpendingLimitItems> {
             children: [
               Text('Còn $remainDay ngày', style: const TextStyle(fontSize: textSmall, color: labelColor)),
               RichText(
-                text: TextSpan(
-                  children: [
-                    spendingPercentage == 1 ? const TextSpan(
-                      text: '( Bội chi ) ',
-                      style: labelTextStyle
-                    ): const TextSpan(),
-                    WidgetSpan(
-                      child: VndRichText(
-                          value: remainMoney, fontSize: textSize,
-                          color: spendingPercentage == 1? spendingMoneyColor: textColor,
-                          iconSize: 14
-                      )
-                    )
-                  ]
-                )
+                  text: TextSpan(
+                      children: [
+                        spendingPercentage == 1 ? const TextSpan(
+                            text: '( Bội chi ) ',
+                            style: labelTextStyle
+                        ) : const TextSpan(),
+                        WidgetSpan(
+                            child: VndRichText(
+                                value: remainMoney, fontSize: textSize,
+                                color: spendingPercentage == 1 ? spendingMoneyColor : textColor,
+                                iconSize: 14
+                            )
+                        )
+                      ]
+                  )
               ),
             ],
           ),
@@ -196,5 +196,3 @@ class _SpendingLimitItemsState extends State<SpendingLimitItems> {
     );
   }
 }
-
-

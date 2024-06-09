@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:practise_ui/constant/font.dart';
-import 'package:practise_ui/providers/app_provider.dart';
 import 'package:practise_ui/providers/user_provider.dart';
 import 'package:practise_ui/utils/custom_toast.dart';
 import 'package:practise_ui/widgets/back_toolbar_button.dart';

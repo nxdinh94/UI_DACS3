@@ -1,8 +1,6 @@
 
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:loader_overlay/loader_overlay.dart';
@@ -236,21 +234,21 @@ class _HomePageState extends State<HomePage> {
                       color: Colors.white,
                       child: Column(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          const Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
                             children: [
-                              const Text(
+                              Text(
                                 "Tình hình thu chi", style: textStyleForTitleSection
                               ),
-                              IconButton(
-                                onPressed: () {},
-                                iconSize: 28, padding: EdgeInsets.zero, color: iconColor,
-                                constraints: const BoxConstraints(), // override default min size of 48px
-                                style: const ButtonStyle(
-                                  tapTargetSize: MaterialTapTargetSize.shrinkWrap, // the '2023' part
-                                ),
-                                icon: const Icon(Icons.settings),
-                              ),
+                              // IconButton(
+                              //   onPressed: () {},
+                              //   iconSize: 28, padding: EdgeInsets.zero, color: iconColor,
+                              //   constraints: const BoxConstraints(), // override default min size of 48px
+                              //   style: const ButtonStyle(
+                              //     tapTargetSize: MaterialTapTargetSize.shrinkWrap, // the '2023' part
+                              //   ),
+                              //   icon: const Icon(Icons.settings),
+                              // ),
                             ],
                           ),
                           Row(
@@ -264,7 +262,6 @@ class _HomePageState extends State<HomePage> {
                                 isDense: true,
                                 value: defaultRangeTimeChartHomePage,
                                 onChanged: (String? time) async {
-
                                   setState(() {
                                     defaultRangeTimeChartHomePage = time!;
                                   });
@@ -473,7 +470,7 @@ class _HomePageState extends State<HomePage> {
                                     children: [
                                       defaultDivider,
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(vertical: 12.0),
+                                        padding: verticalPadding,
                                         child: SpendingLimitItems(itemSpendingLimit: e),
                                       ),
                                     ],

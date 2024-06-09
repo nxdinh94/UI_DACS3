@@ -148,7 +148,7 @@ class UserServices{
       );
       if(res.statusCode == 200){
         result = {
-          'result': jsonDecode(res.body)['result'],
+          'result': 'Đã ghi',
           'status': '200'
         };
       }else {

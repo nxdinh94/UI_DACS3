@@ -21,7 +21,6 @@ class _DetailSpendingPageState extends State<DetailSpendingPage> {
 
   @override
   void initState() {
-
     allWalletUserData = context.read<UserProvider>().accountWalletList;
     super.initState();
   }

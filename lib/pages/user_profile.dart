@@ -400,18 +400,7 @@ class ActionBar extends StatelessWidget {
                 semanticsLabel: 'Back'
             )
           ),
-          GestureDetector(
-            onTap: (){
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(content: Text('Processing Data')),
-              );
-            },
-            child:  SvgPicture.asset(
-                "assets/svg/qrcode.svg",
-                height: 40,
-                semanticsLabel: 'Qrcode',
-            )
-          ),
+          
         ]
       ),
     );

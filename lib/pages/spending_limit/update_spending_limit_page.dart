@@ -362,6 +362,7 @@ class _UpdateSpendingLimitPageState extends State<UpdateSpendingLimitPage> {
                           if(result){
                             showCustomSuccessToast(context, 'Cập nhật thành công!', duration: 1);
                             await Provider.of<UserProvider>(context, listen: false).getAllSpendingLimitProvider();
+                            await Provider.of<UserProvider>(context, listen: false).getSpecificSpendingLimitProvider(idSpendingLimit);
 
                           }else{
                             showCustomErrorToast(context, 'Cập nhật không thành công', 1);
