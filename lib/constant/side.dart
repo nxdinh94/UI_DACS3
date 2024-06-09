@@ -13,3 +13,6 @@ const paddingR8L21 = EdgeInsets.only(right: 8, left: 21);
 const paddingNone = EdgeInsets.all(0);
 const paddingAll12 = EdgeInsets.all(12);
 const paddingV6H12 = EdgeInsets.symmetric(vertical: 6, horizontal: 12);
+
+const paddingRight12 = EdgeInsets.only(right: 12);
+const paddingLeft12 = EdgeInsets.only(left: 12);

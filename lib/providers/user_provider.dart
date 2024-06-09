@@ -16,6 +16,9 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin{
   Map<String, dynamic> _expenseRecordDataByAccountWallet = {};
   Map<String, dynamic> get expenseRecordDataByAccountWallet => _expenseRecordDataByAccountWallet;
 
+  bool _isLoadingExpenseRecordDataByAccountWallet = true;
+  bool get isLoadingExpenseRecordDataByAccountWallet => _isLoadingExpenseRecordDataByAccountWallet;
+
   Map<String, dynamic> _expenseRecordDataForNoteHistory = {};
   Map<String, dynamic> get expenseRecordDataForNoteHistory => _expenseRecordDataForNoteHistory;
 
@@ -89,10 +92,12 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin{
   }
 
   Future<void> getAllExpenseRecordByAccountWalletProvider(String idAccountWallet, String time)async{
+    _isLoadingExpenseRecordDataByAccountWallet = true;
     String accessToken = await getAccessToken();
     Map<String, dynamic> result =  await userServices.getAllExpenseRecordByAccountWalletServices(accessToken, idAccountWallet, time);
-    if(result['result'] != {}){
+    if(result['result'] != null){
       _expenseRecordDataByAccountWallet =  result['result'];
+      _isLoadingExpenseRecordDataByAccountWallet = false;
     }
     notifyListeners();
   }

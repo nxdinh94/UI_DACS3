@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:practise_ui/pages/home_page/detail_spending_revenue_statistical_page/revenue_tab.dart';
 import 'package:practise_ui/pages/home_page/detail_spending_revenue_statistical_page/spending_tab.dart';
-import 'package:provider/provider.dart';
 
 import '../../../constant/color.dart';
 import '../../../constant/font.dart';
-import '../../../providers/chart_provider.dart';
 import '../../../widgets/back_toolbar_button.dart';
 class DetailSpendingRevenueStatisticalPage extends StatefulWidget {
   const DetailSpendingRevenueStatisticalPage({super.key});

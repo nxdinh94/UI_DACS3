@@ -128,10 +128,10 @@ class BodyDetailCashflowCategoryParent extends StatelessWidget {
                     children: e.map((e1){
                       return  ListTile(
                         onTap: ()async{
-                           bool result =await CustomNavigationHelper.router.push(
+                           dynamic result =await CustomNavigationHelper.router.push(
                             CustomNavigationHelper.updateWorkSpacePath,
                             extra: e1
-                           ) as bool;
+                           ) as dynamic;
                            if(!context.mounted){return;}
                            if(result){
                              Navigator.pop(context);

@@ -1,9 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 import 'package:practise_ui/constant/font.dart';
 import 'package:practise_ui/constant/side.dart';
+import 'package:practise_ui/widgets/empty_value_screen.dart';
 import 'package:practise_ui/widgets/rich_text/right_arrow_rich_text.dart';
 import 'package:provider/provider.dart';
 
@@ -14,14 +13,14 @@ import '../../utils/custom_navigation_helper.dart';
 import '../../widgets/back_toolbar_button.dart';
 import '../../widgets/loading_animation.dart';
 import '../account_wallet/detail_account_wallet_page.dart';
-class Notehistory extends StatefulWidget {
-  const Notehistory({super.key});
+class NoteHistory extends StatefulWidget {
+  const NoteHistory({super.key});
 
   @override
-  State<Notehistory> createState() => _NotehistoryState();
+  State<NoteHistory> createState() => _NoteHistoryState();
 }
 
-class _NotehistoryState extends State<Notehistory> {
+class _NoteHistoryState extends State<NoteHistory> {
   String selectedTimeToShow = '';
 
   @override
@@ -78,12 +77,9 @@ class _NotehistoryState extends State<Notehistory> {
                 Map<String, dynamic> data = value.expenseRecordDataForNoteHistory;
                 String totalRevenueMoney = '0';
                 String totalSpendingMoney = '0';
-                if(!value.isLoadingExpenseRecordDataForNoteHistory){
+                if(data.isNotEmpty){
                   totalRevenueMoney = data['response_revenue_money'][r'$numberDecimal'];
                   totalSpendingMoney = data['response_spending_money'][r'$numberDecimal'];
-                }else {
-                  totalRevenueMoney = '0';
-                  totalSpendingMoney = '0';
                 }
                 // print(data);
                 return Container(
@@ -130,6 +126,9 @@ class _NotehistoryState extends State<Notehistory> {
                       containerHeight: 500,
                     ),
                   );
+                }
+                if(records.isEmpty){
+                  return const  EmptyValueScreen(title: 'Không có dữ liệu!', isAccountPage: false);
                 }
                 return BodyOfPage(records: records, dashBorder: dashBorder);
               },

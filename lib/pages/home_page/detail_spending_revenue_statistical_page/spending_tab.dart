@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/providers/chart_provider.dart';
 import 'package:practise_ui/utils/custom_navigation_helper.dart';
@@ -6,6 +7,7 @@ import 'package:practise_ui/utils/progress_bar.dart';
 import 'package:provider/provider.dart';
 
 import '../../../constant/color.dart';
+import '../../../constant/durations.dart';
 import '../../../constant/font.dart';
 import '../../../utils/function/currency_format.dart';
 import '../../../utils/function/percentage_format.dart';
@@ -119,29 +121,41 @@ class _SpendingTabState extends State<SpendingTab> {
                                         );
                                       },
                                       dense: true,
-                                      leading: Image.asset(e['parent_icon'], width: 28),
-                                      title: Text(e['parent_name'], style: defaultTextStyle,),
+                                      leading: Animate(
+                                        effects: const [MoveEffect(begin: Offset(-20, 0)), FadeEffect()],
+                                        delay: twoHundredMilisecond,
+                                        child: Image.asset(e['parent_icon'], width: 28)
+                                      ),
+                                      title: Animate(
+                                        effects: const [MoveEffect(begin: Offset(-20, 0)), FadeEffect()],
+                                        delay: twoHundredMilisecond,
+                                        child: Text(e['parent_name'], style: defaultTextStyle,)
+                                      ),
                                       contentPadding: EdgeInsets.zero,
                                       horizontalTitleGap: 4,
-                                      trailing: RichText(
-                                        text: TextSpan(
-                                            text: formatCurrencyVND(double.parse(e['total_money'][r'$numberDecimal'])),
-                                            style: const TextStyle(fontSize: textSmall, color: textColor),
-                                            children: [
-                                              const WidgetSpan(
-                                                  child: VndIcon(color: textColor, size: 13),
-                                                  alignment: PlaceholderAlignment.middle
-                                              ),
-                                              TextSpan(
-                                                  text:'( ${e['percentage']} )',
-                                                  style: const TextStyle(color: labelColor, fontSize: textSmall)
-                                              ),
-                                              const WidgetSpan(
-                                                  alignment: PlaceholderAlignment.middle,
-                                                  child:  Icon(
-                                                    Icons.keyboard_arrow_right, color: iconColor, size: 23,
-                                                  ))
-                                            ]
+                                      trailing: Animate(
+                                        effects: const [MoveEffect(begin: Offset(20, 0)), FadeEffect()],
+                                        delay: twoHundredMilisecond,
+                                        child: RichText(
+                                          text: TextSpan(
+                                              text: formatCurrencyVND(double.parse(e['total_money'][r'$numberDecimal'])),
+                                              style: const TextStyle(fontSize: textSmall, color: textColor),
+                                              children: [
+                                                const WidgetSpan(
+                                                    child: VndIcon(color: textColor, size: 13),
+                                                    alignment: PlaceholderAlignment.middle
+                                                ),
+                                                TextSpan(
+                                                    text:'( ${e['percentage']} )',
+                                                    style: const TextStyle(color: labelColor, fontSize: textSmall)
+                                                ),
+                                                const WidgetSpan(
+                                                    alignment: PlaceholderAlignment.middle,
+                                                    child:  Icon(
+                                                      Icons.keyboard_arrow_right, color: iconColor, size: 23,
+                                                    ))
+                                              ]
+                                          ),
                                         ),
                                       ),
                                     ),

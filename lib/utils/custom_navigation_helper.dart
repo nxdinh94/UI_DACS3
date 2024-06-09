@@ -163,7 +163,7 @@ class CustomNavigationHelper {
                       path: noteHistoryPath,
                       pageBuilder: (context, state) {
                         return getPage(
-                          child: const Notehistory(),
+                          child: const NoteHistory(),
                           state: state
                         );
                       },

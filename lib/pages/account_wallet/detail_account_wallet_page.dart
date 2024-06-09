@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 import 'package:practise_ui/constant/side.dart';
 import 'package:practise_ui/providers/user_provider.dart';
@@ -9,10 +10,13 @@ import 'package:practise_ui/widgets/rich_text/vnd_rich_text.dart';
 import 'package:provider/provider.dart';
 
 import '../../constant/color.dart';
+import '../../constant/durations.dart';
 import '../../constant/font.dart';
 import '../../constant/range_time/range_time_for_expense_record.dart';
 import '../../utils/function/show_the_day_of_the_week.dart';
 import '../../widgets/dash_line_painter/dash_line_painter.dart';
+import '../../widgets/empty_value_screen.dart';
+import '../../widgets/loading_animation.dart';
 class DetailAccountWalletPage extends StatefulWidget {
   const DetailAccountWalletPage({
     super.key,
@@ -82,47 +86,47 @@ class _DetailAccountWalletPageState extends State<DetailAccountWalletPage> {
             Consumer<UserProvider>(
               builder: (context, value, child) {
                 Map<String, dynamic> data = value.expenseRecordDataByAccountWallet;
-                String totalRevenueMoney = data['response_revenue_money'][r'$numberDecimal'];
-                String totalSpendingMoney = data['response_spending_money'][r'$numberDecimal'];
+                String totalRevenueMoney = '0';
+                String totalSpendingMoney = '0';
+                if(data.isNotEmpty){
+                  totalRevenueMoney = data['response_revenue_money'][r'$numberDecimal'];
+                  totalSpendingMoney =  data['response_spending_money'][r'$numberDecimal'];
+                }
                 // print(data);
-                return Visibility(
-                  // appear if both != 0
-                  visible: !(totalSpendingMoney == '0' && totalRevenueMoney == '0'),
-                  child: Column(
-                    children: [
-                      Container(
-                        color: secondaryColor,
-                        child: IntrinsicHeight(
-                          child: Row(
-                            children: [
-                              Expanded(
-                                child: Padding(
-                                  padding: paddingAll12,
-                                  child: TotalRevenueOrSpendingItem(
-                                    title: 'Tổng thu',
-                                    amountOfMoney: totalRevenueMoney,
-                                    foreground: revenueMoneyColor,
-                                  ),
+                return Column(
+                  children: [
+                    Container(
+                      color: secondaryColor,
+                      child: IntrinsicHeight(
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Padding(
+                                padding: paddingAll12,
+                                child: TotalRevenueOrSpendingItem(
+                                  title: 'Tổng thu',
+                                  amountOfMoney: totalRevenueMoney,
+                                  foreground: revenueMoneyColor,
                                 ),
                               ),
-                              const VerticalDivider(thickness: 1, color: underLineColor),
-                              Expanded(
-                                child: Padding(
-                                  padding: paddingAll12,
-                                  child: TotalRevenueOrSpendingItem(
-                                    title: 'Tổng chi',
-                                    amountOfMoney: totalSpendingMoney,
-                                    foreground: spendingMoneyColor,
-                                  ),
+                            ),
+                            const VerticalDivider(thickness: 1, color: underLineColor),
+                            Expanded(
+                              child: Padding(
+                                padding: paddingAll12,
+                                child: TotalRevenueOrSpendingItem(
+                                  title: 'Tổng chi',
+                                  amountOfMoney: totalSpendingMoney,
+                                  foreground: spendingMoneyColor,
                                 ),
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       ),
-                      spaceColumn,
-                    ],
-                  ),
+                    ),
+                    spaceColumn,
+                  ],
                 );
               },
             ),
@@ -148,6 +152,17 @@ class _DetailAccountWalletPageState extends State<DetailAccountWalletPage> {
               builder: (context, value, child) {
                 Map<String, dynamic> data = value.expenseRecordDataByAccountWallet;
                 List<dynamic> records = data['response_expense_record'];
+                if(value.isLoadingExpenseRecordDataByAccountWallet){
+                  return const Center(
+                    child: LoadingAnimation(
+                      iconSize: 80,
+                      containerHeight: 450,
+                    ),
+                  );
+                }
+                if(records.isEmpty){
+                  return const  EmptyValueScreen(title: 'Không có dữ liệu!', isAccountPage: false);
+                }
                 return BodyOfPage(records: records, dashBorder: dashBorder);
               },
             )
@@ -196,7 +211,7 @@ class BodyOfPage extends StatelessWidget {
             //whole items
             Container(
               color: secondaryColor,
-              padding: const EdgeInsets.only(right: 12),
+              padding: paddingRight12,
               child: Column(
                 children: [
                   //DateTime section
@@ -223,15 +238,21 @@ class BodyOfPage extends StatelessWidget {
                               mainAxisSize: MainAxisSize.min,
                               crossAxisAlignment: CrossAxisAlignment.end,
                               children: [
-                                VndRichText(
-                                  value: totalRevenueMoney,
-                                  iconSize: 15,
-                                  color: revenueMoneyColor,
+                                Animate(
+                                  effects: const [MoveEffect(begin: Offset(20, 0)), FadeEffect()],
+                                  delay: oneHundredMilisecond,
+                                  child: VndRichText(
+                                    value: totalRevenueMoney, iconSize: 15,
+                                    color: revenueMoneyColor,
+                                  ),
                                 ),
-                                VndRichText(
-                                  value: totalSpendingMoney,
-                                  iconSize: 15,
-                                  color: spendingMoneyColor,
+                                Animate(
+                                  effects: const [MoveEffect(begin: Offset(20, 0)), FadeEffect()],
+                                  delay: oneHundredMilisecond,
+                                  child: VndRichText(
+                                    value: totalSpendingMoney, iconSize: 15,
+                                    color: spendingMoneyColor,
+                                  ),
                                 ),
                               ],
                             ),
@@ -265,7 +286,6 @@ class BodyOfPage extends StatelessWidget {
                                   ),
                                 ),
                                 Expanded(
-
                                   child: ListTile(
                                     onTap: (){
                                       CustomNavigationHelper.router.push(
@@ -274,13 +294,22 @@ class BodyOfPage extends StatelessWidget {
                                       );
                                     },
                                     contentPadding: EdgeInsets.zero,
-                                    leading: Image.asset(
-                                      e['icon'],
-                                      width: 35,
+                                    leading: Animate(
+                                      effects: const [MoveEffect(begin: Offset(-20, 0)), FadeEffect()],
+                                      delay: oneHundredMilisecond,
+                                      child: Image.asset(e['icon'], width: 35)
                                     ),
-                                    title: Text(e['name'], style: const TextStyle(fontSize: textSize, fontWeight: FontWeight.w500, color: textColor)),
-                                    trailing: VndRichText(
-                                      value: double.parse(e['amount_of_money'][r'$numberDecimal']), iconSize: 15,color: e['cash_flow_type'] == 0? spendingMoneyColor: revenueMoneyColor,
+                                    title: Animate(
+                                      effects: const [MoveEffect(begin: Offset(-20, 0)), FadeEffect()],
+                                      delay: oneHundredMilisecond,
+                                      child: Text(e['name'], style: const TextStyle(fontSize: textSize, fontWeight: FontWeight.w500, color: textColor))
+                                    ),
+                                    trailing: Animate(
+                                      effects: const [MoveEffect(begin: Offset(20, 0)), FadeEffect()],
+                                      delay: oneHundredMilisecond,
+                                      child: VndRichText(
+                                        value: double.parse(e['amount_of_money'][r'$numberDecimal']), iconSize: 15,color: e['cash_flow_type'] == 0? spendingMoneyColor: revenueMoneyColor,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -317,9 +346,18 @@ class TotalRevenueOrSpendingItem extends StatelessWidget {
     return Column(
       children: [
         Text(title, style: const  TextStyle(color: textColor, fontSize: textSmall, fontWeight: FontWeight.w500)),
-        VndRichText(
-          value: double.parse(amountOfMoney),
-          color: foreground, fontSize: textBig, iconSize: 15,
+        AnimatedSwitcher(
+          duration: twoHundredMilisecond,
+          transitionBuilder: (Widget child, Animation<double> animation) {
+            return ScaleTransition(
+              scale: animation, child: child,
+            );
+          },
+          child: VndRichText(
+            key: ValueKey(amountOfMoney),
+            value: double.parse(amountOfMoney),
+            color: foreground, fontSize: textBig, iconSize: 15,
+          ),
         )
       ],
     );
