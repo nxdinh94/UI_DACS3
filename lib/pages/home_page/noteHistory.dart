@@ -118,7 +118,7 @@ class _NoteHistoryState extends State<NoteHistory> {
             Consumer<UserProvider>(
               builder: (context, value, child) {
                 Map<String, dynamic> data = value.expenseRecordDataForNoteHistory;
-                List<dynamic> records = data['response_expense_record'];
+                List<dynamic> records = data['response_expense_record'] ?? [];
                 if(value.isLoadingExpenseRecordDataForNoteHistory){
                   return const Center(
                     child: LoadingAnimation(
