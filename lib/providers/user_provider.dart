@@ -19,6 +19,10 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin{
   Map<String, dynamic> _expenseRecordDataForNoteHistory = {};
   Map<String, dynamic> get expenseRecordDataForNoteHistory => _expenseRecordDataForNoteHistory;
 
+  bool _isLoadingExpenseRecordDataForNoteHistory = true;
+  bool get isLoadingExpenseRecordDataForNoteHistory => _isLoadingExpenseRecordDataForNoteHistory;
+
+
   Map<String, dynamic> _meData = {};
   Map<String, dynamic> get meData => _meData;
 
@@ -94,9 +98,11 @@ class UserProvider with ChangeNotifier, DiagnosticableTreeMixin{
   }
   Future<void> getAllExpenseRecordForNoteHistoryProvider(String time)async{
     String accessToken = await getAccessToken();
+    _isLoadingExpenseRecordDataForNoteHistory = true;
     Map<String, dynamic> result =  await userServices.getAllExpenseRecordForNoteHistoryServices(accessToken, time);
     if(result['result'] != null){
       _expenseRecordDataForNoteHistory =  result['result'];
+      _isLoadingExpenseRecordDataForNoteHistory = false;
     }
     notifyListeners();
   }
