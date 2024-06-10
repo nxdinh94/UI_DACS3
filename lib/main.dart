@@ -29,7 +29,7 @@ void main() {
     MultiProvider(
       providers: [
         ChangeNotifierProvider(
-          create: (_) => AuthProvider()
+          create: (_) => AuthProvider(),
         ),
         ChangeNotifierProvider<AppProvider>(
           create: (_)=> AppProvider()
@@ -41,7 +41,7 @@ void main() {
             create: (_)=> ChartProvider(),
         ),
       ],
-      child: MyApp(),
+      child: const MyApp(),
     )
   );
 }
@@ -82,7 +82,7 @@ class _MyAppState extends State<MyApp> {
           color: primaryColor,
           child: GestureDetector(
             onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
-            child: SafeArea(
+            child: const SafeArea(
               child: AuthMiddleware(
                 child: CustomRouter(), // Use CustomRouter as home
               ),
@@ -97,7 +97,7 @@ class _MyAppState extends State<MyApp> {
 class AuthMiddleware extends StatelessWidget {
   final Widget child;
 
-  AuthMiddleware({required this.child});
+  const AuthMiddleware({super.key, required this.child});
 
   @override
   Widget build(BuildContext context) {
@@ -134,6 +134,8 @@ class AuthMiddleware extends StatelessWidget {
 }
 
 class CustomRouter extends StatelessWidget {
+  const CustomRouter({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp.router(

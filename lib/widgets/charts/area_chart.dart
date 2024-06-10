@@ -28,7 +28,7 @@ class _MyAreaChartState extends State<MyAreaChart> {
     LinearGradient(colors: color, stops: stops);
 
     return Container(
-        height: 500,
+        height: 565,
         color: secondaryColor,
         child: SfCartesianChart(
             isTransposed: true,
@@ -61,9 +61,6 @@ class _MyAreaChartState extends State<MyAreaChart> {
                 xValueMapper: (ChartData data, _) => data.x,
                 yValueMapper: (ChartData data, _) => data.y,
                 gradient: gradientColors,
-
-
-
               )
             ]
         )

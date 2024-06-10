@@ -418,7 +418,7 @@ class _AddingWorkspaceState extends State<AddingWorkspace> {
 
 
 class ChooseCashFlowCategory extends StatefulWidget {
-  ChooseCashFlowCategory({
+  const ChooseCashFlowCategory({super.key,
      required this.cashFlowType,
      required this.onSelectCashFlowCate
    });

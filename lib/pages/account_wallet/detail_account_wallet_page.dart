@@ -151,7 +151,7 @@ class _DetailAccountWalletPageState extends State<DetailAccountWalletPage> {
             Consumer<UserProvider>(
               builder: (context, value, child) {
                 Map<String, dynamic> data = value.expenseRecordDataByAccountWallet;
-                List<dynamic> records = data['response_expense_record'];
+                List<dynamic> records = data['response_expense_record']??[];
                 if(value.isLoadingExpenseRecordDataByAccountWallet){
                   return const Center(
                     child: LoadingAnimation(

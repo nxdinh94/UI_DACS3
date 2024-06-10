@@ -186,9 +186,9 @@ class _AddAccountWalletPageState extends State<AddAccountWalletPage> {
                       trailing: Switch(
                         value: isNotReport,
                         activeColor: switchColorButton,
-                        trackOutlineColor: const MaterialStatePropertyAll(Colors.transparent),
+                        trackOutlineColor: const WidgetStatePropertyAll(Colors.transparent),
 
-                        thumbColor: const MaterialStatePropertyAll<Color>(secondaryColor),
+                        thumbColor: const WidgetStatePropertyAll<Color>(secondaryColor),
                         onChanged: (bool value) {
                           setState(() {isNotReport = value;});
 
