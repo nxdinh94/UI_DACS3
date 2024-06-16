@@ -39,7 +39,7 @@ class _DetailSpendingRevenueStatisticalPageState extends State<DetailSpendingRev
               padding:  EdgeInsets.only(bottom: 8.0),
               child: BackToolbarButton(),
             ),
-            title: const Text('Tháng này', style: TextStyle(
+            title: const Text('Chi tiết', style: TextStyle(
                 color: secondaryColor,fontSize: textBig, fontWeight: FontWeight.w500
             )),
             centerTitle: true,
