@@ -17,8 +17,8 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
-  final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController(text: 'nxdinh94@gmail.com');
+  final TextEditingController _passwordController = TextEditingController(text: ' a1s2d3f4g5h6KT@');
   String _email = '';
   String _password = '';
   final _formKey = GlobalKey<FormState>();

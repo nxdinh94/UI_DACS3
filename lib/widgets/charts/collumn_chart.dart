@@ -20,7 +20,7 @@ class _MyColumnChartState extends State<MyColumnChart> {
         margin:  const EdgeInsets.only( right: 12),
         enableAxisAnimation: true,
 
-        primaryXAxis: const NumericAxis(
+        primaryXAxis: NumericAxis(
           axisLine: AxisLine(width: 0),
           majorTickLines: MajorTickLines(width: 0),
           majorGridLines: MajorGridLines(
@@ -30,7 +30,7 @@ class _MyColumnChartState extends State<MyColumnChart> {
             color: Colors.transparent, // Hide x-axis labels
           ),
         ),
-        primaryYAxis: const NumericAxis(
+        primaryYAxis: NumericAxis(
           majorGridLines: MajorGridLines(
               width: 0
           ),

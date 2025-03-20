@@ -32,7 +32,7 @@ class _MyAreaChartState extends State<MyAreaChart> {
         color: secondaryColor,
         child: SfCartesianChart(
             isTransposed: true,
-            title: const ChartTitle(
+            title: ChartTitle(
               text: 'Biểu đồ chi tiêu',
               textStyle: TextStyle(
                 color: textColor,
@@ -42,7 +42,7 @@ class _MyAreaChartState extends State<MyAreaChart> {
             ),
 
 
-            primaryYAxis: const NumericAxis(
+            primaryYAxis: NumericAxis(
               labelFormat: '{value}đ',
               title: AxisTitle(
                 text: '(Đơn vị: Trăm nghìn)',

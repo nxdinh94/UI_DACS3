@@ -1,6 +1,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
+import 'package:flutter_native_contact_picker/model/contact.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../../constant/color.dart';
@@ -27,7 +28,7 @@ class PickContactListTile extends StatefulWidget {
 }
 
 class PickContactListTileState extends State<PickContactListTile> {
-  final FlutterContactPicker _contactPicker = FlutterContactPicker();
+  final FlutterNativeContactPicker  _contactPicker = FlutterNativeContactPicker ();
   String? _contact = '';
 
   String customTitle = 'Chọn liên lạc';
