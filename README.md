@@ -8,12 +8,11 @@ This is a Flutter-based application designed to help users track their income, e
 - Categorize transactions by predefined or custom categories.
 - View detailed financial reports (daily, monthly, yearly).
 - Interactive charts for financial analysis.
-- 
+
 ## Technologies Used
 - **Flutter** (latest version)
-- **State Management**: MVVM architecture (Provider/Riverpod/Bloc)
-- **Database**: SQLite, Hive, or Firebase Firestore
-- **AI & OCR**: Google ML Kit, Tesseract for receipt recognition
+- **State Management**: Provider
+- **Database**: Nodejs, Mongodb, JWT
 
 ## Installation & Setup
 Ensure you have Flutter SDK installed before proceeding.
