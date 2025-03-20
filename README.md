@@ -20,8 +20,8 @@ Ensure you have Flutter SDK installed before proceeding.
 ### Steps to Run the App:
 ```sh
 # Clone the repository
-git clone <repo_url>
-cd <project_folder>
+git clone <https://github.com/nxdinh94/UI_DACS3.git>
+cd <UI_DACS3>
 
 # Install dependencies
 flutter pub get
