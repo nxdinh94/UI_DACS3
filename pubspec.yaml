@@ -109,6 +109,7 @@ flutter:
     - assets/icon_category/spending_money_icon/trangPhuc/
     - assets/icon_category/loan_icon/
     - assets/icon_category/revenue_money_icon/
+    - assets/screen_app/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
